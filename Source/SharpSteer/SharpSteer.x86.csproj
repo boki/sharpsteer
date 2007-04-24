@@ -1,0 +1,165 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{8E1E5411-3326-4077-B49B-2694E48AD255}</ProjectGuid>
+    <ProjectTypeGuids>{9F340DF3-2AED-4330-AC16-78AC2D9B4738};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Bnoerj.AI.Steering</RootNamespace>
+    <AssemblyName>Bnoerj.SharpSteer.x86</AssemblyName>
+    <XnaFrameworkVersion>v1.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <XNAGlobalContentPipelineAssemblies>Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</XNAGlobalContentPipelineAssemblies>
+    <XNAProjectContentPipelineAssemblies>
+    </XNAProjectContentPipelineAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractVehicle.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>AbstractVehicle</Name>
+    </Compile>
+    <Compile Include="ILocalSpace.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>ILocalSpace</Name>
+    </Compile>
+    <Compile Include="IPlugIn.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>IPlugIn</Name>
+    </Compile>
+    <Compile Include="IProximityDatabase.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>IProximityDatabase</Name>
+    </Compile>
+    <Compile Include="ITokenForProximityDatabase.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>ITokenForProximityDatabase</Name>
+    </Compile>
+    <Compile Include="IVehicle.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>IVehicle</Name>
+    </Compile>
+    <Compile Include="Annotation.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Annotation</Name>
+    </Compile>
+    <Compile Include="BruteForceProximityDatabase.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>BruteForceProximityDatabase</Name>
+    </Compile>
+    <Compile Include="Camera.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Camera</Name>
+    </Compile>
+    <Compile Include="Clock.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Clock</Name>
+    </Compile>
+    <Compile Include="IDraw.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>IDraw</Name>
+    </Compile>
+    <Compile Include="LocalSpace.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>LocalSpace</Name>
+    </Compile>
+    <Compile Include="LQDatabase.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>LQDatabase</Name>
+    </Compile>
+    <Compile Include="LQProximityDatabase.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>LQProximityDatabase</Name>
+    </Compile>
+    <Compile Include="Obstacle.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Obstacle</Name>
+    </Compile>
+    <Compile Include="Pathway.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Pathway</Name>
+    </Compile>
+    <Compile Include="PlugIn.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>PlugIn</Name>
+    </Compile>
+    <Compile Include="PolylinePathway.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>PolylinePathway</Name>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>AssemblyInfo</Name>
+    </Compile>
+    <Compile Include="SimpleVehicle.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>SimpleVehicle</Name>
+    </Compile>
+    <Compile Include="SphericalObstacle.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>SphericalObstacle</Name>
+    </Compile>
+    <Compile Include="SteerLibrary.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>SteerLibrary</Name>
+    </Compile>
+    <Compile Include="Utilities.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Utilities</Name>
+    </Compile>
+    <Compile Include="Vec3.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Vec3</Name>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA\Game Studio Express\v1.0\Microsoft.Xna.ContentPipeline.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA\Game Studio Express\v1.0\Microsoft.Xna.Common.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

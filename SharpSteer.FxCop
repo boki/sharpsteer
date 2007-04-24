@@ -1,0 +1,1509 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FxCopProject Version="1.35" Name="SharpSteer">
+ <ProjectOptions>
+  <SharedProject>True</SharedProject>
+  <Stylesheet Apply="False">http://www.gotdotnet.com/team/fxcop//xsl/1.35/FxCopReport.xsl</Stylesheet>
+  <SaveMessages>
+   <Project Status="Active, Excluded" NewOnly="False" />
+   <Report Status="Active" NewOnly="False" />
+  </SaveMessages>
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
+  <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
+  <SourceLookup>True</SourceLookup>
+  <AnalysisExceptionsThreshold>10</AnalysisExceptionsThreshold>
+  <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
+  <Spelling Locale="en-us" />
+  <VersionAware>False</VersionAware>
+  <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
+  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
+ </ProjectOptions>
+ <Targets>
+  <AssemblyReferenceDirectories>
+   <Directory>$(ProjectDir)/../../../../../../Programme/Microsoft XNA/XNA Game Studio Express/v1.0/References/Windows/x86/</Directory>
+  </AssemblyReferenceDirectories>
+  <Target Name="$(ProjectDir)/Source/SharpSteer/bin/x86/Release/Bnoerj.SharpSteer.x86.dll" Analyze="True" AnalyzeAllChildren="True" />
+ </Targets>
+ <Rules>
+  <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\DesignRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\UsageRules.dll" Enabled="True" AllRulesEnabled="True" />
+  </RuleFiles>
+  <Groups />
+  <Settings />
+ </Rules>
+ <FxCopReport Version="1.35">
+  <Namespaces>
+   <Namespace Name="Bnoerj.AI.Steering">
+    <Messages>
+     <Message Id="Bnoerj" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-03-26 00:00:41Z">
+      <Issue Name="Namespace">
+       <Item>Bnoerj</Item>
+       <Item>Bnoerj.AI.Steering</Item>
+      </Issue>
+      <Notes>
+       <User Name="Boki">
+        <Note Id="2" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+  </Namespaces>
+  <Targets>
+   <Target Name="$(ProjectDir)/Source/SharpSteer/bin/x86/Release/Bnoerj.SharpSteer.x86.dll">
+    <Modules>
+     <Module Name="bnoerj.sharpsteer.x86.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldDeclareMinimumSecurity" Category="Microsoft.Usage" CheckId="CA2209" Created="2007-03-26 00:00:41Z">
+        <Issue>
+         <Item>Bnoerj.SharpSteer.x86</Item>
+        </Issue>
+       </Message>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2007-03-26 00:00:41Z">
+        <Issue Name="NoStrongName">
+         <Item>Bnoerj.SharpSteer.x86</Item>
+        </Issue>
+       </Message>
+      </Messages>
+      <Namespaces>
+       <Namespace Name="Bnoerj.AI.Steering">
+        <Types>
+         <Type Name="Annotation">
+          <Messages>
+           <Message TypeName="AbstractTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1012" Created="2007-03-26 00:00:41Z">
+            <Issue>
+             <Item>Annotation</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Annotation.Annotation()</Item>
+               <Item>trailFlags</Item>
+               <Item>System.Byte[]</Item>
+               <Item>null</Item>
+              </Issue>
+              <Issue>
+               <Item>Annotation.Annotation()</Item>
+               <Item>trailVertices</Item>
+               <Item>Bnoerj.AI.Steering.Vec3[]</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="AnnotationCircleOrDisk(System.Single,Bnoerj.AI.Steering.Vec3,Bnoerj.AI.Steering.Vec3,Microsoft.Xna.Framework.Graphics.Color,System.Int32,System.Boolean,System.Boolean):System.Void">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2007-03-26 00:00:41Z" FixCategory="Breaking">
+              <Issue>
+               <Item>Annotation.AnnotationCircleOrDisk(Single, Vec3, Vec3, Color, Int32, Boolean, Boolean):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="AnnotationLine(Bnoerj.AI.Steering.Vec3,Bnoerj.AI.Steering.Vec3,Microsoft.Xna.Framework.Graphics.Color):System.Void">
+            <Messages>
+             <Message Id="endPoint" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>endPoint</Item>
+               <Item>parameter</Item>
+               <Item>endPoint</Item>
+               <Item>endpoint</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2007-03-26 00:00:41Z" FixCategory="Breaking">
+              <Issue>
+               <Item>Annotation.AnnotationLine(Vec3, Vec3, Color):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="drawer">
+            <Messages>
+             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>drawer</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="BruteForceProximityDatabase`1+TokenType">
+          <Messages>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2007-03-26 00:00:41Z">
+            <Issue>
+             <Item>Bnoerj.AI.Steering.BruteForceProximityDatabase`1+TokenType</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="UpdateForNewPosition(Bnoerj.AI.Steering.Vec3):System.Void">
+            <Messages>
+             <Message Id="0#" TypeName="ParameterNamesShouldMatchBaseDeclaration" Category="Microsoft.Naming" CheckId="CA1725" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>newPosition</Item>
+               <Item>TokenType.UpdateForNewPosition(Vec3):Void</Item>
+               <Item>position</Item>
+               <Item>ITokenForProximityDatabase`1&lt;ContentType&gt;.UpdateForNewPosition(Vec3):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Camera">
+          <Members>
+           <Member Name="AimLeadTime">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>AimLeadTime</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ConstantDistanceHelper(System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message Id="elapsedTime" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2007-03-26 00:40:45Z" FixCategory="Breaking">
+              <Issue>
+               <Item>elapsedTime</Item>
+               <Item>Camera.ConstantDistanceHelper(Single):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="FixedDistDistance">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>FixedDistDistance</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="FixedDistVOffset">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>FixedDistVOffset</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="FixedLocalOffset">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>FixedLocalOffset</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="FixedPosition">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>FixedPosition</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="FixedTarget">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>FixedTarget</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="FixedUp">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>FixedUp</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="LookdownDistance">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>LookdownDistance</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Mode">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Mode</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="PovOffset">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>PovOffset</Item>
+              </Issue>
+             </Message>
+             <Message Id="Pov" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="Member">
+               <Item>Pov</Item>
+               <Item>Camera.PovOffset</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="smoothMoveSpeed">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>smoothMoveSpeed</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="smoothNextMove">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>smoothNextMove</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SuccessorMode(Bnoerj.AI.Steering.Camera+CameraMode):Bnoerj.AI.Steering.Camera+CameraMode">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2007-03-26 00:00:41Z" FixCategory="Breaking">
+              <Issue>
+               <Item>Camera.SuccessorMode(CameraMode):CameraMode</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Target">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Target</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Update(System.Single,System.Single,System.Boolean):System.Void">
+            <Messages>
+             <Message Id="currentTime" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2007-03-26 00:00:41Z" FixCategory="Breaking">
+              <Issue>
+               <Item>currentTime</Item>
+               <Item>Camera.Update(Single, Single, Boolean):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="VehicleToTrack">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>VehicleToTrack</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Camera+CameraMode">
+          <Members>
+           <Member Name="OffsetPov">
+            <Messages>
+             <Message Id="Pov" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:45:05Z">
+              <Issue Name="Member">
+               <Item>Pov</Item>
+               <Item>CameraMode.OffsetPov</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Clock">
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>elapsedNonWaitRealTime</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>elapsedRealTime</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>elapsedSimulationTime</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>newAdvanceTime</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>smoothedFps</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>smoothedUsage</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>totalAdvanceTime</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>totalPausedTime</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>totalRealTime</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+              <Issue>
+               <Item>Clock.Clock()</Item>
+               <Item>totalSimulationTime</Item>
+               <Item>System.Single</Item>
+               <Item>0.0</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="AdvanceSimulationTime(System.Single):System.Void">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Clock.AdvanceSimulationTime(Single):Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="System.ArgumentException.#ctor(System.String,System.String)" TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Clock.AdvanceSimulationTime(Single):Void</Item>
+               <Item>1</Item>
+               <Item>ArgumentException.ArgumentException(String, String)</Item>
+               <Item>Negative argument to advanceSimulationTime.</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="AdvanceSimulationTimeOneFrame():System.Single">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Clock.AdvanceSimulationTimeOneFrame():Single</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IDraw">
+          <Members>
+           <Member Name="Line(Bnoerj.AI.Steering.Vec3,Bnoerj.AI.Steering.Vec3,Microsoft.Xna.Framework.Graphics.Color):System.Void">
+            <Messages>
+             <Message Id="endPoint" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>endPoint</Item>
+               <Item>parameter</Item>
+               <Item>endPoint</Item>
+               <Item>endpoint</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="LineAlpha(Bnoerj.AI.Steering.Vec3,Bnoerj.AI.Steering.Vec3,Microsoft.Xna.Framework.Graphics.Color,System.Single):System.Void">
+            <Messages>
+             <Message Id="endPoint" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>endPoint</Item>
+               <Item>parameter</Item>
+               <Item>endPoint</Item>
+               <Item>endpoint</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ILocalSpace">
+          <Members>
+           <Member Name="RegenerateOrthonormalBasis(Bnoerj.AI.Steering.Vec3):System.Void">
+            <Messages>
+             <Message Id="Orthonormal" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="Member">
+               <Item>Orthonormal</Item>
+               <Item>ILocalSpace.RegenerateOrthonormalBasis(Vec3):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="RegenerateOrthonormalBasis(Bnoerj.AI.Steering.Vec3,Bnoerj.AI.Steering.Vec3):System.Void">
+            <Messages>
+             <Message Id="Orthonormal" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="Member">
+               <Item>Orthonormal</Item>
+               <Item>ILocalSpace.RegenerateOrthonormalBasis(Vec3, Vec3):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="RegenerateOrthonormalBasisUF(Bnoerj.AI.Steering.Vec3):System.Void">
+            <Messages>
+             <Message Id="Orthonormal" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="Member">
+               <Item>Orthonormal</Item>
+               <Item>ILocalSpace.RegenerateOrthonormalBasisUF(Vec3):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IPlugIn">
+          <Members>
+           <Member Name="Vehicles">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>System.Collections.Generic.List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;</Item>
+               <Item>IPlugIn.Vehicles:List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ITokenForProximityDatabase`1">
+          <Members>
+           <Member Name="FindNeighbors(Bnoerj.AI.Steering.Vec3,System.Single,System.Collections.Generic.List`1&lt;ContentType&gt;&amp;):System.Void">
+            <Messages>
+             <Message Id="2#" TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045" Created="2007-03-26 00:00:41Z">
+              <Issue Level="CriticalWarning">
+               <Item>results</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="LocalityQueryDB">
+          <Members>
+           <Member Name="FindNearestNeighborWithinRadius(Bnoerj.AI.Steering.Vec3,System.Single,System.Object):System.Object">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>LocalityQueryDB.FindNearestNeighborWithinRadius(Vec3, Single, Object):Object</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="MapOverAllObjectsInBin(Bnoerj.AI.Steering.LocalityQueryDB+ClientProxy,Bnoerj.AI.Steering.LocalityQueryDB+LQCallBackFunction,System.Object):System.Void">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2007-03-26 00:00:41Z" FixCategory="NonBreaking">
+              <Issue>
+               <Item>LocalityQueryDB.MapOverAllObjectsInBin(ClientProxy, LQCallBackFunction, Object):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="RemoveAllObjects():System.Void">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>LocalityQueryDB.RemoveAllObjects():Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="RemoveAllObjectsInBin(Bnoerj.AI.Steering.LocalityQueryDB+ClientProxy&amp;):System.Void">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>LocalityQueryDB.RemoveAllObjectsInBin(ClientProxy&amp;):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="TraverseBinClientObjectList(Bnoerj.AI.Steering.LocalityQueryDB+ClientProxy&amp;,System.Single,Bnoerj.AI.Steering.LocalityQueryDB+LQCallBackFunction,System.Object,Bnoerj.AI.Steering.Vec3):System.Void">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2007-03-26 00:00:41Z" FixCategory="NonBreaking">
+              <Issue>
+               <Item>LocalityQueryDB.TraverseBinClientObjectList(ClientProxy&amp;, Single, LQCallBackFunction, Object, Vec3):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="LocalityQueryProximityDatabase`1+TokenType">
+          <Messages>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2007-03-26 00:00:41Z">
+            <Issue>
+             <Item>Bnoerj.AI.Steering.LocalityQueryProximityDatabase`1+TokenType</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(ContentType,Bnoerj.AI.Steering.LocalityQueryProximityDatabase`1&lt;ContentType&gt;)">
+            <Messages>
+             <Message Id="1#lqsd" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="Parameter">
+               <Item>TokenType.TokenType(ContentType, LocalityQueryProximityDatabase`1&lt;ContentType&gt;)</Item>
+               <Item>lqsd</Item>
+               <Item>lqsd</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="perNeighborCallBackFunction(System.Object,System.Single,System.Object):System.Void">
+            <Messages>
+             <Message Id="0#" TypeName="AvoidTypeNamesInParameters" Category="Microsoft.Naming" CheckId="CA1720" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>clientObject</Item>
+              </Issue>
+             </Message>
+             <Message Id="CallBack" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>CallBack</Item>
+               <Item>method</Item>
+               <Item>perNeighborCallBackFunction</Item>
+               <Item>Callback</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>TokenType.perNeighborCallBackFunction(Object, Single, Object):Void</Item>
+               <Item>Bnoerj.AI.Steering.LocalityQueryProximityDatabase`1+TokenType</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2007-03-26 00:00:41Z">
+              <Issue Name="Member">
+               <Item>perNeighborCallBackFunction</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="UpdateForNewPosition(Bnoerj.AI.Steering.Vec3):System.Void">
+            <Messages>
+             <Message Id="0#" TypeName="ParameterNamesShouldMatchBaseDeclaration" Category="Microsoft.Naming" CheckId="CA1725" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>p</Item>
+               <Item>TokenType.UpdateForNewPosition(Vec3):Void</Item>
+               <Item>position</Item>
+               <Item>ITokenForProximityDatabase`1&lt;ContentType&gt;.UpdateForNewPosition(Vec3):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="LocalSpace">
+          <Members>
+           <Member Name="SetForward(System.Single,System.Single,System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message Id="0#x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>LocalSpace.SetForward(Single, Single, Single):Vec3</Item>
+               <Item>x</Item>
+              </Issue>
+             </Message>
+             <Message Id="1#y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>LocalSpace.SetForward(Single, Single, Single):Vec3</Item>
+               <Item>y</Item>
+              </Issue>
+             </Message>
+             <Message Id="2#z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>LocalSpace.SetForward(Single, Single, Single):Vec3</Item>
+               <Item>z</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SetPosition(System.Single,System.Single,System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message Id="0#x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>LocalSpace.SetPosition(Single, Single, Single):Vec3</Item>
+               <Item>x</Item>
+              </Issue>
+             </Message>
+             <Message Id="1#y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>LocalSpace.SetPosition(Single, Single, Single):Vec3</Item>
+               <Item>y</Item>
+              </Issue>
+             </Message>
+             <Message Id="2#z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>LocalSpace.SetPosition(Single, Single, Single):Vec3</Item>
+               <Item>z</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SetUp(System.Single,System.Single,System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message Id="0#x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>LocalSpace.SetUp(Single, Single, Single):Vec3</Item>
+               <Item>x</Item>
+              </Issue>
+             </Message>
+             <Message Id="1#y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>LocalSpace.SetUp(Single, Single, Single):Vec3</Item>
+               <Item>y</Item>
+              </Issue>
+             </Message>
+             <Message Id="2#z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>LocalSpace.SetUp(Single, Single, Single):Vec3</Item>
+               <Item>z</Item>
+              </Issue>
+             </Message>
+             <Message Id="SetUp" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Status="Excluded" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>SetUp</Item>
+               <Item>method</Item>
+               <Item>SetUp</Item>
+               <Item>Setup</Item>
+              </Issue>
+              <Notes>
+               <User Name="Boki">
+                <Note Id="1" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Pathway">
+          <Members>
+           <Member Name="MapPointToPath(Bnoerj.AI.Steering.Vec3,Bnoerj.AI.Steering.Vec3&amp;,System.Single&amp;):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message Id="1#" TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>tangent</Item>
+              </Issue>
+             </Message>
+             <Message Id="2#" TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>outside</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PlugIn">
+          <Messages>
+           <Message TypeName="AbstractTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1012" Created="2007-03-26 00:00:41Z">
+            <Issue>
+             <Item>PlugIn</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="ToString():System.String">
+            <Messages>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>PlugIn.ToString():String</Item>
+               <Item>System.String.Format(System.String,System.Object)</Item>
+               <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Vehicles">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>System.Collections.Generic.List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;</Item>
+               <Item>PlugIn.Vehicles:List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PolylinePathway">
+          <Messages>
+           <Message Id="Polyline" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+            <Issue Name="Type">
+             <Item>Polyline</Item>
+             <Item>Bnoerj.AI.Steering.PolylinePathway</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="chosen">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>chosen</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="cyclic">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>cyclic</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="lengths">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>lengths</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="local">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>local</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="normals">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>normals</Item>
+              </Issue>
+             </Message>
+             <Message Id="normals" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="Member">
+               <Item>normals</Item>
+               <Item>PolylinePathway.normals</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="pointCount">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>pointCount</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="points">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>points</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="radius">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>radius</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="segmentLength">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>segmentLength</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="segmentNormal">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>segmentNormal</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="segmentProjection">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>segmentProjection</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="totalPathLen">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>totalPathLen</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="SimpleVehicle">
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>SimpleVehicle.SimpleVehicle()</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;SimpleVehicle.SimpleVehicle()&#xD;&#xA;SteerLibrary.Reset():Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SerialNumber">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>SerialNumber</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="SphericalObstacle">
+          <Members>
+           <Member Name="Center">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Center</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Radius">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Radius</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerToAvoid(Bnoerj.AI.Steering.IVehicle,System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>'vehicle'</Item>
+               <Item>SphericalObstacle.SteerToAvoid(IVehicle, Single):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="SteerLibrary">
+          <Messages>
+           <Message TypeName="AbstractTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1012" Created="2007-03-26 00:00:41Z">
+            <Issue>
+             <Item>SteerLibrary</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>SteerLibrary.SteerLibrary()</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;SteerLibrary.SteerLibrary()&#xD;&#xA;SteerLibrary.Reset():Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ComputeNearestApproachPositions(Bnoerj.AI.Steering.IVehicle,System.Single):System.Single">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>'other'</Item>
+               <Item>SteerLibrary.ComputeNearestApproachPositions(IVehicle, Single):Single</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="FindNextIntersectionWithSphere(Bnoerj.AI.Steering.SphericalObstacle):Bnoerj.AI.Steering.SteerLibrary+PathIntersection">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:23:34Z">
+              <Issue>
+               <Item>'obs'</Item>
+               <Item>SteerLibrary.FindNextIntersectionWithSphere(SphericalObstacle):PathIntersection</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GaudyPursuitAnnotation">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>GaudyPursuitAnnotation</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="IsInBoidNeighborhood(Bnoerj.AI.Steering.IVehicle,System.Single,System.Single,System.Single):System.Boolean">
+            <Messages>
+             <Message TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>other</Item>
+               <Item>SteerLibrary.IsInBoidNeighborhood(IVehicle, Single, Single, Single):Boolean</Item>
+               <Item>Bnoerj.AI.Steering.IVehicle</Item>
+               <Item>Bnoerj.AI.Steering.ILocalSpace</Item>
+              </Issue>
+             </Message>
+             <Message Id="Boid" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="Member">
+               <Item>Boid</Item>
+               <Item>SteerLibrary.IsInBoidNeighborhood(IVehicle, Single, Single, Single):Boolean</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>'other'</Item>
+               <Item>SteerLibrary.IsInBoidNeighborhood(IVehicle, Single, Single, Single):Boolean</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="PredictNearestApproachTime(Bnoerj.AI.Steering.IVehicle):System.Single">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>'other'</Item>
+               <Item>SteerLibrary.PredictNearestApproachTime(IVehicle):Single</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerForAlignment(System.Single,System.Single,System.Collections.Generic.List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>System.Collections.Generic.List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;</Item>
+               <Item>SteerLibrary.SteerForAlignment(Single, Single, List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerForCohesion(System.Single,System.Single,System.Collections.Generic.List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>System.Collections.Generic.List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;</Item>
+               <Item>SteerLibrary.SteerForCohesion(Single, Single, List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerForEvasion(Bnoerj.AI.Steering.IVehicle,System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>'menace'</Item>
+               <Item>SteerLibrary.SteerForEvasion(IVehicle, Single):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerForPursuit(Bnoerj.AI.Steering.IVehicle,System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>'quarry'</Item>
+               <Item>SteerLibrary.SteerForPursuit(IVehicle, Single):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerForSeparation(System.Single,System.Single,System.Collections.Generic.List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>System.Collections.Generic.List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;</Item>
+               <Item>SteerLibrary.SteerForSeparation(Single, Single, List`1&lt;Bnoerj.AI.Steering.IVehicle&gt;):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerToAvoidCloseNeighbors(System.Single,System.Collections.Generic.List`1&lt;TVehicle&gt;):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>System.Collections.Generic.List`1&lt;TVehicle&gt;</Item>
+               <Item>SteerLibrary.SteerToAvoidCloseNeighbors(Single, List`1&lt;TVehicle&gt;):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerToAvoidNeighbors(System.Single,System.Collections.Generic.List`1&lt;TVehicle&gt;):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>System.Collections.Generic.List`1&lt;TVehicle&gt;</Item>
+               <Item>SteerLibrary.SteerToAvoidNeighbors(Single, List`1&lt;TVehicle&gt;):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerToAvoidObstacle(System.Single,Bnoerj.AI.Steering.IObstacle):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>'obstacle'</Item>
+               <Item>SteerLibrary.SteerToAvoidObstacle(Single, IObstacle):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerToAvoidObstacles(System.Single,System.Collections.Generic.List`1&lt;Obstacle&gt;):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>System.Collections.Generic.List`1&lt;Obstacle&gt;</Item>
+               <Item>SteerLibrary.SteerToAvoidObstacles(Single, List`1&lt;Obstacle&gt;):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerToFollowPath(System.Int32,System.Single,Bnoerj.AI.Steering.Pathway):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>'path'</Item>
+               <Item>SteerLibrary.SteerToFollowPath(Int32, Single, Pathway):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SteerToStayOnPath(System.Single,Bnoerj.AI.Steering.Pathway):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>'path'</Item>
+               <Item>SteerLibrary.SteerToStayOnPath(Single, Pathway):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="WanderSide">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>WanderSide</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="WanderUp">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>WanderUp</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="SteerLibrary+PathIntersection">
+          <Messages>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2007-03-26 00:00:41Z">
+            <Issue>
+             <Item>Bnoerj.AI.Steering.SteerLibrary+PathIntersection</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="OverrideEqualsAndOperatorEqualsOnValueTypes" Category="Microsoft.Performance" CheckId="CA1815" Created="2007-03-26 00:00:41Z">
+            <Issue Name="Equals">
+             <Item>Bnoerj.AI.Steering.SteerLibrary+PathIntersection</Item>
+            </Issue>
+            <Issue Name="op_Equality">
+             <Item>Bnoerj.AI.Steering.SteerLibrary+PathIntersection</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="distance">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>distance</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="intersect">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>intersect</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="obstacle">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>obstacle</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="surfaceNormal">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>surfaceNormal</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="surfacePoint">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>surfacePoint</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Utilities">
+          <Messages>
+           <Message TypeName="StaticHolderTypesShouldBeSealed" Category="Microsoft.Design" CheckId="CA1052" Created="2007-03-26 00:53:52Z">
+            <Issue>
+             <Item>Utilities</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="BlendIntoAccumulator(System.Single,Bnoerj.AI.Steering.Vec3,Bnoerj.AI.Steering.Vec3&amp;):System.Void">
+            <Messages>
+             <Message Id="2#" TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045" Created="2007-03-26 00:00:41Z">
+              <Issue Certainty="50">
+               <Item>smoothedAccumulator</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Vec3">
+          <Members>
+           <Member Name=".ctor(System.Single,System.Single,System.Single)">
+            <Messages>
+             <Message Id="0#x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>Vec3.Vec3(Single, Single, Single)</Item>
+               <Item>x</Item>
+              </Issue>
+             </Message>
+             <Message Id="1#y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>Vec3.Vec3(Single, Single, Single)</Item>
+               <Item>y</Item>
+              </Issue>
+             </Message>
+             <Message Id="2#z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>Vec3.Vec3(Single, Single, Single)</Item>
+               <Item>z</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="op_Addition(Bnoerj.AI.Steering.Vec3,Bnoerj.AI.Steering.Vec3):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Add</Item>
+               <Item>Vec3.op_Addition(Vec3, Vec3):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="op_Division(Bnoerj.AI.Steering.Vec3,System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Divide</Item>
+               <Item>Vec3.op_Division(Vec3, Single):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="op_Multiply(Bnoerj.AI.Steering.Vec3,System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Multiply</Item>
+               <Item>Vec3.op_Multiply(Vec3, Single):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="op_Multiply(System.Single,Bnoerj.AI.Steering.Vec3):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2007-03-26 00:23:34Z">
+              <Issue>
+               <Item>Multiply</Item>
+               <Item>Vec3.op_Multiply(Single, Vec3):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="op_Subtraction(Bnoerj.AI.Steering.Vec3,Bnoerj.AI.Steering.Vec3):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Subtract</Item>
+               <Item>Vec3.op_Subtraction(Vec3, Vec3):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="op_UnaryNegation(Bnoerj.AI.Steering.Vec3):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Negate</Item>
+               <Item>Vec3.op_UnaryNegation(Vec3):Vec3</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Set(System.Single,System.Single,System.Single):Bnoerj.AI.Steering.Vec3">
+            <Messages>
+             <Message Id="0#x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>Vec3.Set(Single, Single, Single):Vec3</Item>
+               <Item>x</Item>
+              </Issue>
+             </Message>
+             <Message Id="1#y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>Vec3.Set(Single, Single, Single):Vec3</Item>
+               <Item>y</Item>
+              </Issue>
+             </Message>
+             <Message Id="2#z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>Vec3.Set(Single, Single, Single):Vec3</Item>
+               <Item>z</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="X">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>X</Item>
+              </Issue>
+             </Message>
+             <Message Id="X" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="MemberOneLetter">
+               <Item>X</Item>
+               <Item>Vec3.X</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Y">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Y</Item>
+              </Issue>
+             </Message>
+             <Message Id="Y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="MemberOneLetter">
+               <Item>Y</Item>
+               <Item>Vec3.Y</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Z">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2007-03-26 00:00:41Z">
+              <Issue>
+               <Item>Z</Item>
+              </Issue>
+             </Message>
+             <Message Id="Z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2007-03-26 00:00:41Z">
+              <Issue Name="MemberOneLetter">
+               <Item>Z</Item>
+               <Item>Vec3.Z</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+  </Targets>
+  <Notes>
+   <User Name="Boki">
+    <Note Id="1" Modified="2007-03-26 00:01:40Z">SetUp means to set the up vector</Note>
+    <Note Id="2" Modified="2007-03-26 00:02:02Z">Bnoerj is spelled correctly</Note>
+   </User>
+  </Notes>
+  <Rules>
+   <Rule TypeName="AbstractTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1012">
+    <Resolution Name="Default">Change the accessibility of all public constructors in '{0}' to protected.</Resolution>
+   </Rule>
+   <Rule TypeName="AssembliesShouldDeclareMinimumSecurity" Category="Microsoft.Usage" CheckId="CA2209">
+    <Resolution Name="Default">No valid permission requests were found for assembly '{0}'. You should always specify the minimum security permissions using SecurityAction.RequestMinimum.</Resolution>
+   </Rule>
+   <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
+    <Resolution Name="NoStrongName">Sign '{0}' with a strong name key.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021">
+    <Resolution Name="Default">Consider a design that does not require that '{0}' be an out parameter.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidTypeNamesInParameters" Category="Microsoft.Naming" CheckId="CA1720">
+    <Resolution Name="Default">Remove the type identifier from parameter name '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
+    <Resolution Name="Default">'{0}' appears to have no upstream public or protected callers.</Resolution>
+   </Rule>
+   <Rule TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702">
+    <Resolution Name="ShouldBeDiscreteTerm">The compound word '{0}' in {1} '{2}' exists as a discrete term. If your usage is intended to be single word, case it as '{3}'.</Resolution>
+   </Rule>
+   <Rule TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011">
+    <Resolution Name="Default">Consider changing the type of parameter '{0}' in {1} from {2} to its base type {3}. This method appears to only require base class members in its implementation. Suppress this violation if there is a compelling reason to require the more derived type in the method signature.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214">
+    <Resolution Name="Default">'{0}' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: {1}</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000">
+    <Resolution Name="Default">Remove {0} from '{1}' or make it an instance member.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051">
+    <Resolution Name="Default">Make '{0}' private or internal (Friend in VB, public private in C++) and provide a public or protected property to access it.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002">
+    <Resolution Name="Default">Change '{0}' in {1} to use Collection&lt;T&gt;, ReadOnlyCollection&lt;T&gt; or KeyedCollection&lt;K,V&gt;</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805">
+    <Resolution Name="Default">{0} initializes field {1} of type {2} to {3}. Remove this initialization as it will be done automatically by the runtime.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303">
+    <Resolution Name="Default">{0} passes a literal as parameter {1} of a call to {2}. Retrieve the following string argument from a resource table instead: '{3}'</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045">
+    <Resolution Name="Default">Consider a design that does not require that '{0}' be a reference parameter.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709">
+    <Resolution Name="Member">Correct the casing of member name '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+    <Resolution Name="Member">Correct the spelling of the unrecognized token '{0}' in member name '{1}'.</Resolution>
+    <Resolution Name="MemberOneLetter">Consider providing a more meaningful name than the one-letter token '{0}' in member name '{1}'.</Resolution>
+    <Resolution Name="Namespace">Correct the spelling of the unrecognized token '{0}' in namespace '{1}'.</Resolution>
+    <Resolution Name="Parameter">In method {0}, correct the spelling of the unrecognized token '{1}' in parameter name '{2}' or strip it entirely if it represents any sort of hungarian notation.</Resolution>
+    <Resolution Name="ParameterOneLetter">In method {0}, consider providing a more meaningful name than the one-letter parameter name '{1}'.</Resolution>
+    <Resolution Name="Type">Correct the spelling of the unrecognized token '{0}' in type name '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
+    <Resolution Name="Default">The 'this' parameter (or 'Me' in VB) of {0} is never used. Mark the member as static (or Shared in VB) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
+   </Rule>
+   <Rule TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034">
+    <Resolution Name="Default">Do not nest type '{0}'. Alternatively, change its accessibility so that it is not externally visible.</Resolution>
+   </Rule>
+   <Rule TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211">
+    <Resolution Name="Default">Consider making '{0}' non-public or a constant.</Resolution>
+   </Rule>
+   <Rule TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225">
+    <Resolution Name="Default">Provide a method named '{0}' as a friendly alternate for operator {1}.</Resolution>
+   </Rule>
+   <Rule TypeName="OverrideEqualsAndOperatorEqualsOnValueTypes" Category="Microsoft.Performance" CheckId="CA1815">
+    <Resolution Name="Equals">'{0}' should override Equals.</Resolution>
+    <Resolution Name="op_Equality">'{0}' should override the equality (==) and inequality (!=) operators.</Resolution>
+   </Rule>
+   <Rule TypeName="ParameterNamesShouldMatchBaseDeclaration" Category="Microsoft.Naming" CheckId="CA1725">
+    <Resolution Name="Default">Change parameter name '{0}' of method {1} to '{2}' in order to match the identifier as it has been declared in {3}.</Resolution>
+   </Rule>
+   <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
+    <Resolution Name="Default">Parameter '{0}' of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+    <Resolution Name="Default">{0} makes a call to {1} that does not explicitly provide an IFormatProvider. This should be replaced with a call to {2}.</Resolution>
+   </Rule>
+   <Rule TypeName="StaticHolderTypesShouldBeSealed" Category="Microsoft.Design" CheckId="CA1052">
+    <Resolution Name="Default">Mark '{0}' as sealed.</Resolution>
+   </Rule>
+   <Rule TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062">
+    <Resolution Name="Default">Validate parameter {0} passed to externally visible method {1}.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
+</FxCopProject>
