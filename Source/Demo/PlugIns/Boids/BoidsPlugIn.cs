@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,11 +11,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Boids
+namespace Bnoerj.AI.Steering.Boids
 {
 	using ProximityDatabase = IProximityDatabase<IVehicle>;
 	using ProximityToken = ITokenForProximityDatabase<IVehicle>;
@@ -45,13 +46,15 @@ namespace Bnoerj.SharpSteer.Boids
 			for (int i = 0; i < 200; i++) AddBoidToFlock();
 
 			// initialize camera
-			Bnoerj.SharpSteer.Demo.Init3dCamera(Bnoerj.SharpSteer.Demo.SelectedVehicle);
-			Bnoerj.SharpSteer.Demo.Camera.Mode = Camera.CameraMode.Fixed;
-			Bnoerj.SharpSteer.Demo.Camera.FixedDistDistance = Bnoerj.SharpSteer.Demo.CameraTargetDistance;
-			Bnoerj.SharpSteer.Demo.Camera.FixedDistVOffset = 0;
-			Bnoerj.SharpSteer.Demo.Camera.LookdownDistance = 20;
-			Bnoerj.SharpSteer.Demo.Camera.AimLeadTime = 0.5f;
-			Bnoerj.SharpSteer.Demo.Camera.PovOffset.Set(0, 0.5f, -2);
+			Bnoerj.AI.Steering.Demo.Init3dCamera(Bnoerj.AI.Steering.Demo.SelectedVehicle);
+			Bnoerj.AI.Steering.Demo.Camera.Mode = Camera.CameraMode.Fixed;
+			Bnoerj.AI.Steering.Demo.Camera.FixedDistDistance = Bnoerj.AI.Steering.Demo.CameraTargetDistance;
+			Bnoerj.AI.Steering.Demo.Camera.FixedDistVOffset = 0;
+			Bnoerj.AI.Steering.Demo.Camera.LookdownDistance = 20;
+			Bnoerj.AI.Steering.Demo.Camera.AimLeadTime = 0.5f;
+			Bnoerj.AI.Steering.Demo.Camera.PovOffset.X =0;
+            Bnoerj.AI.Steering.Demo.Camera.PovOffset.Y = 0.5f;
+            Bnoerj.AI.Steering.Demo.Camera.PovOffset.Z = -2;
 		}
 
 		public override void Update(float currentTime, float elapsedTime)
@@ -98,7 +101,7 @@ namespace Bnoerj.SharpSteer.Boids
 			case 0: status.Append("steer back when outside"); break;
 			case 1: status.Append("wrap around (teleport)"); break;
 			}
-			Vec3 screenLocation = new Vec3(15, 50, 0);
+			Vector3 screenLocation = new Vector3(15, 50, 0);
 			Drawing.Draw2dTextAt2dLocation(status.ToString(), screenLocation, Color.LightGray);
 		}
 
@@ -137,11 +140,11 @@ namespace Bnoerj.SharpSteer.Boids
 			{
 			case 0:
 				{
-					Vec3 center = Vec3.Zero;
+					Vector3 center = Vector3.Zero;
 					const float div = 10.0f;
-					Vec3 divisions = new Vec3(div, div, div);
+					Vector3 divisions = new Vector3(div, div, div);
 					float diameter = Boid.worldRadius * 1.1f * 2;
-					Vec3 dimensions = new Vec3(diameter, diameter, diameter);
+					Vector3 dimensions = new Vector3(diameter, diameter, diameter);
 					pd = new LocalityQueryProximityDatabase<IVehicle>(center, dimensions, divisions);
 					break;
 				}

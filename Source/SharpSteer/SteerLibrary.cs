@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Bnoerj.AI.Steering
 {
@@ -40,7 +42,7 @@ namespace Bnoerj.AI.Steering
 		public float WanderSide;
 		public float WanderUp;
 
-		public Vec3 SteerForWander(float dt)
+        public Vector3 SteerForWander(float dt)
 		{
 			// random walk WanderSide and WanderUp between -1 and +1
 			float speed = 12 * dt; // maybe this (12) should be an argument?
@@ -52,44 +54,44 @@ namespace Bnoerj.AI.Steering
 		}
 
 		// Seek behavior
-		public Vec3 SteerForSeek(Vec3 target)
+        public Vector3 SteerForSeek(Vector3 target)
 		{
-			Vec3 desiredVelocity = target - this.Position;
+            Vector3 desiredVelocity = target - this.Position;
 			return desiredVelocity - this.Velocity;
 		}
 
 		// Flee behavior
-		public Vec3 SteerForFlee(Vec3 target)
+        public Vector3 SteerForFlee(Vector3 target)
 		{
-			Vec3 desiredVelocity = this.Position - target;
+            Vector3 desiredVelocity = this.Position - target;
 			return desiredVelocity - this.Velocity;
 		}
 
 		// xxx proposed, experimental new seek/flee [cwr 9-16-02]
-		public Vec3 SteerForFlee2(Vec3 target)
+        public Vector3 xxxSteerForFlee(Vector3 target)
 		{
-			//  const Vec3 offset = position - target;
-			Vec3 offset = this.Position - target;
-			Vec3 desiredVelocity = offset.TruncateLength(this.MaxSpeed); //xxxnew
+			//  const Vector3 offset = position - target;
+            Vector3 offset = this.Position - target;
+            Vector3 desiredVelocity = Vector3Helpers.TruncateLength(offset, this.MaxSpeed); //xxxnew
 			return desiredVelocity - this.Velocity;
 		}
 
-		public Vec3 SteerForSeek2(Vec3 target)
+        public Vector3 xxxSteerForSeek(Vector3 target)
 		{
-			//  const Vec3 offset = target - position;
-			Vec3 offset = target - this.Position;
-			Vec3 desiredVelocity = offset.TruncateLength(this.MaxSpeed); //xxxnew
+			//  const Vector3 offset = target - position;
+            Vector3 offset = target - this.Position;
+            Vector3 desiredVelocity = Vector3Helpers.TruncateLength(offset, this.MaxSpeed); //xxxnew
 			return desiredVelocity - this.Velocity;
 		}
 
 		// Path Following behaviors
-		public Vec3 SteerToFollowPath(int direction, float predictionTime, Pathway path)
+        public Vector3 SteerToFollowPath(int direction, float predictionTime, Pathway path)
 		{
 			// our goal will be offset from our path distance by this amount
 			float pathDistanceOffset = direction * predictionTime * this.Speed;
 
 			// predict our future position
-			Vec3 futurePosition = this.PredictFuturePosition(predictionTime);
+            Vector3 futurePosition = this.PredictFuturePosition(predictionTime);
 
 			// measure distance along path of our current and predicted positions
 			float nowPathDistance = path.MapPointToPathDistance(this.Position);
@@ -102,18 +104,18 @@ namespace Bnoerj.AI.Steering
 
 			// find the point on the path nearest the predicted future position
 			// XXX need to improve calling sequence, maybe change to return a
-			// XXX special path-defined object which includes two Vec3s and a 
+			// XXX special path-defined object which includes two Vector3s and a 
 			// XXX bool (onPath,tangent (ignored), withinPath)
-			Vec3 tangent;
+            Vector3 tangent;
 			float outside;
-			Vec3 onPath = path.MapPointToPath(futurePosition, out tangent, out outside);
+            Vector3 onPath = path.MapPointToPath(futurePosition, out tangent, out outside);
 
 			// no steering is required if (a) our future position is inside
 			// the path tube and (b) we are facing in the correct direction
 			if ((outside < 0) && rightway)
 			{
 				// all is well, return zero steering
-				return Vec3.Zero;
+				return Vector3.Zero;
 			}
 			else
 			{
@@ -121,7 +123,7 @@ namespace Bnoerj.AI.Steering
 				// by adding pathDistanceOffset to our current path position
 
 				float targetPathDistance = nowPathDistance + pathDistanceOffset;
-				Vec3 target = path.MapPathDistanceToPoint(targetPathDistance);
+                Vector3 target = path.MapPathDistanceToPoint(targetPathDistance);
 
 				AnnotatePathFollowing(futurePosition, onPath, target, outside);
 
@@ -130,21 +132,21 @@ namespace Bnoerj.AI.Steering
 			}
 		}
 
-		public Vec3 SteerToStayOnPath(float predictionTime, Pathway path)
+        public Vector3 SteerToStayOnPath(float predictionTime, Pathway path)
 		{
 			// predict our future position
-			Vec3 futurePosition = this.PredictFuturePosition(predictionTime);
+            Vector3 futurePosition = this.PredictFuturePosition(predictionTime);
 
 			// find the point on the path nearest the predicted future position
-			Vec3 tangent;
+            Vector3 tangent;
 			float outside;
-			Vec3 onPath = path.MapPointToPath(futurePosition, out tangent, out outside);
+            Vector3 onPath = path.MapPointToPath(futurePosition, out tangent, out outside);
 
 			if (outside < 0)
 			{
 				// our predicted future position was in the path,
 				// return zero steering.
-				return Vec3.Zero;
+				return Vector3.Zero;
 			}
 			else
 			{
@@ -164,33 +166,37 @@ namespace Bnoerj.AI.Steering
 		// of the obstacle.  Avoidance is required when (1) the obstacle
 		// intersects the this's current path, (2) it is in front of the
 		// this, and (3) is within minTimeToCollision seconds of travel at the
-		// this's current velocity.  Returns a zero vector value (Vec3::zero)
+		// this's current velocity.  Returns a zero vector value (Vector3::zero)
 		// when no avoidance is required.
-		public Vec3 SteerToAvoidObstacle(float minTimeToCollision, IObstacle obstacle)
+        public Vector3 SteerToAvoidObstacle(float minTimeToCollision, IObstacle obstacle)
 		{
-			Vec3 avoidance = obstacle.SteerToAvoid(this, minTimeToCollision);
+            Vector3 avoidance = obstacle.SteerToAvoid(this, minTimeToCollision);
 
 			// XXX more annotation modularity problems (assumes spherical obstacle)
-			if (avoidance != Vec3.Zero)
+			if (avoidance != Vector3.Zero)
 				AnnotateAvoidObstacle(minTimeToCollision * this.Speed);
 
 			return avoidance;
 		}
 
 		// avoids all obstacles in an ObstacleGroup
-		public Vec3 SteerToAvoidObstacles<Obstacle>(float minTimeToCollision, List<Obstacle> obstacles)
+        public Vector3 SteerToAvoidObstacles<Obstacle>(float minTimeToCollision, List<Obstacle> obstacles)
 			where Obstacle : IObstacle
 		{
-			Vec3 avoidance = Vec3.Zero;
+            Vector3 avoidance = Vector3.Zero;
 			PathIntersection nearest = new PathIntersection();
+			PathIntersection next = new PathIntersection();
 			float minDistanceToCollision = minTimeToCollision * this.Speed;
+
+			next.intersect = false;
+			nearest.intersect = false;
 
 			// test all obstacles for intersection with my forward axis,
 			// select the one whose point of intersection is nearest
 			foreach (Obstacle o in obstacles)
 			{
 				//FIXME: this should be a generic call on Obstacle, rather than this code which presumes the obstacle is spherical
-				PathIntersection next = FindNextIntersectionWithSphere(o as SphericalObstacle);
+				FindNextIntersectionWithSphere(o as SphericalObstacle, ref next);
 
 				if (nearest.intersect == false || (next.intersect != false && next.distance < nearest.distance))
 					nearest = next;
@@ -206,9 +212,9 @@ namespace Bnoerj.AI.Steering
 				// take the component of that which is lateral (perpendicular to my
 				// forward direction), set length to maxForce, add a bit of forward
 				// component (in capture the flag, we never want to slow down)
-				Vec3 offset = this.Position - nearest.obstacle.Center;
-				avoidance = offset.PerpendicularComponent(this.Forward);
-				avoidance = avoidance.Normalize();
+                Vector3 offset = this.Position - nearest.obstacle.Center;
+                avoidance = Vector3Helpers.PerpendicularComponent(offset, this.Forward);
+				avoidance.Normalize();
 				avoidance *= this.MaxForce;
 				avoidance += this.Forward * this.MaxForce * 0.75f;
 			}
@@ -222,12 +228,12 @@ namespace Bnoerj.AI.Steering
 		// (if any) other other this we would collide with first, then steers
 		// to avoid the site of that potential collision.  Returns a steering
 		// force vector, which is zero length if there is no impending collision.
-		public Vec3 SteerToAvoidNeighbors<TVehicle>(float minTimeToCollision, List<TVehicle> others)
+        public Vector3 SteerToAvoidNeighbors<TVehicle>(float minTimeToCollision, List<TVehicle> others)
 			where TVehicle : IVehicle
 		{
 			// first priority is to prevent immediate interpenetration
-			Vec3 separation = SteerToAvoidCloseNeighbors(0, others);
-			if (separation != Vec3.Zero) return separation;
+            Vector3 separation = SteerToAvoidCloseNeighbors(0, others);
+			if (separation != Vector3.Zero) return separation;
 
 			// otherwise, go on to consider potential future collisions
 			float steer = 0;
@@ -239,8 +245,8 @@ namespace Bnoerj.AI.Steering
 			float minTime = minTimeToCollision;
 
 			// xxx solely for annotation
-			Vec3 xxxThreatPositionAtNearestApproach = Vec3.Zero;
-			Vec3 xxxOurPositionAtNearestApproach = Vec3.Zero;
+            Vector3 xxxThreatPositionAtNearestApproach = Vector3.Zero;
+            Vector3 xxxOurPositionAtNearestApproach = Vector3.Zero;
 
 			// for each of the other vehicles, determine which (if any)
 			// pose the most immediate threat of collision.
@@ -275,15 +281,15 @@ namespace Bnoerj.AI.Steering
 			if (threat != null)
 			{
 				// parallel: +1, perpendicular: 0, anti-parallel: -1
-				float parallelness = this.Forward.Dot(threat.Forward);
+                float parallelness = Vector3.Dot(this.Forward, threat.Forward);
 				float angle = 0.707f;
 
 				if (parallelness < -angle)
 				{
 					// anti-parallel "head on" paths:
 					// steer away from future threat position
-					Vec3 offset = xxxThreatPositionAtNearestApproach - this.Position;
-					float sideDot = offset.Dot(this.Side);
+                    Vector3 offset = xxxThreatPositionAtNearestApproach - this.Position;
+                    float sideDot = Vector3.Dot(offset, this.Side);
 					steer = (sideDot > 0) ? -1.0f : 1.0f;
 				}
 				else
@@ -291,8 +297,8 @@ namespace Bnoerj.AI.Steering
 					if (parallelness > angle)
 					{
 						// parallel paths: steer away from threat
-						Vec3 offset = threat.Position - this.Position;
-						float sideDot = offset.Dot(this.Side);
+						Vector3 offset = threat.Position - this.Position;
+                        float sideDot = Vector3.Dot(offset, this.Side);
 						steer = (sideDot > 0) ? -1.0f : 1.0f;
 					}
 					else
@@ -301,13 +307,13 @@ namespace Bnoerj.AI.Steering
 						// (only the slower of the two does this)
 						if (threat.Speed <= this.Speed)
 						{
-							float sideDot = this.Side.Dot(threat.Velocity);
+                            float sideDot = Vector3.Dot(this.Side, threat.Velocity);
 							steer = (sideDot > 0) ? -1.0f : 1.0f;
 						}
 					}
 				}
 
-				AnnotateAvoidNeighbor(threat, steer, xxxOurPositionAtNearestApproach, xxxThreatPositionAtNearestApproach);
+				annotateAvoidNeighbor(threat, steer, xxxOurPositionAtNearestApproach, xxxThreatPositionAtNearestApproach);
 			}
 
 			return this.Side * steer;
@@ -319,9 +325,9 @@ namespace Bnoerj.AI.Steering
 		{
 			// imagine we are at the origin with no velocity,
 			// compute the relative velocity of the other this
-			Vec3 myVelocity = this.Velocity;
-			Vec3 otherVelocity = other.Velocity;
-			Vec3 relVelocity = otherVelocity - myVelocity;
+            Vector3 myVelocity = this.Velocity;
+            Vector3 otherVelocity = other.Velocity;
+            Vector3 relVelocity = otherVelocity - myVelocity;
 			float relSpeed = relVelocity.Length();
 
 			// for parallel paths, the vehicles will always be at the same distance,
@@ -334,12 +340,12 @@ namespace Bnoerj.AI.Steering
 			// the nearest approach.
 
 			// Take the unit tangent along the other this's path
-			Vec3 relTangent = relVelocity / relSpeed;
+            Vector3 relTangent = relVelocity / relSpeed;
 
 			// find distance from its path to origin (compute offset from
 			// other to us, find length of projection onto path)
-			Vec3 relPosition = this.Position - other.Position;
-			float projection = relTangent.Dot(relPosition);
+            Vector3 relPosition = this.Position - other.Position;
+            float projection = Vector3.Dot(relTangent, relPosition);
 
 			return projection / relSpeed;
 		}
@@ -349,22 +355,22 @@ namespace Bnoerj.AI.Steering
 		// between them
 		public float ComputeNearestApproachPositions(IVehicle other, float time)
 		{
-			Vec3 myTravel = this.Forward * this.Speed * time;
-			Vec3 otherTravel = other.Forward * other.Speed * time;
+            Vector3 myTravel = this.Forward * this.Speed * time;
+            Vector3 otherTravel = other.Forward * other.Speed * time;
 
-			Vec3 myFinal = this.Position + myTravel;
-			Vec3 otherFinal = other.Position + otherTravel;
+            Vector3 myFinal = this.Position + myTravel;
+            Vector3 otherFinal = other.Position + otherTravel;
 
 			// xxx for annotation
 			ourPositionAtNearestApproach = myFinal;
 			hisPositionAtNearestApproach = otherFinal;
 
-			return Vec3.Distance(myFinal, otherFinal);
+			return Vector3.Distance(myFinal, otherFinal);
 		}
 
 		/// XXX globals only for the sake of graphical annotation
-		Vec3 hisPositionAtNearestApproach;
-		Vec3 ourPositionAtNearestApproach;
+        Vector3 hisPositionAtNearestApproach;
+        Vector3 ourPositionAtNearestApproach;
 
 		// ------------------------------------------------------------------------
 		// avoidance of "close neighbors" -- used only by steerToAvoidNeighbors
@@ -372,7 +378,7 @@ namespace Bnoerj.AI.Steering
 		// XXX  Does a hard steer away from any other agent who comes withing a
 		// XXX  critical distance.  Ideally this should be replaced with a call
 		// XXX  to steerForSeparation.
-		public Vec3 SteerToAvoidCloseNeighbors<TVehicle>(float minSeparationDistance, List<TVehicle> others)
+        public Vector3 SteerToAvoidCloseNeighbors<TVehicle>(float minSeparationDistance, List<TVehicle> others)
 			where TVehicle : IVehicle
 		{
 			// for each of the other vehicles...
@@ -382,19 +388,19 @@ namespace Bnoerj.AI.Steering
 				{
 					float sumOfRadii = this.Radius + other.Radius;
 					float minCenterToCenter = minSeparationDistance + sumOfRadii;
-					Vec3 offset = other.Position - this.Position;
+					Vector3 offset = other.Position - this.Position;
 					float currentDistance = offset.Length();
 
 					if (currentDistance < minCenterToCenter)
 					{
 						AnnotateAvoidCloseNeighbor(other, minSeparationDistance);
-						return (-offset).PerpendicularComponent(this.Forward);
+                        return Vector3Helpers.PerpendicularComponent(-offset, this.Forward);
 					}
 				}
 			}
 
 			// otherwise return zero
-			return Vec3.Zero;
+			return Vector3.Zero;
 		}
 
 		// ------------------------------------------------------------------------
@@ -407,7 +413,7 @@ namespace Bnoerj.AI.Steering
 			}
 			else
 			{
-				Vec3 offset = other.Position - this.Position;
+                Vector3 offset = other.Position - this.Position;
 				float distanceSquared = offset.LengthSquared();
 
 				// definitely in neighborhood if inside minDistance sphere
@@ -425,8 +431,8 @@ namespace Bnoerj.AI.Steering
 					else
 					{
 						// otherwise, test angular offset from forward axis
-						Vec3 unitOffset = offset / (float)Math.Sqrt(distanceSquared);
-						float forwardness = this.Forward.Dot(unitOffset);
+                        Vector3 unitOffset = offset / (float)Math.Sqrt(distanceSquared);
+                        float forwardness = Vector3.Dot(this.Forward, unitOffset);
 						return forwardness > cosMaxAngle;
 					}
 				}
@@ -435,10 +441,10 @@ namespace Bnoerj.AI.Steering
 
 		// ------------------------------------------------------------------------
 		// Separation behavior -- determines the direction away from nearby boids
-		public Vec3 SteerForSeparation(float maxDistance, float cosMaxAngle, List<IVehicle> flock)
+        public Vector3 SteerForSeparation(float maxDistance, float cosMaxAngle, List<IVehicle> flock)
 		{
 			// steering accumulator and count of neighbors, both initially zero
-			Vec3 steering = Vec3.Zero;
+            Vector3 steering = Vector3.Zero;
 			int neighbors = 0;
 
 			// for each of the other vehicles...
@@ -450,8 +456,8 @@ namespace Bnoerj.AI.Steering
 					// add in steering contribution
 					// (opposite of the offset direction, divided once by distance
 					// to normalize, divided another time to get 1/d falloff)
-					Vec3 offset = other.Position - this.Position;
-					float distanceSquared = offset.Dot(offset);
+					Vector3 offset = other.Position - this.Position;
+                    float distanceSquared = Vector3.Dot(offset, offset);
 					steering += (offset / -distanceSquared);
 
 					// count neighbors
@@ -460,17 +466,21 @@ namespace Bnoerj.AI.Steering
 			}
 
 			// divide by neighbors, then normalize to pure direction
-			if (neighbors > 0) steering = (steering / (float)neighbors).Normalize();
+            if (neighbors > 0)
+            {
+                steering = (steering / (float)neighbors);
+                steering.Normalize();
+            }
 
 			return steering;
 		}
 
 		// ------------------------------------------------------------------------
 		// Alignment behavior
-		public Vec3 SteerForAlignment(float maxDistance, float cosMaxAngle, List<IVehicle> flock)
+        public Vector3 SteerForAlignment(float maxDistance, float cosMaxAngle, List<IVehicle> flock)
 		{
 			// steering accumulator and count of neighbors, both initially zero
-			Vec3 steering = Vec3.Zero;
+			Vector3 steering = Vector3.Zero;
 			int neighbors = 0;
 
 			// for each of the other vehicles...
@@ -489,17 +499,21 @@ namespace Bnoerj.AI.Steering
 
 			// divide by neighbors, subtract off current heading to get error-
 			// correcting direction, then normalize to pure direction
-			if (neighbors > 0) steering = ((steering / (float)neighbors) - this.Forward).Normalize();
+            if (neighbors > 0)
+            {
+                steering = ((steering / (float)neighbors) - this.Forward);
+                steering.Normalize();
+            }
 
 			return steering;
 		}
 
 		// ------------------------------------------------------------------------
 		// Cohesion behavior
-		public Vec3 SteerForCohesion(float maxDistance, float cosMaxAngle, List<IVehicle> flock)
+        public Vector3 SteerForCohesion(float maxDistance, float cosMaxAngle, List<IVehicle> flock)
 		{
 			// steering accumulator and count of neighbors, both initially zero
-			Vec3 steering = Vec3.Zero;
+			Vector3 steering = Vector3.Zero;
 			int neighbors = 0;
 
 			// for each of the other vehicles...
@@ -518,32 +532,36 @@ namespace Bnoerj.AI.Steering
 
 			// divide by neighbors, subtract off current position to get error-
 			// correcting direction, then normalize to pure direction
-			if (neighbors > 0) steering = ((steering / (float)neighbors) - this.Position).Normalize();
+			if (neighbors > 0)
+            {
+                steering = ((steering / (float)neighbors) - this.Position);
+                steering.Normalize();
+            }
 
 			return steering;
 		}
 
 		// ------------------------------------------------------------------------
 		// pursuit of another this (& version with ceiling on prediction time)
-		public Vec3 SteerForPursuit(IVehicle quarry)
+        public Vector3 SteerForPursuit(IVehicle quarry)
 		{
 			return SteerForPursuit(quarry, float.MaxValue);
 		}
 
-		public Vec3 SteerForPursuit(IVehicle quarry, float maxPredictionTime)
+        public Vector3 SteerForPursuit(IVehicle quarry, float maxPredictionTime)
 		{
 			// offset from this to quarry, that distance, unit vector toward quarry
-			Vec3 offset = quarry.Position - this.Position;
+            Vector3 offset = quarry.Position - this.Position;
 			float distance = offset.Length();
-			Vec3 unitOffset = offset / distance;
+            Vector3 unitOffset = offset / distance;
 
 			// how parallel are the paths of "this" and the quarry
 			// (1 means parallel, 0 is pependicular, -1 is anti-parallel)
-			float parallelness = this.Forward.Dot(quarry.Forward);
+            float parallelness = Vector3.Dot(this.Forward, quarry.Forward);
 
 			// how "forward" is the direction to the quarry
 			// (1 means dead ahead, 0 is directly to the side, -1 is straight back)
-			float forwardness = this.Forward.Dot(unitOffset);
+            float forwardness = Vector3.Dot(this.Forward, unitOffset);
 
 			float directTravelTime = distance / this.Speed;
 			int f = Utilities.IntervalComparison(forwardness, -0.707f, 0.707f);
@@ -617,7 +635,7 @@ namespace Bnoerj.AI.Steering
 			float etl = (et > maxPredictionTime) ? maxPredictionTime : et;
 
 			// estimated position of quarry at intercept
-			Vec3 target = quarry.PredictFuturePosition(etl);
+			Vector3 target = quarry.PredictFuturePosition(etl);
 
 			// annotation
 			AnnotationLine(this.Position, target, GaudyPursuitAnnotation ? color : Color.DarkGray);
@@ -630,16 +648,16 @@ namespace Bnoerj.AI.Steering
 
 		// ------------------------------------------------------------------------
 		// evasion of another this
-		public Vec3 SteerForEvasion(IVehicle menace, float maxPredictionTime)
+        public Vector3 SteerForEvasion(IVehicle menace, float maxPredictionTime)
 		{
 			// offset from this to menace, that distance, unit vector toward menace
-			Vec3 offset = menace.Position - this.Position;
+			Vector3 offset = menace.Position - this.Position;
 			float distance = offset.Length();
 
 			float roughTime = distance / menace.Speed;
 			float predictionTime = ((roughTime > maxPredictionTime) ? maxPredictionTime : roughTime);
 
-			Vec3 target = menace.PredictFuturePosition(predictionTime);
+			Vector3 target = menace.PredictFuturePosition(predictionTime);
 
 			return SteerForFlee(target);
 		}
@@ -647,7 +665,7 @@ namespace Bnoerj.AI.Steering
 		// ------------------------------------------------------------------------
 		// tries to maintain a given speed, returns a maxForce-clipped steering
 		// force along the forward/backward axis
-		public Vec3 SteerForTargetSpeed(float targetSpeed)
+        public Vector3 SteerForTargetSpeed(float targetSpeed)
 		{
 			float mf = this.MaxForce;
 			float speedError = targetSpeed - this.Speed;
@@ -660,34 +678,37 @@ namespace Bnoerj.AI.Steering
 		// XXX ("utility this"?)
 
 		// xxx cwr experimental 9-9-02 -- names OK?
-		public bool IsAhead(Vec3 target)
+        public bool IsAhead(Vector3 target)
 		{
 			return IsAhead(target, 0.707f);
 		}
-		public bool IsAside(Vec3 target)
+        public bool IsAside(Vector3 target)
 		{
 			return IsAside(target, 0.707f);
 		}
-		public bool IsBehind(Vec3 target)
+        public bool IsBehind(Vector3 target)
 		{
 			return IsBehind(target, -0.707f);
 		}
 
-		public bool IsAhead(Vec3 target, float cosThreshold)
+        public bool IsAhead(Vector3 target, float cosThreshold)
 		{
-			Vec3 targetDirection = (target - this.Position).Normalize();
-			return this.Forward.Dot(targetDirection) > cosThreshold;
+			Vector3 targetDirection = (target - this.Position);
+            targetDirection.Normalize();
+            return Vector3.Dot(this.Forward, targetDirection) > cosThreshold;
 		}
-		public bool IsAside(Vec3 target, float cosThreshold)
+        public bool IsAside(Vector3 target, float cosThreshold)
 		{
-			Vec3 targetDirection = (target - this.Position).Normalize();
-			float dp = this.Forward.Dot(targetDirection);
+			Vector3 targetDirection = (target - this.Position);
+            targetDirection.Normalize();
+            float dp = Vector3.Dot(this.Forward, targetDirection);
 			return (dp < cosThreshold) && (dp > -cosThreshold);
 		}
-		public bool IsBehind(Vec3 target, float cosThreshold)
+        public bool IsBehind(Vector3 target, float cosThreshold)
 		{
-			Vec3 targetDirection = (target - this.Position).Normalize();
-			return this.Forward.Dot(targetDirection) < cosThreshold;
+			Vector3 targetDirection = (target - this.Position);
+            targetDirection.Normalize();
+            return Vector3.Dot(this.Forward, targetDirection) < cosThreshold;
 		}
 
 		// xxx cwr 9-6-02 temporary to support old code
@@ -695,13 +716,13 @@ namespace Bnoerj.AI.Steering
 		{
 			public bool intersect;
 			public float distance;
-			public Vec3 surfacePoint;
-			public Vec3 surfaceNormal;
+            public Vector3 surfacePoint;
+            public Vector3 surfaceNormal;
 			public SphericalObstacle obstacle;
 		}
 
 		// xxx experiment cwr 9-6-02
-		protected PathIntersection FindNextIntersectionWithSphere(SphericalObstacle obs)
+		protected void FindNextIntersectionWithSphere(SphericalObstacle obs, ref PathIntersection intersection)
 		{
 			// xxx"SphericalObstacle& obs" should be "const SphericalObstacle&
 			// obs" but then it won't let me store a pointer to in inside the
@@ -712,10 +733,9 @@ namespace Bnoerj.AI.Steering
 			//   http://www.swin.edu.au/astronomy/pbourke/geometry/sphereline/
 
 			float b, c, d, p, q, s;
-			Vec3 lc;
+			Vector3 lc;
 
 			// initialize pathIntersection object
-			PathIntersection intersection = new PathIntersection();
 			intersection.intersect = false;
 			intersection.obstacle = obs;
 
@@ -729,8 +749,7 @@ namespace Bnoerj.AI.Steering
 			d = (b * b) - (4 * c);
 
 			// when the path does not intersect the sphere
-			if (d < 0)
-				return intersection;
+			if (d < 0) return;
 
 			// otherwise, the path intersects the sphere in two points with
 			// parametric coordinates of "p" and "q".
@@ -740,8 +759,7 @@ namespace Bnoerj.AI.Steering
 			q = (-b - s) / 2;
 
 			// both intersections are behind us, so no potential collisions
-			if ((p < 0) && (q < 0))
-				return intersection;
+			if ((p < 0) && (q < 0)) return;
 
 			// at least one intersection is in front of us
 			intersection.intersect = true;
@@ -751,7 +769,6 @@ namespace Bnoerj.AI.Steering
 				((p < q) ? p : q) :
 				// otherwise only one intersections is in front, select it
 				((p > 0) ? p : q);
-			return intersection;
 		}
 
 		// ------------------------------------------------ graphical annotation
@@ -764,7 +781,7 @@ namespace Bnoerj.AI.Steering
 
 		// called when steerToFollowPath decides steering is required
 		// (default action is to do nothing, layered classes can overload it)
-		public virtual void AnnotatePathFollowing(Vec3 future, Vec3 onPath, Vec3 target, float outside)
+        public virtual void AnnotatePathFollowing(Vector3 future, Vector3 onPath, Vector3 target, float outside)
 		{
 		}
 
@@ -776,7 +793,7 @@ namespace Bnoerj.AI.Steering
 
 		// called when steerToAvoidNeighbors decides steering is required
 		// (default action is to do nothing, layered classes can overload it)
-		public virtual void AnnotateAvoidNeighbor(IVehicle threat, float steer, Vec3 ourFuture, Vec3 threatFuture)
+        public virtual void annotateAvoidNeighbor(IVehicle threat, float steer, Vector3 ourFuture, Vector3 threatFuture)
 		{
 		}
 	}

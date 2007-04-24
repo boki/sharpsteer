@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -109,13 +110,13 @@ namespace Bnoerj.AI.Steering
 			}
 
 			// the client obj calls this each time its position changes
-			public void UpdateForNewPosition(Vec3 p)
+            public void UpdateForNewPosition(Vector3 p)
 			{
 				lq.UpdateForNewLocation(ref proxy, p);
 			}
 
 			// find all neighbors within the given sphere (as center and radius)
-			public void FindNeighbors(Vec3 center, float radius, ref List<ContentType> results)
+            public void FindNeighbors(Vector3 center, float radius, ref List<ContentType> results)
 			{
 				lq.MapOverAllObjectsInLocality(center, radius, perNeighborCallBackFunction, results);
 			}
@@ -133,10 +134,10 @@ namespace Bnoerj.AI.Steering
 		LocalityQueryDB lq;
 
 		// constructor
-		public LocalityQueryProximityDatabase(Vec3 center, Vec3 dimensions, Vec3 divisions)
+        public LocalityQueryProximityDatabase(Vector3 center, Vector3 dimensions, Vector3 divisions)
 		{
-			Vec3 halfsize = dimensions * 0.5f;
-			Vec3 origin = center - halfsize;
+			Vector3 halfsize = dimensions * 0.5f;
+			Vector3 origin = center - halfsize;
 
 			lq = new LocalityQueryDB(origin, dimensions, (int)Math.Round(divisions.X), (int)Math.Round(divisions.Y), (int)Math.Round(divisions.Z));
 		}
@@ -153,12 +154,12 @@ namespace Bnoerj.AI.Steering
 			get
 			{
 				int count = 0;
-				lq.MapOverAllObjects(CounterCallbackFunction, count);
+				lq.MapOverAllObjects(CounterCallBackFunction, count);
 				return count;
 			}
 		}
 
-		static void CounterCallbackFunction(Object client, float distanceSquared, Object clientQueryState)
+		public static void CounterCallBackFunction(Object clientObject, float distanceSquared, Object clientQueryState)
 		{
 			int counter = (int)clientQueryState;
 			counter++;

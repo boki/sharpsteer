@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,10 +10,10 @@
 
 using System;
 using System.Collections.Generic;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Ctf
+namespace Bnoerj.AI.Steering.Ctf
 {
 	using SOG = List<SphericalObstacle>;  // spherical obstacle group
 
@@ -54,12 +55,12 @@ namespace Bnoerj.SharpSteer.Ctf
 		// xxx Pedestrian.cpp
 		public override void AnnotateAvoidObstacle(float minDistanceToCollision)
 		{
-			Vec3 boxSide = Side * Radius;
-			Vec3 boxFront = Forward * minDistanceToCollision;
-			Vec3 FR = Position + boxFront - boxSide;
-			Vec3 FL = Position + boxFront + boxSide;
-			Vec3 BR = Position - boxSide;
-			Vec3 BL = Position + boxSide;
+			Vector3 boxSide = Side * Radius;
+			Vector3 boxFront = Forward * minDistanceToCollision;
+			Vector3 FR = Position + boxFront - boxSide;
+			Vector3 FL = Position + boxFront + boxSide;
+			Vector3 BR = Position - boxSide;
+			Vector3 BL = Position + boxSide;
 			AnnotationLine(FR, FL, Color.White);
 			AnnotationLine(FL, BL, Color.White);
 			AnnotationLine(BL, BR, Color.White);
@@ -68,7 +69,7 @@ namespace Bnoerj.SharpSteer.Ctf
 
 		public void DrawHomeBase()
 		{
-			Vec3 up = new Vec3(0, 0.01f, 0);
+			Vector3 up = new Vector3(0, 0.01f, 0);
 			Color atColor = new Color((byte)(255.0f * 0.3f), (byte)(255.0f * 0.3f), (byte)(255.0f * 0.5f));
 			Color noColor = Color.Gray;
 			bool reached = Globals.CtfSeeker.State == CtfSeeker.SeekerState.AtGoal;
@@ -82,7 +83,7 @@ namespace Bnoerj.SharpSteer.Ctf
 			// randomize position on a ring between inner and outer radii
 			// centered around the home base
 			float rRadius = Utilities.Random(Globals.MinStartRadius, Globals.MaxStartRadius);
-			Vec3 randomOnRing = Vec3.RandomUnitVectorOnXZPlane() * rRadius;
+			Vector3 randomOnRing = Vector3Helpers.RandomUnitVectorOnXZPlane() * rRadius;
 			Position = (Globals.HomeBaseCenter + randomOnRing);
 
 			// are we are too close to an obstacle?
@@ -130,14 +131,15 @@ namespace Bnoerj.SharpSteer.Ctf
 				// pick a random center and radius,
 				// loop until no overlap with other obstacles and the home base
 				float r;
-				Vec3 c;
+				Vector3 c;
 				float minClearance;
 				float requiredClearance = Globals.Seeker.Radius * 4; // 2 x diameter
 				do
 				{
 					r = Utilities.Random(1.5f, 4);
-					c = Vec3.RandomVectorOnUnitRadiusXZDisk() * Globals.MaxStartRadius * 1.1f;
+					c = Vector3Helpers.RandomVectorOnUnitRadiusXZDisk() * Globals.MaxStartRadius * 1.1f;
 					minClearance = float.MaxValue;
+					System.Diagnostics.Debug.WriteLine(String.Format("[{0}, {1}, {2}]", c.X, c.Y, c.Z));
 					for (int so = 0; so < AllObstacles.Count; so++)
 					{
 						minClearance = TestOneObstacleOverlap(minClearance, r, AllObstacles[so].Radius, c, AllObstacles[so].Center);
@@ -162,10 +164,10 @@ namespace Bnoerj.SharpSteer.Ctf
 			}
 		}
 
-		public float MinDistanceToObstacle(Vec3 point)
+		public float MinDistanceToObstacle(Vector3 point)
 		{
 			float r = 0;
-			Vec3 c = point;
+			Vector3 c = point;
 			float minClearance = float.MaxValue;
 			for (int so = 0; so < AllObstacles.Count; so++)
 			{
@@ -174,9 +176,9 @@ namespace Bnoerj.SharpSteer.Ctf
 			return minClearance;
 		}
 
-		static float TestOneObstacleOverlap(float minClearance, float r, float radius, Vec3 c, Vec3 center)
+		static float TestOneObstacleOverlap(float minClearance, float r, float radius, Vector3 c, Vector3 center)
 		{
-			float d = Vec3.Distance(c, center);
+			float d = Vector3.Distance(c, center);
 			float clearance = d - (r + radius);
 			if (minClearance > clearance) minClearance = clearance;
 			return minClearance;

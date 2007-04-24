@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -16,9 +17,6 @@ namespace Bnoerj.AI.Steering
 {
 	public class Utilities
 	{
-		Utilities()
-		{ }
-
 		static Random rng = new Random();
 
 		public static float Interpolate(float alpha, float x0, float x1)
@@ -26,7 +24,7 @@ namespace Bnoerj.AI.Steering
 			return x0 + ((x1 - x0) * alpha);
 		}
 
-		public static Vec3 Interpolate(float alpha, Vec3 x0, Vec3 x1)
+        public static Vector3 Interpolate(float alpha, Vector3 x0, Vector3 x1)
 		{
 			return x0 + ((x1 - x0) * alpha);
 		}
@@ -54,21 +52,21 @@ namespace Bnoerj.AI.Steering
 		/// <param name="min"></param>
 		/// <param name="max"></param>
 		/// <returns>Returns x if it is between the bounds, otherwise returns the nearer bound.</returns>
-		public static float Clip(float value, float min, float max)
+		public static float Clip(float x, float min, float max)
 		{
-			if (value < min) return min;
-			if (value > max) return max;
-			return value;
+			if (x < min) return min;
+			if (x > max) return max;
+			return x;
 		}
 
 		// ----------------------------------------------------------------------------
 		// remap a value specified relative to a pair of bounding values
 		// to the corresponding value relative to another pair of bounds.
 		// Inspired by (dyna:remap-interval y y0 y1 z0 z1)
-		public static float RemapInterval(float value, float in0, float in1, float out0, float out1)
+		public static float RemapInterval(float x, float in0, float in1, float out0, float out1)
 		{
 			// uninterpolate: what is x relative to the interval in0:in1?
-			float relative = (value - in0) / (in1 - in0);
+			float relative = (x - in0) / (in1 - in0);
 
 			// now interpolate between output interval based on relative x
 			return Interpolate(relative, out0, out1);
@@ -76,10 +74,10 @@ namespace Bnoerj.AI.Steering
 
 		// Like remapInterval but the result is clipped to remain between
 		// out0 and out1
-		public static float RemapIntervalClip(float value, float in0, float in1, float out0, float out1)
+		public static float RemapIntervalClip(float x, float in0, float in1, float out0, float out1)
 		{
 			// uninterpolate: what is x relative to the interval in0:in1?
-			float relative = (value - in0) / (in1 - in0);
+			float relative = (x - in0) / (in1 - in0);
 
 			// now interpolate between output interval based on relative x
 			return Interpolate(Clip(relative, 0, 1), out0, out1);
@@ -90,24 +88,24 @@ namespace Bnoerj.AI.Steering
 		//     returns -1 when below the lower bound
 		//     returns  0 when between the bounds (inside the interval)
 		//     returns +1 when above the upper bound
-		public static int IntervalComparison(float value, float lowerBound, float upperBound)
+		public static int IntervalComparison(float x, float lowerBound, float upperBound)
 		{
-			if (value < lowerBound) return -1;
-			if (value > upperBound) return +1;
+			if (x < lowerBound) return -1;
+			if (x > upperBound) return +1;
 			return 0;
 		}
 
-		public static float ScalarRandomWalk(float initial, float walkSpeed, float min, float max)
+		public static float ScalarRandomWalk(float initial, float walkspeed, float min, float max)
 		{
-			float next = initial + (((Random() * 2) - 1) * walkSpeed);
+			float next = initial + (((Random() * 2) - 1) * walkspeed);
 			if (next < min) return min;
 			if (next > max) return max;
 			return next;
 		}
 
-		public static float Square(float value)
+		public static float Square(float x)
 		{
-			return value * value;
+			return x * x;
 		}
 
 		/// <summary>
@@ -132,7 +130,7 @@ namespace Bnoerj.AI.Steering
 			smoothedAccumulator = Interpolate(Clip(smoothRate, 0, 1), smoothedAccumulator, newValue);
 		}
 
-		public static void BlendIntoAccumulator(float smoothRate, Vec3 newValue, ref Vec3 smoothedAccumulator)
+		public static void BlendIntoAccumulator(float smoothRate, Vector3 newValue, ref Vector3 smoothedAccumulator)
 		{
 			smoothedAccumulator = Interpolate(Clip(smoothRate, 0, 1), smoothedAccumulator, newValue);
 		}

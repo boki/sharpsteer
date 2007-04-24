@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,30 +11,30 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bnoerj.SharpSteer.Soccer
+namespace Bnoerj.AI.Steering.Soccer
 {
 	public class AABBox
 	{
-		public AABBox(Vec3 min, Vec3 max)
+		public AABBox(Vector3 min, Vector3 max)
 		{
 			m_min = min;
 			m_max = max;
 		}
-		public bool IsInsideX(Vec3 p)
+		public bool IsInsideX(Vector3 p)
 		{
 			return !(p.X < m_min.X || p.X > m_max.X);
 		}
-		public bool IsInsideZ(Vec3 p)
+		public bool IsInsideZ(Vector3 p)
 		{
 			return !(p.Z < m_min.Z || p.Z > m_max.Z);
 		}
 		public void Draw()
 		{
-			Vec3 b = new Vec3(m_min.X, 0, m_max.Z);
-			Vec3 c = new Vec3(m_max.X, 0, m_min.Z);
+			Vector3 b = new Vector3(m_min.X, 0, m_max.Z);
+			Vector3 c = new Vector3(m_max.X, 0, m_min.Z);
 			Color color = new Color(255, 255, 0);
 			Drawing.DrawLineAlpha(m_min, b, color, 1.0f);
 			Drawing.DrawLineAlpha(b, m_max, color, 1.0f);
@@ -41,7 +42,7 @@ namespace Bnoerj.SharpSteer.Soccer
 			Drawing.DrawLineAlpha(c, m_min, color, 1.0f);
 		}
 
-		Vec3 m_min;
-		Vec3 m_max;
+		Vector3 m_min;
+		Vector3 m_max;
 	}
 }

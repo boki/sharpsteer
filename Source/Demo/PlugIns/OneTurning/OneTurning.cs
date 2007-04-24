@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,10 +11,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.OneTurning
+namespace Bnoerj.AI.Steering.OneTurning
 {
 	public class OneTurning : SimpleVehicle
 	{
@@ -36,7 +37,7 @@ namespace Bnoerj.SharpSteer.OneTurning
 		// per frame simulation update
 		public void Update(float currentTime, float elapsedTime)
 		{
-			ApplySteeringForce(new Vec3(-2, 0, -3), elapsedTime);
+			ApplySteeringForce(new Vector3(-2, 0, -3), elapsedTime);
 			AnnotationVelocityAcceleration();
 			RecordTrailVertex(currentTime, Position);
 		}

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bnoerj.AI.Steering</RootNamespace>
-    <AssemblyName>Bnoerj.SharpSteer.360</AssemblyName>
+    <RootNamespace>Bnoerj.AI.SharpSteer</RootNamespace>
+    <AssemblyName>Bnoerj.AI.SharpSteer.360</AssemblyName>
     <XnaFrameworkVersion>v1.0</XnaFrameworkVersion>
     <XnaPlatform>Xbox 360</XnaPlatform>
     <XNAGlobalContentPipelineAssemblies>Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</XNAGlobalContentPipelineAssemblies>
@@ -140,9 +140,9 @@
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>Utilities</Name>
     </Compile>
-    <Compile Include="Vec3.cs">
+    <Compile Include="Vector3Helpers.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
-      <Name>Vec3</Name>
+      <Name>Vector3Helpers</Name>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

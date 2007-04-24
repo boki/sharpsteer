@@ -1,26 +1,17 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if !XBOX360
-using System.Security.Permissions;
-#endif
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpSteer")]
 [assembly: AssemblyProduct("SharpSteer")]
-[assembly: AssemblyDescription("Steering behaviors for autonomous characters")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright © 2007 Björn Graf")]
+[assembly: AssemblyCopyright("Copyright © 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
-[assembly: CLSCompliant(true)]
-#if !XBOX360
-//FIXME: [assembly: SecurityPermission(SecurityAction.RequestMinimum, Assertion = true, Execution = true, Unrestricted = true)]
-#endif
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  

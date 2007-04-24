@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,10 +10,10 @@
 
 using System;
 using System.Collections.Generic;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Ctf
+namespace Bnoerj.AI.Steering.Ctf
 {
 	public class CtfEnemy : CtfBase
 	{
@@ -33,19 +34,19 @@ namespace Bnoerj.SharpSteer.Ctf
 		public void Update(float currentTime, float elapsedTime)
 		{
 			// determine upper bound for pursuit prediction time
-			float seekerToGoalDist = Vec3.Distance(Globals.HomeBaseCenter, Globals.Seeker.Position);
+			float seekerToGoalDist = Vector3.Distance(Globals.HomeBaseCenter, Globals.Seeker.Position);
 			float adjustedDistance = seekerToGoalDist - Radius - Globals.HomeBaseRadius;
 			float seekerToGoalTime = ((adjustedDistance < 0) ? 0 : (adjustedDistance / Globals.Seeker.Speed));
 			float maxPredictionTime = seekerToGoalTime * 0.9f;
 
 			// determine steering (pursuit, obstacle avoidance, or braking)
-			Vec3 steer = Vec3.Zero;
+			Vector3 steer = Vector3.Zero;
 			if (Globals.Seeker.State == SeekerState.Running)
 			{
-				Vec3 avoidance = SteerToAvoidObstacles(Globals.AvoidancePredictTimeMin, AllObstacles);
+				Vector3 avoidance = SteerToAvoidObstacles(Globals.AvoidancePredictTimeMin, AllObstacles);
 
 				// saved for annotation
-				Avoiding = (avoidance == Vec3.Zero);
+				Avoiding = (avoidance == Vector3.Zero);
 
 				if (Avoiding)
 					steer = SteerForPursuit(Globals.Seeker, maxPredictionTime);
@@ -63,7 +64,7 @@ namespace Bnoerj.SharpSteer.Ctf
 			RecordTrailVertex(currentTime, Position);
 
 			// detect and record interceptions ("tags") of seeker
-			float seekerToMeDist = Vec3.Distance(Position, Globals.Seeker.Position);
+			float seekerToMeDist = Vector3.Distance(Position, Globals.Seeker.Position);
 			float sumOfRadii = Radius + Globals.Seeker.Radius;
 			if (seekerToMeDist < sumOfRadii)
 			{

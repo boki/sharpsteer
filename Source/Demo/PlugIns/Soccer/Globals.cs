@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,23 +10,23 @@
 
 using System;
 using System.Collections.Generic;
-using Bnoerj.AI.Steering;
 using System.Text;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Soccer
+namespace Bnoerj.AI.Steering.Soccer
 {
 	class Globals
 	{
-		public static Vec3[] PlayerPosition = new Vec3[] {
-			new Vec3(4,0,0),
-			new Vec3(7,0,-5),
-			new Vec3(7,0,5),
-			new Vec3(10,0,-3),
-			new Vec3(10,0,3),
-			new Vec3(15,0, -8),
-			new Vec3(15,0,0),
-			new Vec3(15,0,8),
-			new Vec3(4,0,0)
+		public static Vector3[] PlayerPosition = new Vector3[] {
+			new Vector3(4,0,0),
+			new Vector3(7,0,-5),
+			new Vector3(7,0,5),
+			new Vector3(10,0,-3),
+			new Vector3(10,0,3),
+			new Vector3(15,0, -8),
+			new Vector3(15,0,0),
+			new Vector3(15,0,8),
+			new Vector3(4,0,0)
 		};
 	}
 }

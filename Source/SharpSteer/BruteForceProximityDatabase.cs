@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Bnoerj.AI.Steering
 {
@@ -20,7 +22,7 @@ namespace Bnoerj.AI.Steering
 		{
 			BruteForceProximityDatabase<ContentType> bfpd;
 			ContentType obj;
-			Vec3 position;
+            Vector3 position;
 
 			// constructor
 			public TokenType(ContentType parentObject, BruteForceProximityDatabase<ContentType> pd)
@@ -51,19 +53,19 @@ namespace Bnoerj.AI.Steering
 			}
 
 			// the client obj calls this each time its position changes
-			public void UpdateForNewPosition(Vec3 newPosition)
+            public void UpdateForNewPosition(Vector3 newPosition)
 			{
 				position = newPosition;
 			}
 
 			// find all neighbors within the given sphere (as center and radius)
-			public void FindNeighbors(Vec3 center, float radius, ref List<ContentType> results)
+            public void FindNeighbors(Vector3 center, float radius, ref List<ContentType> results)
 			{
 				// loop over all tokens
 				float r2 = radius * radius;
 				for (int i = 0; i < bfpd.group.Count; i++)
 				{
-					Vec3 offset = center - bfpd.group[i].position;
+                    Vector3 offset = center - bfpd.group[i].position;
 					float d2 = offset.LengthSquared();
 
 					// push onto result vector when within given radius

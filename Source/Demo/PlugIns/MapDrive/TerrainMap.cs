@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,14 +11,14 @@
 using System;
 using System.Collections.Specialized;
 using System.Collections.Generic;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.MapDrive
+namespace Bnoerj.AI.Steering.MapDrive
 {
 	public class TerrainMap
 	{
-		public TerrainMap(Vec3 c, float x, float z, int r)
+		public TerrainMap(Vector3 c, float x, float z, int r)
 		{
 			center = c;
 			xSize = x;
@@ -52,10 +53,11 @@ namespace Bnoerj.SharpSteer.MapDrive
 		}
 
 		// get a value based on a position in 3d world space
-		public bool GetMapValue(Vec3 point)
+		public bool GetMapValue(Vector3 point)
 		{
-			Vec3 local = point - center;
-			Vec3 localXZ = local.SetYToZero();
+			Vector3 local = point - center;
+            local.Y = 0;
+			Vector3 localXZ = local;
 
 			float hxs = xSize / 2;
 			float hzs = zSize / 2;
@@ -82,9 +84,9 @@ namespace Bnoerj.SharpSteer.MapDrive
 		{
 			float xs = xSize / (float)resolution;
 			float zs = zSize / (float)resolution;
-			Vec3 alongRow = new Vec3(xs, 0, 0);
-			Vec3 nextRow = new Vec3(-xSize, 0, zs);
-			Vec3 g = new Vec3((xSize - xs) / -2, 0, (zSize - zs) / -2);
+			Vector3 alongRow = new Vector3(xs, 0, 0);
+			Vector3 nextRow = new Vector3(-xSize, 0, zs);
+			Vector3 g = new Vector3((xSize - xs) / -2, 0, (zSize - zs) / -2);
 			g += center;
 			for (int j = 0; j < resolution; j++)
 			{
@@ -93,23 +95,23 @@ namespace Bnoerj.SharpSteer.MapDrive
 					if (GetMapBit(i, j))
 					{
 						// spikes
-						// Vec3 spikeTop (0, 5.0f, 0);
+						// Vector3 spikeTop (0, 5.0f, 0);
 						// drawLine (g, g+spikeTop, gWhite);
 
 						// squares
 						float rockHeight = 0;
-						Vec3 v1 = new Vec3(+xs / 2, rockHeight, +zs / 2);
-						Vec3 v2 = new Vec3(+xs / 2, rockHeight, -zs / 2);
-						Vec3 v3 = new Vec3(-xs / 2, rockHeight, -zs / 2);
-						Vec3 v4 = new Vec3(-xs / 2, rockHeight, +zs / 2);
-						// Vec3 redRockColor (0.6f, 0.1f, 0.0f);
+						Vector3 v1 = new Vector3(+xs / 2, rockHeight, +zs / 2);
+						Vector3 v2 = new Vector3(+xs / 2, rockHeight, -zs / 2);
+						Vector3 v3 = new Vector3(-xs / 2, rockHeight, -zs / 2);
+						Vector3 v4 = new Vector3(-xs / 2, rockHeight, +zs / 2);
+						// Vector3 redRockColor (0.6f, 0.1f, 0.0f);
 						Color orangeRockColor = new Color((byte)(255.0f * 0.5f), (byte)(255.0f * 0.2f), (byte)(255.0f * 0.0f));
 						Drawing.DrawQuadrangle(g + v1, g + v2, g + v3, g + v4, orangeRockColor);
 
 						// pyramids
-						// Vec3 top (0, xs/2, 0);
-						// Vec3 redRockColor (0.6f, 0.1f, 0.0f);
-						// Vec3 orangeRockColor (0.5f, 0.2f, 0.0f);
+						// Vector3 top (0, xs/2, 0);
+						// Vector3 redRockColor (0.6f, 0.1f, 0.0f);
+						// Vector3 orangeRockColor (0.5f, 0.2f, 0.0f);
 						// drawTriangle (g+v1, g+v2, g+top, redRockColor);
 						// drawTriangle (g+v2, g+v3, g+top, orangeRockColor);
 						// drawTriangle (g+v3, g+v4, g+top, redRockColor);
@@ -135,8 +137,8 @@ namespace Bnoerj.SharpSteer.MapDrive
 			{
 				for (float z = zMin; z < zMax; z += spacing)
 				{
-					Vec3 sample = new Vec3(x, 0, z);
-					Vec3 global = localSpace.GlobalizePosition(sample);
+					Vector3 sample = new Vector3(x, 0, z);
+					Vector3 global = localSpace.GlobalizePosition(sample);
 					if (GetMapValue(global)) return true;
 				}
 			}
@@ -146,9 +148,9 @@ namespace Bnoerj.SharpSteer.MapDrive
 		// Scans along a ray (directed line segment) on the XZ plane, sampling
 		// the map for a "true" cell.  Returns the index of the first sample
 		// that gets a "hit", or zero if no hits found.
-		public int ScanXZray(Vec3 origin, Vec3 sampleSpacing, int sampleCount)
+		public int ScanXZray(Vector3 origin, Vector3 sampleSpacing, int sampleCount)
 		{
-			Vec3 samplePoint = new Vec3(origin);
+			Vector3 samplePoint = origin;
 
 			for (int i = 1; i <= sampleCount; i++)
 			{
@@ -161,10 +163,10 @@ namespace Bnoerj.SharpSteer.MapDrive
 
 		public int Cellwidth() { return resolution; }  // xxx cwr
 		public int Cellheight() { return resolution; }  // xxx cwr
-		public bool IsPassable(Vec3 point) { return !GetMapValue(point); }
+		public bool IsPassable(Vector3 point) { return !GetMapValue(point); }
 
 
-		public Vec3 center;
+		public Vector3 center;
 		public float xSize;
 		public float zSize;
 		public int resolution;

@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,11 +11,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Pedestrian
+namespace Bnoerj.AI.Steering.Pedestrian
 {
 	using ProximityDatabase = IProximityDatabase<IVehicle>;
 	using ProximityToken = ITokenForProximityDatabase<IVehicle>;
@@ -45,8 +46,14 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			Pedestrian firstPedestrian = crowd[0];
 			Demo.Init3dCamera(firstPedestrian);
 			Demo.Camera.Mode = Camera.CameraMode.FixedDistanceOffset;
-			Demo.Camera.FixedTarget.Set(15, 0, 30);
-			Demo.Camera.FixedPosition.Set(15, 70, -70);
+
+			Demo.Camera.FixedTarget.X = 15;
+            Demo.Camera.FixedTarget.Y = 0;
+            Demo.Camera.FixedTarget.Z = 30;
+
+			Demo.Camera.FixedPosition.X = 15;
+            Demo.Camera.FixedPosition.Y = 70;
+            Demo.Camera.FixedPosition.Z = -70;
 		}
 
 		public override void Update(float currentTime, float elapsedTime)
@@ -89,10 +96,10 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			if (Demo.SelectedVehicle != null && Annotation.IsAnnotationEnabled)
 			{
 				Color color = new Color((byte)(255.0f * 0.8f), (byte)(255.0f * 0.8f), (byte)(255.0f * 1.0f));
-				Vec3 textOffset = new Vec3(0, 0.25f, 0);
-				Vec3 textPosition = selected.Position + textOffset;
-				Vec3 camPosition = Demo.Camera.Position;
-				float camDistance = Vec3.Distance(selected.Position, camPosition);
+				Vector3 textOffset = new Vector3(0, 0.25f, 0);
+				Vector3 textPosition = selected.Position + textOffset;
+				Vector3 camPosition = Demo.Camera.Position;
+				float camDistance = Vector3.Distance(selected.Position, camPosition);
 
 				StringBuilder sb = new StringBuilder();
 				sb.AppendFormat("1: speed: {0:0.00}\n", selected.Speed);
@@ -118,7 +125,7 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			if (Globals.WanderSwitch) status.Append("yes");
 			else status.Append("no");
 			status.Append("\n");
-			Vec3 screenLocation = new Vec3(15, 50, 0);
+			Vector3 screenLocation = new Vector3(15, 50, 0);
 			Drawing.Draw2dTextAt2dLocation(status.ToString(), screenLocation, Color.LightGray);
 		}
 
@@ -132,15 +139,15 @@ namespace Bnoerj.SharpSteer.Pedestrian
 				{
 					IVehicle vehicle = crowd[i];
 					const float nearDistance = 6;
-					Vec3 vp = vehicle.Position;
-					//Vec3 np = nearMouse.Position;
-					if ((Vec3.Distance(vp, selected.Position) < nearDistance)/* ||
-						(nearMouse != null && (Vec3.Distance(vp, np) < nearDistance))*/)
+					Vector3 vp = vehicle.Position;
+					//Vector3 np = nearMouse.Position;
+					if ((Vector3.Distance(vp, selected.Position) < nearDistance)/* ||
+						(nearMouse != null && (Vector3.Distance(vp, np) < nearDistance))*/)
 					{
 						String sn = String.Format("#{0}", ((Pedestrian)vehicle).SerialNumber);
 						Color textColor = new Color((byte)(255.0f * 0.8f), (byte)(255.0f * 1), (byte)(255.0f * 0.8f));
-						Vec3 textOffset = new Vec3(0, 0.25f, 0);
-						Vec3 textPos = vehicle.Position + textOffset;
+						Vector3 textOffset = new Vector3(0, 0.25f, 0);
+						Vector3 textPos = vehicle.Position + textOffset;
 						Drawing.Draw2dTextAt3dLocation(sn, textPos, textColor);
 					}
 				}
@@ -246,11 +253,11 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			{
 			case 0:
 				{
-					Vec3 center = Vec3.Zero;
+					Vector3 center = Vector3.Zero;
 					float div = 20.0f;
-					Vec3 divisions = new Vec3(div, 1.0f, div);
+					Vector3 divisions = new Vector3(div, 1.0f, div);
 					float diameter = 80.0f; //XXX need better way to get this
-					Vec3 dimensions = new Vec3(diameter, diameter, diameter);
+					Vector3 dimensions = new Vector3(diameter, diameter, diameter);
 					pd = new LocalityQueryProximityDatabase<IVehicle>(center, dimensions, divisions);
 					break;
 				}
@@ -276,7 +283,7 @@ namespace Bnoerj.SharpSteer.Pedestrian
 		// crowd: a group (STL vector) of all Pedestrians
 		List<Pedestrian> crowd;
 
-		Vec3 gridCenter;
+		Vector3 gridCenter;
 
 		// pointer to database used to accelerate proximity queries
 		ProximityDatabase pd;

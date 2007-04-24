@@ -8,8 +8,8 @@
 // are also available at http://www.codeplex.com/SharpSteer/Project/License.aspx.
 
 using System;
-
-namespace Bnoerj.SharpSteer
+// SharpSteer - Steering Behaviors for Autonomous Characters
+namespace Bnoerj.AI.Steering
 {
 	static class Program
 	{

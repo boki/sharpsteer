@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,10 +10,10 @@
 
 using System;
 using System.Collections.Generic;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.LowSpeedTurn
+namespace Bnoerj.AI.Steering.LowSpeedTurn
 {
 	public class LowSpeedTurn : SimpleVehicle
 	{
@@ -75,9 +76,9 @@ namespace Bnoerj.SharpSteer.LowSpeedTurn
 		}
 
 		// constant steering force
-		public Vec3 Steering
+		public Vector3 Steering
 		{
-			get { return new Vec3(1, 0, -1); }
+			get { return new Vector3(1, 0, -1); }
 		}
 
 		// for stepping the starting conditions for next vehicle

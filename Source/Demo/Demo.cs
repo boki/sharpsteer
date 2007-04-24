@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,14 +11,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 // Boenjr?
-namespace Bnoerj.SharpSteer
+namespace Bnoerj.AI.Steering
 {
 	/// <summary>
 	/// This is the main type for your game
@@ -49,14 +49,14 @@ namespace Bnoerj.SharpSteer
 		public Matrix projectionMatrix;
 		VertexDeclaration vertexDeclaration;
 
-		Bnoerj.SharpSteer.Boids.BoidsPlugIn boids;
-		Bnoerj.SharpSteer.LowSpeedTurn.LowSpeedTurnPlugIn lowSpeedTurn;
-		Bnoerj.SharpSteer.Pedestrian.PedestrianPlugIn pedestrian;
-		Bnoerj.SharpSteer.Ctf.CtfPlugIn ctf;
-		Bnoerj.SharpSteer.MapDrive.MapDrivePlugIn mapDrive;
-		Bnoerj.SharpSteer.MultiplePursuit.MpPlugIn multiplePersuit;
-		Bnoerj.SharpSteer.Soccer.SoccerPlugIn soccer;
-		Bnoerj.SharpSteer.OneTurning.OneTurningPlugIn oneTurning;
+		Bnoerj.AI.Steering.Boids.BoidsPlugIn boids;
+		Bnoerj.AI.Steering.LowSpeedTurn.LowSpeedTurnPlugIn lowSpeedTurn;
+		Bnoerj.AI.Steering.Pedestrian.PedestrianPlugIn pedestrian;
+		Bnoerj.AI.Steering.Ctf.CtfPlugIn ctf;
+		Bnoerj.AI.Steering.MapDrive.MapDrivePlugIn mapDrive;
+		Bnoerj.AI.Steering.MultiplePursuit.MpPlugIn multiplePersuit;
+		Bnoerj.AI.Steering.Soccer.SoccerPlugIn soccer;
+		Bnoerj.AI.Steering.OneTurning.OneTurningPlugIn oneTurning;
 
 		// currently selected plug-in (user can choose or cycle through them)
 		public static PlugIn SelectedPlugIn = null;
@@ -72,11 +72,11 @@ namespace Bnoerj.SharpSteer
 		// some camera-related default constants
 		public const float Camera2dElevation = 8;
 		public const float CameraTargetDistance = 13;
-		public static readonly Vec3 CameraTargetOffset = new Vec3(0, Camera2dElevation, 0);
+		public static readonly Vector3 CameraTargetOffset = new Vector3(0, Camera2dElevation, 0);
 
 		public Demo()
 		{
-			Bnoerj.SharpSteer.Drawing.game = this;
+			Bnoerj.AI.Steering.Drawing.game = this;
 
 			graphics = new GraphicsDeviceManager(this);
 			content = new ContentManager(Services);
@@ -89,16 +89,14 @@ namespace Bnoerj.SharpSteer
 			//FIXME: eijeijei.
 			Annotation.drawer = new Drawing();
 
-			boids = new Bnoerj.SharpSteer.Boids.BoidsPlugIn();
-			lowSpeedTurn = new Bnoerj.SharpSteer.LowSpeedTurn.LowSpeedTurnPlugIn();
-			pedestrian = new Bnoerj.SharpSteer.Pedestrian.PedestrianPlugIn();
-			ctf = new Bnoerj.SharpSteer.Ctf.CtfPlugIn();
-			mapDrive = new Bnoerj.SharpSteer.MapDrive.MapDrivePlugIn();
-			multiplePersuit = new Bnoerj.SharpSteer.MultiplePursuit.MpPlugIn();
-			soccer = new Bnoerj.SharpSteer.Soccer.SoccerPlugIn();
-			oneTurning = new Bnoerj.SharpSteer.OneTurning.OneTurningPlugIn();
-
-			PlugIn.SortBySelectionOrder();
+			boids = new Bnoerj.AI.Steering.Boids.BoidsPlugIn();
+			lowSpeedTurn = new Bnoerj.AI.Steering.LowSpeedTurn.LowSpeedTurnPlugIn();
+			pedestrian = new Bnoerj.AI.Steering.Pedestrian.PedestrianPlugIn();
+			ctf = new Bnoerj.AI.Steering.Ctf.CtfPlugIn();
+			mapDrive = new Bnoerj.AI.Steering.MapDrive.MapDrivePlugIn();
+			multiplePersuit = new Bnoerj.AI.Steering.MultiplePursuit.MpPlugIn();
+			soccer = new Bnoerj.AI.Steering.Soccer.SoccerPlugIn();
+			oneTurning = new Bnoerj.AI.Steering.OneTurning.OneTurningPlugIn();
 
 			IsFixedTimeStep = false;
 		}
@@ -139,7 +137,7 @@ namespace Bnoerj.SharpSteer
 			Position3dCamera(selected, distance, elevation);
 
 			// then adjust for 3d:
-			Vec3 position3d = Camera.Position;
+			Vector3 position3d = Camera.Position;
 			position3d.Y += elevation;
 			Camera.Position = (position3d);
 		}
@@ -154,7 +152,7 @@ namespace Bnoerj.SharpSteer
 			SelectedVehicle = selected;
 			if (selected != null)
 			{
-				Vec3 behind = selected.Forward * -distance;
+				Vector3 behind = selected.Forward * -distance;
 				Camera.Position = (selected.Position + behind);
 				Camera.Target = selected.Position;
 			}
@@ -168,12 +166,12 @@ namespace Bnoerj.SharpSteer
 		}
 
 		// ground plane grid-drawing utility used by several plug-ins
-		public static void GridUtility(Vec3 gridTarget)
+		public static void GridUtility(Vector3 gridTarget)
 		{
 			// Math.Round off target to the nearest multiple of 2 (because the
 			// checkboard grid with a pitch of 1 tiles with a period of 2)
 			// then lower the grid a bit to put it under 2d annotation lines
-			Vec3 gridCenter = new Vec3((float)(Math.Round(gridTarget.X * 0.5f) * 2),
+			Vector3 gridCenter = new Vector3((float)(Math.Round(gridTarget.X * 0.5f) * 2),
 								   (float)(Math.Round(gridTarget.Y * 0.5f) * 2) - .05f,
 								   (float)(Math.Round(gridTarget.Z * 0.5f) * 2));
 
@@ -182,10 +180,10 @@ namespace Bnoerj.SharpSteer
 			Color gray2 = new Color(new Vector3(0.30f));
 
 			// draw 50x50 checkerboard grid with 50 squares along each side
-			Bnoerj.SharpSteer.Drawing.DrawXZCheckerboardGrid(50, 50, gridCenter, gray1, gray2);
+			Bnoerj.AI.Steering.Drawing.DrawXZCheckerboardGrid(50, 50, gridCenter, gray1, gray2);
 
 			// alternate style
-			//Bnoerj.SharpSteer.Draw.drawXZLineGrid(50, 50, gridCenter, Color.Black);
+			//Bnoerj.AI.Steering.Draw.drawXZLineGrid(50, 50, gridCenter, Color.Black);
 		}
 
 		// draws a gray disk on the XZ plane under a given vehicle
@@ -193,7 +191,7 @@ namespace Bnoerj.SharpSteer
 		{
 			if (vehicle != null)
 			{
-				Bnoerj.SharpSteer.Drawing.DrawXZDisk(vehicle.Radius, vehicle.Position, Color.LightGray, 20);
+				Bnoerj.AI.Steering.Drawing.DrawXZDisk(vehicle.Radius, vehicle.Position, Color.LightGray, 20);
 			}
 		}
 
@@ -202,7 +200,7 @@ namespace Bnoerj.SharpSteer
 		{
 			if (vehicle != null)
 			{
-				Bnoerj.SharpSteer.Drawing.DrawXZCircle(vehicle.Radius * 1.1f, vehicle.Position, Color.LightGray, 20);
+				Bnoerj.AI.Steering.Drawing.DrawXZCircle(vehicle.Radius * 1.1f, vehicle.Position, Color.LightGray, 20);
 			}
 		}
 
@@ -213,8 +211,8 @@ namespace Bnoerj.SharpSteer
 			if (v != null)
 			{
 				float diameter = v.Radius * 2;
-				Vec3 size = new Vec3(diameter, diameter, diameter);
-				Bnoerj.SharpSteer.Drawing.DrawBoxOutline(v, size, color);
+				Vector3 size = new Vector3(diameter, diameter, diameter);
+				Bnoerj.AI.Steering.Drawing.DrawBoxOutline(v, size, color);
 			}
 		}
 
@@ -225,8 +223,8 @@ namespace Bnoerj.SharpSteer
 		{
 			if (v != null)
 			{
-				Vec3 cPosition = Camera.Position;
-				Bnoerj.SharpSteer.Drawing.Draw3dCircle(
+				Vector3 cPosition = Camera.Position;
+				Bnoerj.AI.Steering.Drawing.Draw3dCircle(
 					v.Radius * radiusMultiplier,  // adjusted radius
 					v.Position,                   // center
 					v.Position - cPosition,       // view axis
@@ -258,7 +256,7 @@ namespace Bnoerj.SharpSteer
 		internal static IVehicle findVehicleNearestScreenPosition(int x, int y)
 		{
 			// find the direction from the camera position to the given pixel
-			Vec3 direction = DirectionFromCameraToScreenPosition(x, y);
+			Vector3 direction = DirectionFromCameraToScreenPosition(x, y);
 
 			// iterate over all vehicles to find the one whose center is nearest the
 			// "eye-mouse" selection line
@@ -268,7 +266,7 @@ namespace Bnoerj.SharpSteer
 			foreach (IVehicle vehicle in vehicles)
 			{
 				// distance from this vehicle's center to the selection line:
-				float d = Vec3.DistanceFromLine(vehicle.Position, Camera.Position, direction);
+				float d = Vector3Helpers.DistanceFromLine(vehicle.Position, Camera.Position, direction);
 
 				// if this vehicle-to-line distance is the smallest so far,
 				// store it and this vehicle in the selection registers.
@@ -284,7 +282,7 @@ namespace Bnoerj.SharpSteer
 
 		// return a normalized direction vector pointing from the camera towards a
 		// given point on the screen: the ray that would be traced for that pixel
-		static Vec3 DirectionFromCameraToScreenPosition(int x, int y)
+		static Vector3 DirectionFromCameraToScreenPosition(int x, int y)
 		{
 #if TODO
 			// Get window height, viewport, modelview and projection matrices
@@ -294,11 +292,11 @@ namespace Bnoerj.SharpSteer
 
 			// "direction" is the normalized difference between these far and near
 			// unprojected points.  Its parallel to the "eye-mouse" selection line.
-			Vec3 diffNearFar = new Vec3(un1x - un0x, un1y - un0y, un1z - un0z);
-			Vec3 direction = diffNearFar.normalize();
+			Vector3 diffNearFar = new Vector3(un1x - un0x, un1y - un0y, un1z - un0z);
+			Vector3 direction = diffNearFar.normalize();
 			return direction;
 #else
-			return Vec3.Up;
+			return Vector3.Up;
 #endif
 		}
 
@@ -306,7 +304,7 @@ namespace Bnoerj.SharpSteer
 		static void SelectDefaultPlugIn()
 		{
 			PlugIn.SortBySelectionOrder();
-			SelectedPlugIn = (PlugIn)PlugIn.FindDefault();
+			SelectedPlugIn = PlugIn.FindDefault();
 		}
 
 		// open the currently selected plug-in
@@ -442,8 +440,8 @@ namespace Bnoerj.SharpSteer
 			SelectedPlugIn.Redraw(currentTime, elapsedTime);
 
 			// draw any annotation queued up during selected PlugIn's Update method
-			Bnoerj.SharpSteer.Drawing.AllDeferredLines();
-			Bnoerj.SharpSteer.Drawing.AllDeferredCirclesOrDisks();
+			Bnoerj.AI.Steering.Drawing.AllDeferredLines();
+			Bnoerj.AI.Steering.Drawing.AllDeferredCirclesOrDisks();
 
 			// return to previous phase
 			PopPhase();
@@ -490,7 +488,7 @@ namespace Bnoerj.SharpSteer
 		private void SelectNextPlugin()
 		{
 			CloseSelectedPlugIn();
-			SelectedPlugIn = (PlugIn)SelectedPlugIn.Next();
+			SelectedPlugIn = SelectedPlugIn.Next();
 			OpenSelectedPlugIn();
 		}
 
@@ -624,9 +622,9 @@ namespace Bnoerj.SharpSteer
 
 			worldMatrix = Matrix.Identity;
 
-			Vec3 pos = Camera.Position;
-			Vec3 lookAt = Camera.Target;
-			Vec3 up = Camera.Up;
+			Vector3 pos = Camera.Position;
+			Vector3 lookAt = Camera.Target;
+			Vector3 up = Camera.Up;
 			viewMatrix = Matrix.CreateLookAt(new Vector3(pos.X, pos.Y, pos.Z), new Vector3(lookAt.X, lookAt.Y, lookAt.Z), new Vector3(up.X, up.Y, up.Z));
 
 			projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
@@ -709,7 +707,7 @@ namespace Bnoerj.SharpSteer
 
 			// target and recent average frame rates
 			int targetFPS = Clock.FixedFrameRate;
-			float smoothedFPS = Clock.SmoothedFps;
+			float smoothedFPS = Clock.SmoothedFPS;
 
 			// describe clock mode and frame rate statistics
 			StringBuilder sb = new StringBuilder();

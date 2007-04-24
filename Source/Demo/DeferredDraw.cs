@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,10 +10,10 @@
 
 using System;
 using System.Collections.Generic;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer
+namespace Bnoerj.AI.Steering
 {
 	public class DeferredLine
 	{
@@ -25,7 +26,7 @@ namespace Bnoerj.SharpSteer
 			}
 		}
 
-		public static void AddToBuffer(Vec3 s, Vec3 e, Color c)
+		public static void AddToBuffer(Vector3 s, Vector3 e, Color c)
 		{
 			if (index < size)
 			{
@@ -53,8 +54,8 @@ namespace Bnoerj.SharpSteer
 			index = 0;
 		}
 
-		Vec3 startPoint;
-		Vec3 endPoint;
+		Vector3 startPoint;
+		Vector3 endPoint;
 		Color color;
 
 		static int index = 0;
@@ -73,7 +74,7 @@ namespace Bnoerj.SharpSteer
 			}
 		}
 
-		public static void AddToBuffer(float radius, Vec3 axis, Vec3 center, Color color, int segments, bool filled, bool in3d)
+		public static void AddToBuffer(float radius, Vector3 axis, Vector3 center, Color color, int segments, bool filled, bool in3d)
 		{
 			if (index < size)
 			{
@@ -106,8 +107,8 @@ namespace Bnoerj.SharpSteer
 		}
 
 		float radius;
-		Vec3 axis;
-		Vec3 center;
+		Vector3 axis;
+		Vector3 center;
 		Color color;
 		int segments;
 		bool filled;

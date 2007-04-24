@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Bnoerj.AI.Steering
 {
@@ -16,10 +18,10 @@ namespace Bnoerj.AI.Steering
 	{
 		public abstract float Mass { get; set; }
 		public abstract float Radius { get; set; }
-		public abstract Vec3 Velocity { get; }
+        public abstract Vector3 Velocity { get; }
 		public abstract float Speed { get; set; }
 
-		public abstract Vec3 PredictFuturePosition(float predictionTime);
+        public abstract Vector3 PredictFuturePosition(float predictionTime);
 
 		public abstract float MaxForce { get; set; }
 		public abstract float MaxSpeed { get; set; }

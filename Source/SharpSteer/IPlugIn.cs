@@ -10,7 +10,11 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Storage;
+using Microsoft.Xna.Framework.Content;
 
 namespace Bnoerj.AI.Steering
 {
@@ -42,7 +46,6 @@ namespace Bnoerj.AI.Steering
 
 		// return an AVGroup (an STL vector of AbstractVehicle pointers) of
 		// all vehicles(/agents/characters) defined by the PlugIn
-		//FIXME: use IVehicle[] as return value
 		List<IVehicle> Vehicles { get; }
 	}
 }

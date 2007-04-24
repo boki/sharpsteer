@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Bnoerj.AI.Steering
 {
@@ -30,6 +32,6 @@ namespace Bnoerj.AI.Steering
 		SeenFromState SeenFrom { get; set; }
 
 		// XXX 4-23-03: Temporary work around (see comment above)
-		Vec3 SteerToAvoid(IVehicle vehicle, float minTimeToCollision);
+        Vector3 SteerToAvoid(IVehicle v, float minTimeToCollision);
 	}
 }

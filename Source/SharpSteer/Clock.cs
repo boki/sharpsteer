@@ -57,7 +57,7 @@ namespace Bnoerj.AI.Steering
 			// When a fixed frame rate is used, a running average of "CPU load" is
 			// kept (aka "non-wait time", the percentage of each frame time (time
 			// step) that the CPU is busy).
-			smoothedFps = 0;
+			smoothedFPS = 0;
 			smoothedUsage = 0;
 		}
 
@@ -137,7 +137,7 @@ namespace Bnoerj.AI.Steering
 		float AdvanceSimulationTimeOneFrame()
 		{
 			// decide on what frame time is (use fixed rate, average for variable rate)
-			float fps = (VariableFrameRateMode ? SmoothedFps : FixedFrameRate);
+			float fps = (VariableFrameRateMode ? SmoothedFPS : FixedFrameRate);
 			float frameTime = 1.0f / fps;
 
 			// bump advance time
@@ -227,21 +227,21 @@ namespace Bnoerj.AI.Steering
 		// When a fixed frame rate is used, a running average of "CPU load" is
 		// kept (aka "non-wait time", the percentage of each frame time (time
 		// step) that the CPU is busy).
-		float smoothedFps;
+		float smoothedFPS;
 		float smoothedUsage;
 
 		void UpdateSmoothedRegisters()
 		{
 			float rate = SmoothingRate;
 			if (elapsedRealTime > 0)
-				Utilities.BlendIntoAccumulator(rate, 1 / elapsedRealTime, ref smoothedFps);
+				Utilities.BlendIntoAccumulator(rate, 1 / elapsedRealTime, ref smoothedFPS);
 			if (!VariableFrameRateMode)
 				Utilities.BlendIntoAccumulator(rate, Usage, ref smoothedUsage);
 		}
 
-		public float SmoothedFps
+		public float SmoothedFPS
 		{
-			get { return smoothedFps; }
+			get { return smoothedFPS; }
 		}
 		public float SmoothedUsage
 		{
@@ -249,7 +249,7 @@ namespace Bnoerj.AI.Steering
 		}
 		public float SmoothingRate
 		{
-			get { return smoothedFps == 0 ? 1 : elapsedRealTime * 1.5f; }
+			get { return smoothedFPS == 0 ? 1 : elapsedRealTime * 1.5f; }
 		}
 		public float Usage
 		{

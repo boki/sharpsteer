@@ -2,7 +2,8 @@ OpenSteer -- Steering Behaviors for Autonomous Characters
 
 Copyright (c) 2002-2003, Sony Computer Entertainment America
 Original author: Craig Reynolds <craig_reynolds@playstation.sony.com>
-C# version: Bjoern Graf <bjoern.graf@gmx.net>
+C# version: Copyright (c) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+            Copyright (c) 2007 Michael Coles <michael@digini.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),

@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Bnoerj.AI.Steering
 {
@@ -23,8 +25,8 @@ namespace Bnoerj.AI.Steering
 		float trailSampleInterval;  // desired interval between taking samples
 		float trailLastSampleTime;  // global time when lat sample was taken
 		int trailDottedPhase;       // dotted line: draw segment or not
-		Vec3 curPosition;           // last reported position of vehicle
-		Vec3[] trailVertices;        // array (ring) of recent points along trail
+		Vector3 curPosition;           // last reported position of vehicle
+		Vector3[] trailVertices;        // array (ring) of recent points along trail
 		byte[] trailFlags;           // array (ring) of flag bits for trail points
 
 		static bool isAnnotationEnabled;
@@ -61,7 +63,7 @@ namespace Bnoerj.AI.Steering
 		// XXX Annotation would "has-a" one (or more))
 
 		// record a position for the current time, called once per update
-		public void RecordTrailVertex(float currentTime, Vec3 position)
+		public void RecordTrailVertex(float currentTime, Vector3 position)
 		{
 			float timeSinceLastTrailSample = currentTime - trailLastSampleTime;
 			if (timeSinceLastTrailSample > trailSampleInterval)
@@ -134,7 +136,7 @@ namespace Bnoerj.AI.Steering
 
 			// prepare trailVertices array: free old one if needed, allocate new one
 			trailVertices = null;
-			trailVertices = new Vec3[trailVertexCount];
+			trailVertices = new Vector3[trailVertexCount];
 
 			// prepare trailFlags array: free old one if needed, allocate new one
 			trailFlags = null;
@@ -164,7 +166,7 @@ namespace Bnoerj.AI.Steering
 		//       "segments" is the number of line segments used to draw the circle
 
 		// draw an opaque colored line segment between two locations in space
-		public void AnnotationLine(Vec3 startPoint, Vec3 endPoint, Color color)
+		public void AnnotationLine(Vector3 startPoint, Vector3 endPoint, Color color)
 		{
 			if (isAnnotationEnabled == true && drawer != null)
 			{
@@ -173,35 +175,35 @@ namespace Bnoerj.AI.Steering
 		}
 
 		// draw a circle on the XZ plane
-		public void AnnotationXZCircle(float radius, Vec3 center, Color color, int segments)
+		public void AnnotationXZCircle(float radius, Vector3 center, Color color, int segments)
 		{
 			AnnotationXZCircleOrDisk(radius, center, color, segments, false);
 		}
 
 		// draw a disk on the XZ plane
-		public void AnnotationXZDisk(float radius, Vec3 center, Color color, int segments)
+		public void AnnotationXZDisk(float radius, Vector3 center, Color color, int segments)
 		{
 			AnnotationXZCircleOrDisk(radius, center, color, segments, true);
 		}
 
 		// draw a circle perpendicular to the given axis
-		public void Annotation3dCircle(float radius, Vec3 center, Vec3 axis, Color color, int segments)
+		public void Annotation3dCircle(float radius, Vector3 center, Vector3 axis, Color color, int segments)
 		{
 			Annotation3dCircleOrDisk(radius, center, axis, color, segments, false);
 		}
 
 		// draw a disk perpendicular to the given axis
-		public void Annotation3dDisk(float radius, Vec3 center, Vec3 axis, Color color, int segments)
+		public void Annotation3dDisk(float radius, Vector3 center, Vector3 axis, Color color, int segments)
 		{
 			Annotation3dCircleOrDisk(radius, center, axis, color, segments, true);
 		}
 
 		// ------------------------------------------------------------------------
 		// support for annotation circles
-		public void AnnotationXZCircleOrDisk(float radius, Vec3 center, Color color, int segments, bool filled)
+		public void AnnotationXZCircleOrDisk(float radius, Vector3 center, Color color, int segments, bool filled)
 		{
 			AnnotationCircleOrDisk(radius,
-									Vec3.Zero,
+									Vector3.Zero,
 									center,
 									color,
 									segments,
@@ -209,7 +211,7 @@ namespace Bnoerj.AI.Steering
 									false); // "not in3d" -> on XZ plane
 		}
 
-		public void Annotation3dCircleOrDisk(float radius, Vec3 center, Vec3 axis, Color color, int segments, bool filled)
+		public void Annotation3dCircleOrDisk(float radius, Vector3 center, Vector3 axis, Color color, int segments, bool filled)
 		{
 			AnnotationCircleOrDisk(radius,
 									axis,
@@ -220,7 +222,7 @@ namespace Bnoerj.AI.Steering
 									true); // "in3d"
 		}
 
-		public void AnnotationCircleOrDisk(float radius, Vec3 axis, Vec3 center, Color color, int segments, bool filled, bool in3d)
+		public void AnnotationCircleOrDisk(float radius, Vector3 axis, Vector3 center, Color color, int segments, bool filled, bool in3d)
 		{
 			if (isAnnotationEnabled == true && drawer != null)
 			{

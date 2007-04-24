@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,6 +10,7 @@
 
 using System;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Bnoerj.AI.Steering
 {
@@ -22,44 +24,56 @@ namespace Bnoerj.AI.Steering
 		// origin of the local space.  These correspond to the "rows" of
 		// a 3x4 transformation matrix with [0 0 0 1] as the final column
 
-		Vec3 side;     //    side-pointing unit basis vector
-		Vec3 up;       //  upward-pointing unit basis vector
-		Vec3 forward;  // forward-pointing unit basis vector
-		Vec3 position; // origin of local space
+        Vector3 side;     //    side-pointing unit basis vector
+        Vector3 up;       //  upward-pointing unit basis vector
+        Vector3 forward;  // forward-pointing unit basis vector
+        Vector3 position; // origin of local space
 
 		// accessors (get and set) for side, up, forward and position
-		public Vec3 Side
+        public Vector3 Side
 		{
 			get { return side; }
 			set { side = value; }
 		}
-		public Vec3 Up
+        public Vector3 Up
 		{
 			get { return up; }
 			set { up = value; }
 		}
-		public Vec3 Forward
+        public Vector3 Forward
 		{
 			get { return forward; }
 			set { forward = value; }
 		}
-		public Vec3 Position
+        public Vector3 Position
 		{
 			get { return position; }
 			set { position = value; }
 		}
 
-		public Vec3 SetUp(float x, float y, float z)
+        public Vector3 SetUp(float x, float y, float z)
 		{
-			return up.Set(x, y, z);
+            up.X = x;
+            up.Y = y;
+            up.Z = z;
+
+			return up;
 		}
-		public Vec3 SetForward(float x, float y, float z)
+        public Vector3 SetForward(float x, float y, float z)
 		{
-			return forward.Set(x, y, z);
+            forward.X = x;
+            forward.Y = y;
+            forward.Z = z;
+
+			return forward;
 		}
-		public Vec3 SetPosition(float x, float y, float z)
+        public Vector3 SetPosition(float x, float y, float z)
 		{
-			return position.Set(x, y, z);
+            position.X = x;
+            position.Y = y;
+            position.Z = z;
+
+			return position;
 		}
 
 		// ------------------------------------------------------------------------
@@ -75,19 +89,19 @@ namespace Bnoerj.AI.Steering
 			ResetLocalSpace();
 		}
 
-		public LocalSpace(Vec3 side, Vec3 up, Vec3 forward, Vec3 position)
+        public LocalSpace(Vector3 Side, Vector3 Up, Vector3 Forward, Vector3 Position)
 		{
-			this.side = side;
-			this.up = up;
-			this.forward = forward;
-			this.position = position;
+			side = Side;
+			up = Up;
+			forward = Forward;
+			position = Position;
 		}
 
-		public LocalSpace(Vec3 up, Vec3 forward, Vec3 position)
+        public LocalSpace(Vector3 Up, Vector3 Forward, Vector3 Position)
 		{
-			this.up = up;
-			this.forward = forward;
-			this.position = position;
+			up = Up;
+			forward = Forward;
+			position = Position;
 			SetUnitSideFromForwardAndUp();
 		}
 
@@ -103,26 +117,26 @@ namespace Bnoerj.AI.Steering
 		// where X is 1 for a left-handed system and -1 for a right-handed system.
 		public void ResetLocalSpace()
 		{
-			forward.Set(0, 0, 1);
+			forward = Vector3.Backward;
 			side = LocalRotateForwardToSide(Forward);
-			up.Set(0, 1, 0);
-			position.Set(0, 0, 0);
+			up = Vector3.Up;
+			position = Vector3.Zero;
 		}
 
 		// ------------------------------------------------------------------------
 		// transform a direction in global space to its equivalent in local space
-		public Vec3 LocalizeDirection(Vec3 globalDirection)
-		{
+        public Vector3 LocalizeDirection(Vector3 globalDirection)
+        {
 			// dot offset with local basis vectors to obtain local coordiantes
-			return new Vec3(globalDirection.Dot(side), globalDirection.Dot(up), globalDirection.Dot(forward));
+            return new Vector3(Vector3.Dot(globalDirection, side), Vector3.Dot(globalDirection, up), Vector3.Dot(globalDirection, forward));
 		}
 
 		// ------------------------------------------------------------------------
 		// transform a point in global space to its equivalent in local space
-		public Vec3 LocalizePosition(Vec3 globalPosition)
+        public Vector3 LocalizePosition(Vector3 globalPosition)
 		{
 			// global offset from local origin
-			Vec3 globalOffset = globalPosition - position;
+            Vector3 globalOffset = globalPosition - position;
 
 			// dot offset with local basis vectors to obtain local coordiantes
 			return LocalizeDirection(globalOffset);
@@ -130,14 +144,14 @@ namespace Bnoerj.AI.Steering
 
 		// ------------------------------------------------------------------------
 		// transform a point in local space to its equivalent in global space
-		public Vec3 GlobalizePosition(Vec3 localPosition)
+        public Vector3 GlobalizePosition(Vector3 localPosition)
 		{
 			return position + GlobalizeDirection(localPosition);
 		}
 
 		// ------------------------------------------------------------------------
 		// transform a direction in local space to its equivalent in global space
-		public Vec3 GlobalizeDirection(Vec3 localDirection)
+        public Vector3 GlobalizeDirection(Vector3 localDirection)
 		{
 			return ((side * localDirection.X) +
 					(up * localDirection.Y) +
@@ -150,16 +164,17 @@ namespace Bnoerj.AI.Steering
 		{
 			// derive new unit side basis vector from forward and up
 			if (IsRightHanded)
-				side.Cross(forward, up);
+				side = Vector3.Cross(forward, up);
 			else
-				side.Cross(up, forward);
-			side = side.Normalize();
+                side = Vector3.Cross(up, forward);
+			
+            side.Normalize();
 		}
 
 		// ------------------------------------------------------------------------
 		// regenerate the orthonormal basis vectors given a new forward
 		//(which is expected to have unit length)
-		public void RegenerateOrthonormalBasisUF(Vec3 newUnitForward)
+        public void RegenerateOrthonormalBasisUF(Vector3 newUnitForward)
 		{
 			forward = newUnitForward;
 
@@ -170,37 +185,40 @@ namespace Bnoerj.AI.Steering
 			//(should have unit length since Side and Forward are
 			// perpendicular and unit length)
 			if (IsRightHanded)
-				up.Cross(side, forward);
+                up = Vector3.Cross(side, forward);
 			else
-				up.Cross(forward, side);
+                up = Vector3.Cross(forward, side);
 		}
 
 		// for when the new forward is NOT know to have unit length
-		public void RegenerateOrthonormalBasis(Vec3 newForward)
+        public void RegenerateOrthonormalBasis(Vector3 newForward)
 		{
-			RegenerateOrthonormalBasisUF(newForward.Normalize());
+            newForward.Normalize();
+
+			RegenerateOrthonormalBasisUF(newForward);
 		}
 
 		// for supplying both a new forward and and new up
-		public void RegenerateOrthonormalBasis(Vec3 newForward, Vec3 newUp)
+        public void RegenerateOrthonormalBasis(Vector3 newForward, Vector3 newUp)
 		{
 			up = newUp;
-			RegenerateOrthonormalBasis(newForward.Normalize());
+            newForward.Normalize();
+			RegenerateOrthonormalBasis(newForward);
 		}
 
 		// ------------------------------------------------------------------------
 		// rotate, in the canonical direction, a vector pointing in the
 		// "forward"(+Z) direction to the "side"(+/-X) direction
-		public Vec3 LocalRotateForwardToSide(Vec3 vector)
+        public Vector3 LocalRotateForwardToSide(Vector3 v)
 		{
-			return new Vec3(IsRightHanded ? -vector.Z : +vector.Z, vector.Y, vector.X);
+			return new Vector3(IsRightHanded ? -v.Z : +v.Z, v.Y, v.X);
 		}
 
 		// not currently used, just added for completeness
-		public Vec3 GlobalRotateForwardToSide(Vec3 globalForward)
+        public Vector3 GlobalRotateForwardToSide(Vector3 globalForward)
 		{
-			Vec3 localForward = LocalizeDirection(globalForward);
-			Vec3 localSide = LocalRotateForwardToSide(localForward);
+            Vector3 localForward = LocalizeDirection(globalForward);
+            Vector3 localSide = LocalRotateForwardToSide(localForward);
 			return GlobalizeDirection(localSide);
 		}
 	}

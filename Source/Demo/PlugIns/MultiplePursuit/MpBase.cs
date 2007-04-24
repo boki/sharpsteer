@@ -10,10 +10,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bnoerj.SharpSteer.MultiplePursuit
+namespace Bnoerj.AI.Steering.MultiplePursuit
 {
 	public class MpBase : SimpleVehicle
 	{

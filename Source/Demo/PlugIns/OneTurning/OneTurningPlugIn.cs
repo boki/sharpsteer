@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,10 +11,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.OneTurning
+namespace Bnoerj.AI.Steering.OneTurning
 {
 	public class OneTurningPlugIn : PlugIn
 	{
@@ -35,7 +36,7 @@ namespace Bnoerj.SharpSteer.OneTurning
 			// initialize camera
 			Demo.Init2dCamera(oneTurning);
 			Demo.Camera.SetPosition(10, Demo.Camera2dElevation, 10);
-			Demo.Camera.FixedPosition.Set(40, 40, 40);
+			Demo.Camera.FixedPosition = new Vector3(40);
 		}
 
 		public override void Update(float currentTime, float elapsedTime)
@@ -55,7 +56,7 @@ namespace Bnoerj.SharpSteer.OneTurning
 			// textual annotation (following the test vehicle's screen position)
 			String annote = String.Format("      speed: {0:0.00}", oneTurning.Speed);
 			Drawing.Draw2dTextAt3dLocation(annote, oneTurning.Position, Color.Red);
-			Drawing.Draw2dTextAt3dLocation("start", Vec3.Zero, Color.Green);
+			Drawing.Draw2dTextAt3dLocation("start", Vector3.Zero, Color.Green);
 
 			// update camera, tracking test vehicle
 			Demo.UpdateCamera(currentTime, elapsedTime, oneTurning);

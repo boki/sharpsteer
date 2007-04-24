@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -24,29 +25,28 @@ namespace Bnoerj.AI.Steering
 		// this path.  Also returns, via output arguments, the path tangent at
 		// P and a measure of how far A is outside the Pathway's "tube".  Note
 		// that a negative distance indicates A is inside the Pathway.
-		//FIXME: change the out's to a returned struct
-		public abstract Vec3 MapPointToPath(Vec3 point, out Vec3 tangent, out float outside);
+        public abstract Vector3 MapPointToPath(Vector3 point, out Vector3 tangent, out float outside);
 
 		// given a distance along the path, convert it to a point on the path
-		public abstract Vec3 MapPathDistanceToPoint(float pathDistance);
+        public abstract Vector3 MapPathDistanceToPoint(float pathDistance);
 
 		// Given an arbitrary point, convert it to a distance along the path.
-		public abstract float MapPointToPathDistance(Vec3 point);
+        public abstract float MapPointToPathDistance(Vector3 point);
 
 		// is the given point inside the path tube?
-		public bool IsInsidePath(Vec3 point)
+        public bool IsInsidePath(Vector3 point)
 		{
 			float outside;
-			Vec3 tangent;
+			Vector3 tangent;
 			MapPointToPath(point, out tangent, out outside);
 			return outside < 0;
 		}
 
 		// how far outside path tube is the given point?  (negative is inside)
-		public float HowFarOutsidePath(Vec3 point)
+        public float HowFarOutsidePath(Vector3 point)
 		{
 			float outside;
-			Vec3 tangent;
+			Vector3 tangent;
 			MapPointToPath(point, out tangent, out outside);
 			return outside;
 		}

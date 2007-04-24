@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,9 +11,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.MapDrive
+namespace Bnoerj.AI.Steering.MapDrive
 {
 	// A variation on PolylinePathway (whose path tube radius is constant)
 	// GCRoute (Grand Challenge Route) has an array of radii-per-segment
@@ -25,7 +26,7 @@ namespace Bnoerj.SharpSteer.MapDrive
 		// construct a GCRoute given the number of points (vertices), an
 		// array of points, an array of per-segment path radii, and a flag
 		// indiating if the path is connected at the end.
-		public GCRoute(int _pointCount, Vec3[] _points, float[] _radii, bool _cyclic)
+		public GCRoute(int _pointCount, Vector3[] _points, float[] _radii, bool _cyclic)
 		{
 			Initialize(_pointCount, _points, _radii[0], _cyclic);
 
@@ -49,10 +50,10 @@ namespace Bnoerj.SharpSteer.MapDrive
 		// this path.  Also returns, via output arguments, the path tangent at
 		// P and a measure of how far A is outside the Pathway's "tube".  Note
 		// that a negative distance indicates A is inside the Pathway.
-		public override Vec3 MapPointToPath(Vec3 point, out Vec3 tangent, out float outside)
+		public override Vector3 MapPointToPath(Vector3 point, out Vector3 tangent, out float outside)
 		{
-			Vec3 onPath = Vec3.Zero;
-			tangent = Vec3.Zero;
+			Vector3 onPath = Vector3.Zero;
+			tangent = Vector3.Zero;
 			outside = float.MaxValue;
 
 			// loop over all segments, find the one nearest to the given point
@@ -83,15 +84,15 @@ namespace Bnoerj.SharpSteer.MapDrive
 
 		// ignore that "tangent" output argument which is never used
 		// XXX eventually move this to Pathway class
-		public Vec3 MapPointToPath(Vec3 point, out float outside)
+		public Vector3 MapPointToPath(Vector3 point, out float outside)
 		{
-			Vec3 tangent;
+			Vector3 tangent;
 			return MapPointToPath(point, out tangent, out outside);
 		}
 
 		// get the index number of the path segment nearest the given point
 		// XXX consider moving this to path class
-		public int IndexOfNearestSegment(Vec3 point)
+		public int IndexOfNearestSegment(Vector3 point)
 		{
 			int index = 0;
 			float minDistance = float.MaxValue;
@@ -115,11 +116,11 @@ namespace Bnoerj.SharpSteer.MapDrive
 		// used to measure the "angle" at a path vertex: how sharp is the turn?
 		public float DotSegmentUnitTangents(int segmentIndex0, int segmentIndex1)
 		{
-			return normals[segmentIndex0].Dot(normals[segmentIndex1]);
+			return Vector3.Dot(normals[segmentIndex0], normals[segmentIndex1]);
 		}
 
 		// return path tangent at given point (its projection on path)
-		public Vec3 TangentAt(Vec3 point)
+		public Vector3 TangentAt(Vector3 point)
 		{
 			return normals[IndexOfNearestSegment(point)];
 		}
@@ -128,7 +129,7 @@ namespace Bnoerj.SharpSteer.MapDrive
 		// multiplied by the given pathfollowing direction (+1/-1 =
 		// upstream/downstream).  Near path vertices (waypoints) use the
 		// tangent of the "next segment" in the given direction
-		public Vec3 TangentAt(Vec3 point, int pathFollowDirection)
+		public Vector3 TangentAt(Vector3 point, int pathFollowDirection)
 		{
 			int segmentIndex = IndexOfNearestSegment(point);
 			int nextIndex = segmentIndex + pathFollowDirection;
@@ -139,7 +140,7 @@ namespace Bnoerj.SharpSteer.MapDrive
 
 		// is the given point "near" a waypoint of this path?  ("near" == closer
 		// to the waypoint than the max of radii of two adjacent segments)
-		public bool NearWaypoint(Vec3 point)
+		public bool NearWaypoint(Vector3 point)
 		{
 			// loop over all waypoints
 			for (int i = 1; i < pointCount; i++)
@@ -155,7 +156,7 @@ namespace Bnoerj.SharpSteer.MapDrive
 		// is the given point inside the path tube of the given segment
 		// number?  (currently not used. this seemed like a useful utility,
 		// but wasn't right for the problem I was trying to solve)
-		public bool IsInsidePathSegment(Vec3 point, int segmentIndex)
+		public bool IsInsidePathSegment(Vector3 point, int segmentIndex)
 		{
 			if (segmentIndex < 1 || segmentIndex >= pointCount) return false;
 

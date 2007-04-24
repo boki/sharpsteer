@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Bnoerj.AI.Steering
 {
@@ -20,17 +22,17 @@ namespace Bnoerj.AI.Steering
 		SeenFromState seenFrom;
 
 		public float Radius;
-		public Vec3 Center;
+        public Vector3 Center;
 
 		// constructors
 		public SphericalObstacle()
-			: this(1, Vec3.Zero)
+			: this(1, Vector3.Zero)
 		{
 		}
-		public SphericalObstacle(float radius, Vec3 center)
+        public SphericalObstacle(float r, Vector3 c)
 		{
-			Radius = radius;
-			Center = center;
+			Radius = r;
+			Center = c;
 		}
 
 		public SeenFromState SeenFrom
@@ -53,24 +55,24 @@ namespace Bnoerj.AI.Steering
 		//
 		// xxx couldn't this be made more compact using localizePosition?
 
-		public Vec3 SteerToAvoid(IVehicle vehicle, float minTimeToCollision)
+        public Vector3 SteerToAvoid(IVehicle v, float minTimeToCollision)
 		{
 			// minimum distance to obstacle before avoidance is required
-			float minDistanceToCollision = minTimeToCollision * vehicle.Speed;
+			float minDistanceToCollision = minTimeToCollision * v.Speed;
 			float minDistanceToCenter = minDistanceToCollision + Radius;
 
 			// contact distance: sum of radii of obstacle and vehicle
-			float totalRadius = Radius + vehicle.Radius;
+			float totalRadius = Radius + v.Radius;
 
 			// obstacle center relative to vehicle position
-			Vec3 localOffset = Center - vehicle.Position;
+			Vector3 localOffset = Center - v.Position;
 
 			// distance along vehicle's forward axis to obstacle's center
-			float forwardComponent = localOffset.Dot(vehicle.Forward);
-			Vec3 forwardOffset = vehicle.Forward * forwardComponent;
+            float forwardComponent = Vector3.Dot(localOffset, v.Forward);
+			Vector3 forwardOffset = v.Forward * forwardComponent;
 
 			// offset from forward axis to obstacle's center
-			Vec3 offForwardOffset = localOffset - forwardOffset;
+			Vector3 offForwardOffset = localOffset - forwardOffset;
 
 			// test to see if sphere overlaps with obstacle-free corridor
 			bool inCylinder = offForwardOffset.Length() < totalRadius;
@@ -84,7 +86,7 @@ namespace Bnoerj.AI.Steering
 			}
 			else
 			{
-				return Vec3.Zero;
+                return Vector3.Zero;
 			}
 		}
 	}

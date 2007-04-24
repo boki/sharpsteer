@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Bnoerj.AI.Steering
 {
@@ -45,7 +47,7 @@ namespace Bnoerj.AI.Steering
 			public Object Obj;
 
 			// the obj's location ("key point") used for spatial sorting
-			public Vec3 Position;
+			public Vector3 Position;
 
 			public ClientProxy(Object obj)
 			{
@@ -54,10 +56,10 @@ namespace Bnoerj.AI.Steering
 		}
 
 		// the origin is the super-brick corner minimum coordinates
-		Vec3 Origin;
+		Vector3 Origin;
 
 		// length of the edges of the super-brick
-		Vec3 Size;
+		Vector3 Size;
 
 		// number of sub-brick divisions in each direction
 		int DivX;
@@ -82,7 +84,7 @@ namespace Bnoerj.AI.Steering
 		 * This routine also allocates the bin array, and initialize its
 		 * contents.
 		 */
-		public LocalityQueryDB(Vec3 origin, Vec3 size, int divx, int divy, int divz)
+		public LocalityQueryDB(Vector3 origin, Vector3 size, int divx, int divy, int divz)
 		{
 			Origin = origin;
 			Size = size;
@@ -108,7 +110,7 @@ namespace Bnoerj.AI.Steering
 		/* Call for each client obj every time its location changes.  For
 		   example, in an animation application, this would be called each
 		   frame for every moving obj.  */
-		public void UpdateForNewLocation(ref ClientProxy obj, Vec3 position)
+		public void UpdateForNewLocation(ref ClientProxy obj, Vector3 position)
 		{
 			/* find bin for new location */
 			int newBin = BinForLocation(position);
@@ -150,7 +152,7 @@ namespace Bnoerj.AI.Steering
 		/* Find the bin ID for a location in space.  The location is given in
 		   terms of its XYZ coordinates.  The bin ID is a pointer to a pointer
 		   to the bin contents list.  */
-		public /*lqClientProxy*/int BinForLocation(Vec3 position)
+		public /*lqClientProxy*/int BinForLocation(Vector3 position)
 		{
 			/* if point outside super-brick, return the "other" bin */
 			if (position.X < Origin.X || position.Y < Origin.Y || position.Z < Origin.Z ||
@@ -188,7 +190,7 @@ namespace Bnoerj.AI.Steering
 		   bins which do not overlap with the sphere of interest.  Incremental
 		   calculation of index values is used to efficiently traverse the
 		   bins of interest. */
-		public void MapOverAllObjectsInLocality(Vec3 center, float radius, LQCallBackFunction func, Object clientQueryState)
+		public void MapOverAllObjectsInLocality(Vector3 center, float radius, LQCallBackFunction func, Object clientQueryState)
 		{
 			int partlyOut = 0;
 			bool completelyOutside =
@@ -239,13 +241,13 @@ namespace Bnoerj.AI.Steering
 		/* Given a bin's list of client proxies, traverse the list and invoke
 		the given lqCallBackFunction on each obj that falls within the
 		search radius.  */
-		public void TraverseBinClientObjectList(ref ClientProxy co, float radiusSquared, LQCallBackFunction func, Object state, Vec3 position)
+		public void TraverseBinClientObjectList(ref ClientProxy co, float radiusSquared, LQCallBackFunction func, Object state, Vector3 position)
 		{
 			while (co != null)
 			{
 				// compute distance (squared) from this client obj to given
 				// locality sphere's centerpoint
-				Vec3 d = position - co.Position;
+				Vector3 d = position - co.Position;
 				float distanceSquared = d.LengthSquared();
 
 				// apply function if client obj within sphere
@@ -260,7 +262,7 @@ namespace Bnoerj.AI.Steering
 		/* This subroutine of lqMapOverAllObjectsInLocality efficiently
 		   traverses of subset of bins specified by max and min bin
 		   coordinates. */
-		public void MapOverAllObjectsInLocalityClipped(Vec3 center, float radius,
+		public void MapOverAllObjectsInLocalityClipped(Vector3 center, float radius,
 							   LQCallBackFunction func,
 							   Object clientQueryState,
 							   int minBinX, int minBinY, int minBinZ,
@@ -310,7 +312,7 @@ namespace Bnoerj.AI.Steering
 		/* If the query region (sphere) extends outside of the "super-brick"
 		   we need to check for objects in the catch-all "other" bin which
 		   holds any object which are not inside the regular sub-bricks  */
-		public void MapOverAllOutsideObjects(Vec3 center, float radius, LQCallBackFunction func, Object clientQueryState)
+		public void MapOverAllOutsideObjects(Vector3 center, float radius, LQCallBackFunction func, Object clientQueryState)
 		{
 			ClientProxy co = bins[bins.Length - 1];
 			float radiusSquared = radius * radius;
@@ -423,7 +425,7 @@ namespace Bnoerj.AI.Steering
 		   database, since otherwise it would be its own nearest neighbor.
 		   The function returns a void* pointer to the nearest object, or
 		   NULL if none is found.  */
-		public Object FindNearestNeighborWithinRadius(Vec3 center, float radius, Object ignoreObject)
+		public Object FindNearestNeighborWithinRadius(Vector3 center, float radius, Object ignoreObject)
 		{
 			/* initialize search state */
 			FindNearestState lqFNS;

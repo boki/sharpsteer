@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,17 +11,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.LowSpeedTurn
+namespace Bnoerj.AI.Steering.LowSpeedTurn
 {
 	class LowSpeedTurnPlugIn : PlugIn
 	{
 		const int lstCount = 5;
 		const float lstLookDownDistance = 18;
-		static Vec3 lstViewCenter = new Vec3(7, 0, -2);
-		static Vec3 lstPlusZ = new Vec3(0, 0, 1);
+		static Vector3 lstViewCenter = new Vector3(7, 0, -2);
+		static Vector3 lstPlusZ = new Vector3(0, 0, 1);
 
 		public LowSpeedTurnPlugIn()
 			: base()
@@ -84,9 +85,9 @@ namespace Bnoerj.SharpSteer.LowSpeedTurn
 				agent.Draw();
 
 				// display speed near agent's screen position
-				Color textColor = new Color(new Vec3(0.8f, 0.8f, 1.0f).ToVector3());
-				Vec3 textOffset = new Vec3(0, 0.25f, 0);
-				Vec3 textPosition = agent.Position + textOffset;
+				Color textColor = new Color(new Vector3(0.8f, 0.8f, 1.0f));
+				Vector3 textOffset = new Vector3(0, 0.25f, 0);
+				Vector3 textPosition = agent.Position + textOffset;
 				String annote = String.Format("{0:0.00}", agent.Speed);
 				Drawing.Draw2dTextAt3dLocation(annote, textPosition, textColor);
 			}

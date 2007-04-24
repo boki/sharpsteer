@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -27,14 +28,14 @@ namespace Bnoerj.AI.Steering
 		float Radius { get; set; }
 
         // velocity of vehicle
-		Vec3 Velocity { get; }
+        Vector3 Velocity { get; }
 
         // speed of vehicle (may be faster than taking magnitude of velocity)
 		float Speed { get; set; }
 
         // predict position of this vehicle at some time in the future
         //(assumes velocity remains constant)
-		Vec3 PredictFuturePosition(float predictionTime);
+        Vector3 PredictFuturePosition(float predictionTime);
 
         // ----------------------------------------------------------------------
         // XXX this vehicle-model-specific functionality functionality seems out

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Bnoerj.SharpSteer
+namespace Bnoerj.AI.Steering
 {
     /// <summary>
     /// The main runtime font class. These objects are loaded from XNB format

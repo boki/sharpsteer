@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -34,11 +35,11 @@ namespace Bnoerj.AI.Steering
 		// (velocity is clipped to this magnitude)
 
 		float curvature;
-		Vec3 lastForward;
-		Vec3 lastPosition;
-		Vec3 smoothedPosition;
+        Vector3 lastForward;
+        Vector3 lastPosition;
+        Vector3 smoothedPosition;
 		float smoothedCurvature;
-		Vec3 smoothedAcceleration;
+        Vector3 smoothedAcceleration;
 
 		// constructor
 		public SimpleVehicle()
@@ -82,7 +83,7 @@ namespace Bnoerj.AI.Steering
 		}
 
 		// get velocity of vehicle
-		public override Vec3 Velocity
+        public override Vector3 Velocity
 		{
 			get { return Forward * speed; }
 		}
@@ -117,16 +118,16 @@ namespace Bnoerj.AI.Steering
 
 		// apply a given steering force to our momentum,
 		// adjusting our orientation to maintain velocity-alignment.
-		public void ApplySteeringForce(Vec3 force, float elapsedTime)
+        public void ApplySteeringForce(Vector3 force, float elapsedTime)
 		{
-			Vec3 adjustedForce = AdjustRawSteeringForce(force, elapsedTime);
+			Vector3 adjustedForce = AdjustRawSteeringForce(force, elapsedTime);
 
 			// enforce limit on magnitude of steering force
-			Vec3 clippedForce = adjustedForce.TruncateLength(MaxForce);
+            Vector3 clippedForce = Vector3Helpers.TruncateLength(adjustedForce, MaxForce);
 
 			// compute acceleration and velocity
-			Vec3 newAcceleration = (clippedForce / Mass);
-			Vec3 newVelocity = Velocity;
+			Vector3 newAcceleration = (clippedForce / Mass);
+			Vector3 newVelocity = Velocity;
 
 			// damp out abrupt changes and oscillations in steering acceleration
 			// (rate is proportional to time step, then clipped into useful range)
@@ -140,7 +141,7 @@ namespace Bnoerj.AI.Steering
 			newVelocity += smoothedAcceleration * elapsedTime;
 
 			// enforce speed limit
-			newVelocity = newVelocity.TruncateLength(MaxSpeed);
+            newVelocity = Vector3Helpers.TruncateLength(newVelocity, MaxSpeed);
 
 			// update Speed
 			Speed = (newVelocity.Length());
@@ -163,7 +164,7 @@ namespace Bnoerj.AI.Steering
 
 		// the default version: keep FORWARD parallel to velocity, change
 		// UP as little as possible.
-		public virtual void RegenerateLocalSpace(Vec3 newVelocity, float elapsedTime)
+        public virtual void RegenerateLocalSpace(Vector3 newVelocity, float elapsedTime)
 		{
 			// adjust orthonormal basis vectors to be aligned with new velocity
 			if (Speed > 0)
@@ -175,24 +176,25 @@ namespace Bnoerj.AI.Steering
 		// alternate version: keep FORWARD parallel to velocity, adjust UP
 		// according to a no-basis-in-reality "banking" behavior, something
 		// like what birds and airplanes do.  (XXX experimental cwr 6-5-03)
-		public void RegenerateLocalSpaceForBanking(Vec3 newVelocity, float elapsedTime)
+        public void RegenerateLocalSpaceForBanking(Vector3 newVelocity, float elapsedTime)
 		{
 			// the length of this global-upward-pointing vector controls the vehicle's
 			// tendency to right itself as it is rolled over from turning acceleration
-			Vec3 globalUp = new Vec3(0, 0.2f, 0);
+			Vector3 globalUp = new Vector3(0, 0.2f, 0);
 
 			// acceleration points toward the center of local path curvature, the
 			// length determines how much the vehicle will roll while turning
-			Vec3 accelUp = smoothedAcceleration * 0.05f;
+			Vector3 accelUp = smoothedAcceleration * 0.05f;
 
 			// combined banking, sum of UP due to turning and global UP
-			Vec3 bankUp = accelUp + globalUp;
+			Vector3 bankUp = accelUp + globalUp;
 
 			// blend bankUp into vehicle's UP basis vector
 			float smoothRate = elapsedTime * 3;
-			Vec3 tempUp = Up;
+			Vector3 tempUp = Up;
 			Utilities.BlendIntoAccumulator(smoothRate, bankUp, ref tempUp);
-			Up = tempUp.Normalize();
+			Up = tempUp;
+            Up.Normalize();
 
 			AnnotationLine(Position, Position + (globalUp * 4), Color.White);  // XXX
 			AnnotationLine(Position, Position + (bankUp * 4), Color.Orange); // XXX
@@ -207,11 +209,11 @@ namespace Bnoerj.AI.Steering
 		// allows a specific vehicle class to redefine this adjustment.
 		// default is to disallow backward-facing steering at low speed.
 		// xxx experimental 8-20-02
-		public virtual Vec3 AdjustRawSteeringForce(Vec3 force, float deltaTime)
+        public virtual Vector3 AdjustRawSteeringForce(Vector3 force, float deltaTime)
 		{
 			float maxAdjustedSpeed = 0.2f * MaxSpeed;
 
-			if ((Speed > maxAdjustedSpeed) || (force == Vec3.Zero))
+			if ((Speed > maxAdjustedSpeed) || (force == Vector3.Zero))
 			{
 				return force;
 			}
@@ -219,7 +221,7 @@ namespace Bnoerj.AI.Steering
 			{
 				float range = Speed / maxAdjustedSpeed;
 				float cosine = Utilities.Interpolate((float)Math.Pow(range, 20), 1.0f, -1.0f);
-				return Vec3.LimitMaxDeviationAngle(force, cosine, Forward);
+				return Vector3Helpers.LimitMaxDeviationAngle(force, cosine, Forward);
 			}
 		}
 
@@ -235,7 +237,7 @@ namespace Bnoerj.AI.Steering
 
 		// predict position of this vehicle at some time in the future
 		// (assumes velocity remains constant)
-		public override Vec3 PredictFuturePosition(float predictionTime)
+        public override Vector3 PredictFuturePosition(float predictionTime)
 		{
 			return Position + (Velocity * predictionTime);
 		}
@@ -257,33 +259,33 @@ namespace Bnoerj.AI.Steering
 		}
 		public float ResetSmoothedCurvature(float value)
 		{
-			lastForward = Vec3.Zero;
-			lastPosition = Vec3.Zero;
+			lastForward = Vector3.Zero;
+			lastPosition = Vector3.Zero;
 			return smoothedCurvature = curvature = value;
 		}
 
-		public Vec3 SmoothedAcceleration
+        public Vector3 SmoothedAcceleration
 		{
 			get { return smoothedAcceleration; }
 		}
-		public Vec3 ResetSmoothedAcceleration()
+        public Vector3 ResetSmoothedAcceleration()
 		{
-			return ResetSmoothedAcceleration(Vec3.Zero);
+			return ResetSmoothedAcceleration(Vector3.Zero);
 		}
-		public Vec3 ResetSmoothedAcceleration(Vec3 value)
+        public Vector3 ResetSmoothedAcceleration(Vector3 value)
 		{
 			return smoothedAcceleration = value;
 		}
 
-		public Vec3 SmoothedPosition
+        public Vector3 SmoothedPosition
 		{
 			get { return smoothedPosition; }
 		}
-		public Vec3 ResetSmoothedPosition()
+        public Vector3 ResetSmoothedPosition()
 		{
-			return ResetSmoothedPosition(Vec3.Zero);
+			return ResetSmoothedPosition(Vector3.Zero);
 		}
-		public Vec3 ResetSmoothedPosition(Vec3 value)
+        public Vector3 ResetSmoothedPosition(Vector3 value)
 		{
 			return smoothedPosition = value;
 		}
@@ -294,7 +296,7 @@ namespace Bnoerj.AI.Steering
 			float desat = 0.4f;
 			float aScale = maxLengthA / MaxForce;
 			float vScale = maxLengthV / MaxSpeed;
-			Vec3 p = Position;
+			Vector3 p = Position;
 			Color aColor = new Color(new Vector3(desat, desat, 1)); // bluish
 			Color vColor = new Color(new Vector3(1, desat, 1)); // pinkish
 
@@ -314,8 +316,8 @@ namespace Bnoerj.AI.Steering
 		// rotate about it by a random angle (pick random forward, derive side).
 		public void RandomizeHeadingOnXZPlane()
 		{
-			Up = Vec3.Up;
-			Forward = Vec3.RandomUnitVectorOnXZPlane();
+			Up = Vector3.Up;
+            Forward = Vector3Helpers.RandomUnitVectorOnXZPlane();
 			Side = LocalRotateForwardToSide(Forward);
 		}
 
@@ -324,10 +326,10 @@ namespace Bnoerj.AI.Steering
 		{
 			if (elapsedTime > 0)
 			{
-				Vec3 dP = lastPosition - Position;
-				Vec3 dF = (lastForward - Forward) / dP.Length();
-				Vec3 lateral = dF.PerpendicularComponent(Forward);
-				float sign = (lateral.Dot(Side) < 0) ? 1.0f : -1.0f;
+				Vector3 dP = lastPosition - Position;
+				Vector3 dF = (lastForward - Forward) / dP.Length();
+                Vector3 lateral = Vector3Helpers.PerpendicularComponent(dF, Forward);
+                float sign = (Vector3.Dot(lateral, Side) < 0) ? 1.0f : -1.0f;
 				curvature = lateral.Length() * sign;
 				Utilities.BlendIntoAccumulator(elapsedTime * 4.0f, curvature, ref smoothedCurvature);
 				lastForward = Forward;

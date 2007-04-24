@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,10 +11,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.MultiplePursuit
+namespace Bnoerj.AI.Steering.MultiplePursuit
 {
 	public class MpPursuer : MpBase
 	{
@@ -36,7 +37,7 @@ namespace Bnoerj.SharpSteer.MultiplePursuit
 		public void Update(float currentTime, float elapsedTime)
 		{
 			// when pursuer touches quarry ("wanderer"), reset its position
-			float d = Vec3.Distance(Position, wanderer.Position);
+			float d = Vector3.Distance(Position, wanderer.Position);
 			float r = Radius + wanderer.Radius;
 			if (d < r) Reset();
 
@@ -55,7 +56,7 @@ namespace Bnoerj.SharpSteer.MultiplePursuit
 			const float inner = 20;
 			const float outer = 30;
 			float radius = Utilities.Random(inner, outer);
-			Vec3 randomOnRing = Vec3.RandomUnitVectorOnXZPlane() * radius;
+			Vector3 randomOnRing = Vector3Helpers.RandomUnitVectorOnXZPlane() * radius;
 			Position = (wanderer.Position + randomOnRing);
 
 			// randomize 2D heading

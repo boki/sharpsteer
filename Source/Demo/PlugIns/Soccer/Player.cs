@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,10 +11,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Soccer
+namespace Bnoerj.AI.Steering.Soccer
 {
 	public class Player : SimpleVehicle
 	{
@@ -43,7 +44,7 @@ namespace Bnoerj.SharpSteer.Soccer
 				if (b_ImTeamA)
 					Position = (Globals.PlayerPosition[m_MyID]);
 				else
-					Position = (new Vec3(-Globals.PlayerPosition[m_MyID].X, Globals.PlayerPosition[m_MyID].Y, Globals.PlayerPosition[m_MyID].Z));
+					Position = (new Vector3(-Globals.PlayerPosition[m_MyID].X, Globals.PlayerPosition[m_MyID].Y, Globals.PlayerPosition[m_MyID].Z));
 			}
 			m_home = Position;
 			ClearTrailHistory();    // prevent long streaks due to teleportation 
@@ -54,24 +55,24 @@ namespace Bnoerj.SharpSteer.Soccer
 		public void Update(float currentTime, float elapsedTime)
 		{
 			// if I hit the ball, kick it.
-			float distToBall = Vec3.Distance(Position, m_Ball.Position);
+			float distToBall = Vector3.Distance(Position, m_Ball.Position);
 			float sumOfRadii = Radius + m_Ball.Radius;
 			if (distToBall < sumOfRadii)
 				m_Ball.Kick((m_Ball.Position - Position) * 50, elapsedTime);
 
 			// otherwise consider avoiding collisions with others
-			Vec3 collisionAvoidance = SteerToAvoidNeighbors(1, m_AllPlayers);
-			if (collisionAvoidance != Vec3.Zero)
+			Vector3 collisionAvoidance = SteerToAvoidNeighbors(1, m_AllPlayers);
+			if (collisionAvoidance != Vector3.Zero)
 				ApplySteeringForce(collisionAvoidance, elapsedTime);
 			else
 			{
-				float distHomeToBall = Vec3.Distance(m_home, m_Ball.Position);
+				float distHomeToBall = Vector3.Distance(m_home, m_Ball.Position);
 				if (distHomeToBall < 12)
 				{
 					// go for ball if I'm on the 'right' side of the ball
 					if (b_ImTeamA ? Position.X > m_Ball.Position.X : Position.X < m_Ball.Position.X)
 					{
-						Vec3 seekTarget = SteerForSeek2(m_Ball.Position);
+						Vector3 seekTarget = xxxSteerForSeek(m_Ball.Position);
 						ApplySteeringForce(seekTarget, elapsedTime);
 					}
 					else
@@ -79,18 +80,18 @@ namespace Bnoerj.SharpSteer.Soccer
 						if (distHomeToBall < 12)
 						{
 							float Z = m_Ball.Position.Z - Position.Z > 0 ? -1.0f : 1.0f;
-							Vec3 behindBall = m_Ball.Position + (b_ImTeamA ? new Vec3(2, 0, Z) : new Vec3(-2, 0, Z));
-							Vec3 behindBallForce = SteerForSeek2(behindBall);
+							Vector3 behindBall = m_Ball.Position + (b_ImTeamA ? new Vector3(2, 0, Z) : new Vector3(-2, 0, Z));
+							Vector3 behindBallForce = xxxSteerForSeek(behindBall);
 							AnnotationLine(Position, behindBall, Color.Green);
-							Vec3 evadeTarget = SteerForFlee2(m_Ball.Position);
+							Vector3 evadeTarget = xxxSteerForFlee(m_Ball.Position);
 							ApplySteeringForce(behindBallForce * 10 + evadeTarget, elapsedTime);
 						}
 					}
 				}
 				else	// Go home
 				{
-					Vec3 seekTarget = SteerForSeek2(m_home);
-					Vec3 seekHome = SteerForSeek2(m_home);
+					Vector3 seekTarget = xxxSteerForSeek(m_home);
+					Vector3 seekHome = xxxSteerForSeek(m_home);
 					ApplySteeringForce(seekTarget + seekHome, elapsedTime);
 				}
 
@@ -110,6 +111,6 @@ namespace Bnoerj.SharpSteer.Soccer
 		Ball m_Ball;
 		bool b_ImTeamA;
 		int m_MyID;
-		Vec3 m_home;
+		Vector3 m_home;
 	}
 }

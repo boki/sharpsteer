@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,10 +11,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Soccer
+namespace Bnoerj.AI.Steering.Soccer
 {
 	public class Ball : SimpleVehicle
 	{
@@ -44,20 +45,20 @@ namespace Bnoerj.SharpSteer.Soccer
 			// are we now outside the field?
 			if (!m_bbox.IsInsideX(Position))
 			{
-				Vec3 d = Velocity;
-				RegenerateOrthonormalBasis(new Vec3(-d.X, d.Y, d.Z));
+				Vector3 d = Velocity;
+				RegenerateOrthonormalBasis(new Vector3(-d.X, d.Y, d.Z));
 				ApplySteeringForce(Velocity, elapsedTime);
 			}
 			if (!m_bbox.IsInsideZ(Position))
 			{
-				Vec3 d = Velocity;
-				RegenerateOrthonormalBasis(new Vec3(d.X, d.Y, -d.Z));
+				Vector3 d = Velocity;
+				RegenerateOrthonormalBasis(new Vector3(d.X, d.Y, -d.Z));
 				ApplySteeringForce(Velocity, elapsedTime);
 			}
 			RecordTrailVertex(currentTime, Position);
 		}
 
-		public void Kick(Vec3 dir, float elapsedTime)
+		public void Kick(Vector3 dir, float elapsedTime)
 		{
 			Speed = (dir.Length());
 			RegenerateOrthonormalBasis(dir);

@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,10 +11,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Soccer
+namespace Bnoerj.AI.Steering.Soccer
 {
 	public class SoccerPlugIn : PlugIn
 	{
@@ -29,11 +30,11 @@ namespace Bnoerj.SharpSteer.Soccer
 		public override void Open()
 		{
 			// Make a field
-			bbox = new AABBox(new Vec3(-20, 0, -10), new Vec3(20, 0, 10));
+			bbox = new AABBox(new Vector3(-20, 0, -10), new Vector3(20, 0, 10));
 			// Red goal
-			teamAGoal = new AABBox(new Vec3(-21, 0, -7), new Vec3(-19, 0, 7));
+			teamAGoal = new AABBox(new Vector3(-21, 0, -7), new Vector3(-19, 0, 7));
 			// Blue Goal
-			teamBGoal = new AABBox(new Vec3(19, 0, -7), new Vec3(21, 0, 7));
+			teamBGoal = new AABBox(new Vector3(19, 0, -7), new Vector3(21, 0, 7));
 			// Make a ball
 			ball = new Ball(bbox);
 			// Build team A
@@ -57,7 +58,7 @@ namespace Bnoerj.SharpSteer.Soccer
 			// initialize camera
 			Demo.Init2dCamera(ball);
 			Demo.Camera.SetPosition(10, Demo.Camera2dElevation, 10);
-			Demo.Camera.FixedPosition.Set(40, 40, 40);
+			Demo.Camera.FixedPosition = new Vector3(40);
 			Demo.Camera.Mode = Camera.CameraMode.Fixed;
 			redScore = 0;
 			blueScore = 0;
@@ -87,7 +88,7 @@ namespace Bnoerj.SharpSteer.Soccer
 		public override void Redraw(float currentTime, float elapsedTime)
 		{
 			// draw "ground plane"
-			Demo.GridUtility(Vec3.Zero);
+			Demo.GridUtility(Vector3.Zero);
 
 			// draw test vehicle
 			for (int i = 0; i < teamA.Count; i++)
@@ -101,11 +102,11 @@ namespace Bnoerj.SharpSteer.Soccer
 
 			StringBuilder annote = new StringBuilder();
 			annote.AppendFormat("Red: {0}", redScore);
-			Drawing.Draw2dTextAt3dLocation(annote.ToString(), new Vec3(23, 0, 0), new Color((byte)(255.0f * 1), (byte)(255.0f * 0.7f), (byte)(255.0f * 0.7f)));
+			Drawing.Draw2dTextAt3dLocation(annote.ToString(), new Vector3(23, 0, 0), new Color((byte)(255.0f * 1), (byte)(255.0f * 0.7f), (byte)(255.0f * 0.7f)));
 
 			annote = new StringBuilder();
 			annote.AppendFormat("Blue: {0}", blueScore);
-			Drawing.Draw2dTextAt3dLocation(annote.ToString(), new Vec3(-23, 0, 0), new Color((byte)(255.0f * 0.7f), (byte)(255.0f * 0.7f), (byte)(255.0f * 1)));
+			Drawing.Draw2dTextAt3dLocation(annote.ToString(), new Vector3(-23, 0, 0), new Color((byte)(255.0f * 0.7f), (byte)(255.0f * 0.7f), (byte)(255.0f * 1)));
 
 			// textual annotation (following the test vehicle's screen position)
 #if IGNORED
@@ -114,7 +115,7 @@ namespace Bnoerj.SharpSteer.Soccer
 				String anno = String.Format("      speed: {0:0.00} ID: {1} ", TeamA[i].speed(), i);
 				Drawing.Draw2dTextAt3dLocation(anno, TeamA[i].position(), Color.Red);
 			}
-			Drawing.Draw2dTextAt3dLocation("start", Vec3.zero, Color.Green);
+			Drawing.Draw2dTextAt3dLocation("start", Vector3.zero, Color.Green);
 #endif
 			// update camera, tracking test vehicle
 			Demo.UpdateCamera(currentTime, elapsedTime, Demo.SelectedVehicle);

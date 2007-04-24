@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,15 +10,16 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Bnoerj.AI.Steering
 {
 	public interface ITokenForProximityDatabase<ContentType> : IDisposable
 	{
 		// the client object calls this each time its position changes
-		void UpdateForNewPosition(Vec3 position);
+        void UpdateForNewPosition(Vector3 position);
 
 		// find all neighbors within the given sphere (as center and radius)
-		void FindNeighbors(Vec3 center, float radius, ref List<ContentType> results);
+        void FindNeighbors(Vector3 center, float radius, ref List<ContentType> results);
 	}
 }

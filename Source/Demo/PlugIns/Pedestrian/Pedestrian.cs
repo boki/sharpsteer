@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,10 +10,10 @@
 
 using System;
 using System.Collections.Generic;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Pedestrian
+namespace Bnoerj.AI.Steering.Pedestrian
 {
 	using ProximityDatabase = IProximityDatabase<IVehicle>;
 	using ProximityToken = ITokenForProximityDatabase<IVehicle>;
@@ -20,7 +21,7 @@ namespace Bnoerj.SharpSteer.Pedestrian
 	public class Pedestrian : SimpleVehicle
 	{
 		// called when steerToFollowPath decides steering is required
-		public override void AnnotatePathFollowing(Vec3 future, Vec3 onPath, Vec3 target, float outside)
+		public override void AnnotatePathFollowing(Vector3 future, Vector3 onPath, Vector3 target, float outside)
 		{
 			Color yellow = Color.Yellow;
 			Color lightOrange = new Color((byte)(255.0f * 1.0f), (byte)(255.0f * 0.5f), 0);
@@ -36,8 +37,10 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			// draw a two-toned line between the future test point and its
 			// projection onto the path, the change from dark to light color
 			// indicates the boundary of the tube.
-			Vec3 boundaryOffset = (onPath - future).Normalize() * outside;
-			Vec3 onPathBoundary = future + boundaryOffset;
+            Vector3 boundaryOffset = (onPath - future);
+            boundaryOffset.Normalize();
+            boundaryOffset *= outside;
+			Vector3 onPathBoundary = future + boundaryOffset;
 			AnnotationLine(onPath, onPathBoundary, darkOrange);
 			AnnotationLine(onPathBoundary, future, lightOrange);
 		}
@@ -47,18 +50,18 @@ namespace Bnoerj.SharpSteer.Pedestrian
 		public override void AnnotateAvoidCloseNeighbor(IVehicle other, float additionalDistance)
 		{
 			// draw the word "Ouch!" above colliding vehicles
-			bool headOn = Forward.Dot(other.Forward) < 0;
+            bool headOn = Vector3.Dot(Forward, other.Forward) < 0;
 			Color green = new Color((byte)(255.0f * 0.4f), (byte)(255.0f * 0.8f), (byte)(255.0f * 0.1f));
 			Color red = new Color((byte)(255.0f * 1), (byte)(255.0f * 0.1f), 0);
 			Color color = headOn ? red : green;
 			String text = headOn ? "OUCH!" : "pardon me";
-			Vec3 location = Position + new Vec3(0, 0.5f, 0);
+			Vector3 location = Position + new Vector3(0, 0.5f, 0);
 			if (Annotation.IsAnnotationEnabled)
 				Drawing.Draw2dTextAt3dLocation(text, location, color);
 		}
 
 		// (parameter names commented out to prevent compiler warning from "-W")
-		public override void AnnotateAvoidNeighbor(IVehicle threat, float steer, Vec3 ourFuture, Vec3 threatFuture)
+		public override void annotateAvoidNeighbor(IVehicle threat, float steer, Vector3 ourFuture, Vector3 threatFuture)
 		{
 			Color green = new Color((byte)(255.0f * 0.15f), (byte)(255.0f * 0.6f), 0);
 
@@ -74,12 +77,12 @@ namespace Bnoerj.SharpSteer.Pedestrian
 		// xxx CaptureTheFlag.cpp
 		public override void AnnotateAvoidObstacle(float minDistanceToCollision)
 		{
-			Vec3 boxSide = Side * Radius;
-			Vec3 boxFront = Forward * minDistanceToCollision;
-			Vec3 FR = Position + boxFront - boxSide;
-			Vec3 FL = Position + boxFront + boxSide;
-			Vec3 BR = Position - boxSide;
-			Vec3 BL = Position + boxSide;
+			Vector3 boxSide = Side * Radius;
+			Vector3 boxFront = Forward * minDistanceToCollision;
+			Vector3 FR = Position + boxFront - boxSide;
+			Vector3 FL = Position + boxFront + boxSide;
+			Vector3 BR = Position - boxSide;
+			Vector3 BL = Position + boxSide;
 			AnnotationLine(FR, FL, Color.White);
 			AnnotationLine(FL, BL, Color.White);
 			AnnotationLine(BL, BR, Color.White);
@@ -120,7 +123,7 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			// (random point on path + random horizontal offset)
 			float d = path.TotalPathLength * Utilities.Random();
 			float r = path.radius;
-			Vec3 randomOffset = Vec3.RandomVectorOnUnitRadiusXZDisk() * r;
+			Vector3 randomOffset = Vector3Helpers.RandomVectorOnUnitRadiusXZDisk() * r;
 			Position = (path.MapPathDistanceToPoint(d) + randomOffset);
 
 			// randomize 2D heading
@@ -145,12 +148,12 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			// reverse direction when we reach an endpoint
 			if (Globals.UseDirectedPathFollowing)
 			{
-				if (Vec3.Distance(Position, Globals.Endpoint0) < path.radius)
+				if (Vector3.Distance(Position, Globals.Endpoint0) < path.radius)
 				{
 					pathDirection = +1;
 					AnnotationXZCircle(path.radius, Globals.Endpoint0, Color.DarkRed, 20);
 				}
-				if (Vec3.Distance(Position, Globals.Endpoint1) < path.radius)
+				if (Vector3.Distance(Position, Globals.Endpoint1) < path.radius)
 				{
 					pathDirection = -1;
 					AnnotationXZCircle(path.radius, Globals.Endpoint1, Color.DarkRed, 20);
@@ -167,10 +170,10 @@ namespace Bnoerj.SharpSteer.Pedestrian
 
 		// compute combined steering force: move forward, avoid obstacles
 		// or neighbors if needed, otherwise follow the path and wander
-		public Vec3 DetermineCombinedSteering(float elapsedTime)
+		public Vector3 DetermineCombinedSteering(float elapsedTime)
 		{
 			// move forward
-			Vec3 steeringForce = Forward;
+			Vector3 steeringForce = Forward;
 
 			// probability that a lower priority behavior will be given a
 			// chance to "drive" even if a higher priority behavior might
@@ -178,7 +181,7 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			const float leakThrough = 0.1f;
 
 			// determine if obstacle avoidance is required
-			Vec3 obstacleAvoidance = Vec3.Zero;
+			Vector3 obstacleAvoidance = Vector3.Zero;
 			if (leakThrough < Utilities.Random())
 			{
 				const float oTime = 6; // minTimeToCollision = 6 seconds
@@ -186,14 +189,14 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			}
 
 			// if obstacle avoidance is needed, do it
-			if (obstacleAvoidance != Vec3.Zero)
+			if (obstacleAvoidance != Vector3.Zero)
 			{
 				steeringForce += obstacleAvoidance;
 			}
 			else
 			{
 				// otherwise consider avoiding collisions with others
-				Vec3 collisionAvoidance = Vec3.Zero;
+				Vector3 collisionAvoidance = Vector3.Zero;
 				const float caLeadTime = 3;
 
 				// find all neighbors within maxRadius using proximity database
@@ -207,7 +210,7 @@ namespace Bnoerj.SharpSteer.Pedestrian
 					collisionAvoidance = SteerToAvoidNeighbors(caLeadTime, neighbors) * 10;
 
 				// if collision avoidance is needed, do it
-				if (collisionAvoidance != Vec3.Zero)
+				if (collisionAvoidance != Vector3.Zero)
 				{
 					steeringForce += collisionAvoidance;
 				}
@@ -219,7 +222,7 @@ namespace Bnoerj.SharpSteer.Pedestrian
 
 					// do (interactively) selected type of path following
 					const float pfLeadTime = 3;
-					Vec3 pathFollow =
+					Vector3 pathFollow =
 						(Globals.UseDirectedPathFollowing ?
 						 SteerToFollowPath(pathDirection, pfLeadTime, path) :
 						 SteerToStayOnPath(pfLeadTime, path));
@@ -230,7 +233,8 @@ namespace Bnoerj.SharpSteer.Pedestrian
 			}
 
 			// return steering constrained to global XZ "ground" plane
-			return steeringForce.SetYToZero();
+            steeringForce.Y = 0;
+			return steeringForce;
 		}
 
 

@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -9,11 +10,11 @@
 
 using System;
 using System.Collections.Generic;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.Ctf
+namespace Bnoerj.AI.Steering.Ctf
 {
 	using SOG = List<SphericalObstacle>;  // spherical obstacle group
 
@@ -65,8 +66,11 @@ namespace Bnoerj.SharpSteer.Ctf
 			// initialize camera
 			Demo.Init2dCamera(Globals.CtfSeeker);
 			Demo.Camera.Mode = Camera.CameraMode.FixedDistanceOffset;
-			Demo.Camera.FixedTarget.Set(15, 0, 0);
-			Demo.Camera.FixedPosition.Set(80, 60, 0);
+			Demo.Camera.FixedTarget = Vector3.Zero;
+            Demo.Camera.FixedTarget.X = 15;
+			Demo.Camera.FixedPosition.X = 80;
+            Demo.Camera.FixedPosition.Y = 60;
+            Demo.Camera.FixedPosition.Z = 0;
 
 			CtfBase.InitializeObstacles();
 		}
@@ -95,12 +99,13 @@ namespace Bnoerj.SharpSteer.Ctf
 			Demo.UpdateCamera(currentTime, elapsedTime, selected);
 
 			// draw "ground plane" centered between base and selected vehicle
-			Vec3 goalOffset = Globals.HomeBaseCenter - Demo.Camera.Position;
-			Vec3 goalDirection = goalOffset.Normalize();
-			Vec3 cameraForward = Demo.Camera.GenerateLocalSpace().Forward;
-			float goalDot = cameraForward.Dot(goalDirection);
+			Vector3 goalOffset = Globals.HomeBaseCenter - Demo.Camera.Position;
+			Vector3 goalDirection = goalOffset;
+            goalDirection.Normalize();
+			Vector3 cameraForward = Demo.Camera.xxxls().Forward;
+            float goalDot = Vector3.Dot(cameraForward, goalDirection);
 			float blend = Utilities.RemapIntervalClip(goalDot, 1, 0, 0.5f, 0);
-			Vec3 gridCenter = Utilities.Interpolate(blend, selected.Position, Globals.HomeBaseCenter);
+			Vector3 gridCenter = Utilities.Interpolate(blend, selected.Position, Globals.HomeBaseCenter);
 			Demo.GridUtility(gridCenter);
 
 			// draw the seeker, obstacles and home base
@@ -175,7 +180,7 @@ namespace Bnoerj.SharpSteer.Ctf
 
 		public void DrawHomeBase()
 		{
-			Vec3 up = new Vec3(0, 0.01f, 0);
+			Vector3 up = new Vector3(0, 0.01f, 0);
 			Color atColor = new Color((byte)(255.0f * 0.3f), (byte)(255.0f * 0.3f), (byte)(255.0f * 0.5f));
 			Color noColor = Color.Gray;
 			bool reached = Globals.CtfSeeker.State == CtfSeeker.SeekerState.AtGoal;

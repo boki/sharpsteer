@@ -1,6 +1,7 @@
 // Copyright (c) 2002-2003, Sony Computer Entertainment America
 // Copyright (c) 2002-2003, Craig Reynolds <craig_reynolds@playstation.sony.com>
 // Copyright (C) 2007 Bjoern Graf <bjoern.graf@gmx.net>
+// Copyright (C) 2007 Michael Coles <michael@digini.com>
 // All rights reserved.
 //
 // This software is licensed as described in the file license.txt, which
@@ -10,11 +11,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bnoerj.AI.Steering;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
-namespace Bnoerj.SharpSteer.MapDrive
+namespace Bnoerj.AI.Steering.MapDrive
 {
 	public class MapDrivePlugIn : PlugIn
 	{
@@ -48,9 +49,11 @@ namespace Bnoerj.SharpSteer.MapDrive
 			// "look straight down at vehicle" camera mode parameters
 			Demo.Camera.LookdownDistance = 50;
 			// "static" camera mode parameters
-			Demo.Camera.FixedPosition.Set(145, 145, 145);
-			Demo.Camera.FixedTarget.Set(40, 0, 40);
-			Demo.Camera.FixedUp = Vec3.Up;
+			Demo.Camera.FixedPosition = new Vector3(145);
+			Demo.Camera.FixedTarget.X = 40;
+            Demo.Camera.FixedTarget.Y = 0;
+            Demo.Camera.FixedTarget.Z = 40;
+			Demo.Camera.FixedUp = Vector3.Up;
 
 			// reset this plugin
 			Reset();
@@ -82,10 +85,10 @@ namespace Bnoerj.SharpSteer.MapDrive
 			// draw "ground plane"  (make it 4x map size)
 			float s = MapDriver.worldSize * 2;
 			float u = -0.2f;
-			Drawing.DrawQuadrangle(new Vec3(+s, u, +s),
-							new Vec3(+s, u, -s),
-							new Vec3(-s, u, -s),
-							new Vec3(-s, u, +s),
+			Drawing.DrawQuadrangle(new Vector3(+s, u, +s),
+							new Vector3(+s, u, -s),
+							new Vector3(-s, u, -s),
+							new Vector3(-s, u, +s),
 							new Color((byte)(255.0f * 0.8f), (byte)(255.0f * 0.7f), (byte)(255.0f * 0.5f))); // "sand"
 
 			// draw map and path
@@ -97,8 +100,8 @@ namespace Bnoerj.SharpSteer.MapDrive
 
 			// QQQ mark origin to help spot artifacts
 			float tick = 2;
-			Drawing.DrawLine(new Vec3(tick, 0, 0), new Vec3(-tick, 0, 0), Color.Green);
-			Drawing.DrawLine(new Vec3(0, 0, tick), new Vec3(0, 0, -tick), Color.Green);
+			Drawing.DrawLine(new Vector3(tick, 0, 0), new Vector3(-tick, 0, 0), Color.Green);
+			Drawing.DrawLine(new Vector3(0, 0, tick), new Vector3(0, 0, -tick), Color.Green);
 
 			// compute conversion factor miles-per-hour to meters-per-second
 			float metersPerMile = 1609.344f;
@@ -172,9 +175,9 @@ namespace Bnoerj.SharpSteer.MapDrive
 			qqqRange("R  ", MapDriver.savedNearestR, status);
 			qqqRange("L  ", MapDriver.savedNearestL, status);
 			qqqRange("WL ", MapDriver.savedNearestWL, status);
-			Vec3 screenLocation = new Vec3(15, 50, 0);
-			Vec3 color = new Vec3(0.15f, 0.15f, 0.5f);
-			Drawing.Draw2dTextAt2dLocation(status.ToString(), screenLocation, new Color(color.ToVector3()));
+			Vector3 screenLocation = new Vector3(15, 50, 0);
+			Vector3 color = new Vector3(0.15f, 0.15f, 0.5f);
+			Drawing.Draw2dTextAt2dLocation(status.ToString(), screenLocation, new Color(color));
 
 			{
 				float v = Drawing.GetWindowHeight() - 5;
@@ -185,21 +188,21 @@ namespace Bnoerj.SharpSteer.MapDrive
 
 				// limit tick mark
 				float l = vehicle.annoteMaxRelSpeed;
-				Drawing.Draw2dLine(new Vec3(m + (f * l), v - 3, 0), new Vec3(m + (f * l), v + 3, 0), Color.Black);
+				Drawing.Draw2dLine(new Vector3(m + (f * l), v - 3, 0), new Vector3(m + (f * l), v + 3, 0), Color.Black);
 				// two "inverse speedometers" showing limits due to curvature and
 				// path alignment
 				if (l != 0)
 				{
 					float c = vehicle.annoteMaxRelSpeedCurve;
 					float p = vehicle.annoteMaxRelSpeedPath;
-					Drawing.Draw2dLine(new Vec3(m + (f * c), v + 1, 0), new Vec3(w - m, v + 1, 0), Color.Red);
-					Drawing.Draw2dLine(new Vec3(m + (f * p), v - 2, 0), new Vec3(w - m, v - 1, 0), Color.Green);
+					Drawing.Draw2dLine(new Vector3(m + (f * c), v + 1, 0), new Vector3(w - m, v + 1, 0), Color.Red);
+					Drawing.Draw2dLine(new Vector3(m + (f * p), v - 2, 0), new Vector3(w - m, v - 1, 0), Color.Green);
 				}
 				// speedometer: horizontal line with length proportional to speed
-				Drawing.Draw2dLine(new Vec3(m, v, 0), new Vec3(m + (f * s), v, 0), Color.White);
+				Drawing.Draw2dLine(new Vector3(m, v, 0), new Vector3(m + (f * s), v, 0), Color.White);
 				// min and max tick marks
-				Drawing.Draw2dLine(new Vec3(m, v, 0), new Vec3(m, v - 2, 0), Color.White);
-				Drawing.Draw2dLine(new Vec3(w - m, v, 0), new Vec3(w - m, v - 2, 0), Color.White);
+				Drawing.Draw2dLine(new Vector3(m, v, 0), new Vector3(m, v - 2, 0), Color.White);
+				Drawing.Draw2dLine(new Vector3(w - m, v, 0), new Vector3(w - m, v - 2, 0), Color.White);
 			}
 		}
 
@@ -245,13 +248,13 @@ namespace Bnoerj.SharpSteer.MapDrive
 				{
 					float m = MapDriver.worldSize * 0.4f; // main diamond size
 					float n = MapDriver.worldSize / 8;    // notch size
-					Vec3 q = new Vec3(0, 0, m - n);
-					Vec3 s = new Vec3(2 * n, 0, 0);
-					Vec3 c = new Vec3(s - q);
-					Vec3 d = new Vec3(s + q);
+					Vector3 q = new Vector3(0, 0, m - n);
+					Vector3 s = new Vector3(2 * n, 0, 0);
+					Vector3 c = s - q;
+					Vector3 d =s + q;
 					int pathPointCount = 2;
 					float[] pathRadii = new float[] { 10, 10 };
-					Vec3[] pathPoints = new Vec3[] { c, d };
+					Vector3[] pathPoints = new Vector3[] { c, d };
 					GCRoute r = new GCRoute(pathPointCount, pathPoints, pathRadii, false);
 					DrawPathFencesOnMap(vehicle.map, r);
 					break;
@@ -427,9 +430,9 @@ namespace Bnoerj.SharpSteer.MapDrive
 		{
 			float xs = map.xSize / (float)map.resolution;
 			float zs = map.zSize / (float)map.resolution;
-			Vec3 alongRow = new Vec3(xs, 0, 0);
-			Vec3 nextRow = new Vec3(-map.xSize, 0, zs);
-			Vec3 g = new Vec3((map.xSize - xs) / -2, 0, (map.zSize - zs) / -2);
+			Vector3 alongRow = new Vector3(xs, 0, 0);
+			Vector3 nextRow = new Vector3(-map.xSize, 0, zs);
+			Vector3 g = new Vector3((map.xSize - xs) / -2, 0, (map.zSize - zs) / -2);
 			for (int j = 0; j < map.resolution; j++)
 			{
 				for (int i = 0; i < map.resolution; i++)
