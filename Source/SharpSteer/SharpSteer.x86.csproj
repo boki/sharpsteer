@@ -59,6 +59,10 @@
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>AbstractVehicle</Name>
     </Compile>
+    <Compile Include="AnnotationService.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>AnnotationService</Name>
+    </Compile>
     <Compile Include="IAnnotationService.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>IAnnotationService</Name>
@@ -82,10 +86,6 @@
     <Compile Include="IVehicle.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>IVehicle</Name>
-    </Compile>
-    <Compile Include="Annotation.cs">
-      <XNAUseContentPipeline>false</XNAUseContentPipeline>
-      <Name>Annotation</Name>
     </Compile>
     <Compile Include="BruteForceProximityDatabase.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
