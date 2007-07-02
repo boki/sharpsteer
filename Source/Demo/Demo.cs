@@ -109,8 +109,8 @@ namespace Bnoerj.AI.Steering
 		public static void Init2dCamera(IVehicle selected, float distance, float elevation)
 		{
 			Position2dCamera(selected, distance, elevation);
-			Camera.FixedDistDistance = distance;
-			Camera.FixedDistVOffset = elevation;
+			Camera.FixedDistanceDistance = distance;
+			Camera.FixedDistanceVerticalOffset = elevation;
 			Camera.Mode = Camera.CameraMode.FixedDistanceOffset;
 		}
 
@@ -121,8 +121,8 @@ namespace Bnoerj.AI.Steering
 		public static void Init3dCamera(IVehicle selected, float distance, float elevation)
 		{
 			Position3dCamera(selected, distance, elevation);
-			Camera.FixedDistDistance = distance;
-			Camera.FixedDistVOffset = elevation;
+			Camera.FixedDistanceDistance = distance;
+			Camera.FixedDistanceVerticalOffset = elevation;
 			Camera.Mode = Camera.CameraMode.FixedDistanceOffset;
 		}
 
@@ -578,7 +578,7 @@ namespace Bnoerj.AI.Steering
 			}
 			if (IsKeyDown(keyState, Keys.A) == true)
 			{
-				Annotation.IsAnnotationEnabled = !Annotation.IsAnnotationEnabled;
+				SteerLibrary.annotation.IsEnabled = !SteerLibrary.annotation.IsEnabled;
 			}
 			if (IsKeyDown(keyState, Keys.Space) == true)
 			{

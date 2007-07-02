@@ -18,6 +18,8 @@ namespace Bnoerj.AI.Steering.MapDrive
 {
 	public class MapDriver : SimpleVehicle
 	{
+		Trail trail;
+
 		// constructor
 		public MapDriver()
 		{
@@ -57,9 +59,6 @@ namespace Bnoerj.AI.Steering.MapDrive
 			// use curved prediction and incremental steering:
 			curvedSteering = true;
 			incrementalSteering = true;
-
-			// 10 seconds with 200 points along the trail
-			SetTrailParameters(10, 200);
 		}
 
 		// reset state
@@ -88,8 +87,11 @@ namespace Bnoerj.AI.Steering.MapDrive
 			// not previously avoiding
 			annotateAvoid = Vector3.Zero;
 
+			// 10 seconds with 200 points along the trail
+			if (trail == null) trail = new Trail(10, 200);
+
 			// prevent long streaks due to teleportation 
-			ClearTrailHistory();
+			trail.Clear();
 
 			// first pass at detecting "stuck" state
 			stuck = false;
@@ -155,7 +157,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 				stuck = true;
 
 				// QQQ trying to prevent "creep" during emergency stops
-				ResetSmoothedAcceleration();
+				ResetAcceleration();
 				currentSteering = Vector3.Zero;
 			}
 			else
@@ -183,11 +185,11 @@ namespace Bnoerj.AI.Steering.MapDrive
 					if (demoSelect == 1)
 					{
 						Vector3 wander = SteerForWander(elapsedTime);
-                        wander.Y = 0;
+						wander.Y = 0;
 						Vector3 flat = wander;
-                        Vector3 weighted = Vector3Helpers.TruncateLength(flat, MaxForce) * 6;
+						Vector3 weighted = Vector3Helpers.TruncateLength(flat, MaxForce) * 6;
 						Vector3 a = Position + new Vector3(0, 0.2f, 0);
-						AnnotationLine(a, a + (weighted * 0.3f), Color.White);
+						annotation.Line(a, a + (weighted * 0.3f), Color.White);
 						steering += weighted;
 					}
 
@@ -198,7 +200,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 						if (pf != Vector3.Zero)
 						{
 							// steer to remain on path
-                            if (Vector3.Dot(pf, Forward) < 0)
+							if (Vector3.Dot(pf, Forward) < 0)
 								steering = pf;
 							else
 								steering = pf + steering;
@@ -211,8 +213,8 @@ namespace Bnoerj.AI.Steering.MapDrive
 							{
 								Vector3 b = (Position + (Up * 0.2f) + (Forward * halfLength * 1.4f));
 								float l = 2;
-								AnnotationLine(b, b + (Forward * l), Color.Cyan);
-								AnnotationLine(b, b + (pathHeading * l), Color.Cyan);
+								annotation.Line(b, b + (Forward * l), Color.Cyan);
+								annotation.Line(b, b + (pathHeading * l), Color.Cyan);
 							}
 							steering += (SteerTowardHeading(pathHeading) *
 										 (path.NearWaypoint(Position) ?
@@ -242,12 +244,12 @@ namespace Bnoerj.AI.Steering.MapDrive
 				bool circles = WeAreGoingInCircles();
 				if (circles && !stuck) stuckCycleCount++;
 				if (circles) stuck = true;
-				AnnotationCircleOrDisk(0.5f, Up, SmoothedPosition, Color.White, 12, circles, false);
+				annotation.CircleOrDisk(0.5f, Up, SmoothedPosition, Color.White, 12, circles, false);
 			}
 
 			// annotation
 			PerFrameAnnotation();
-			RecordTrailVertex(currentTime, Position);
+			trail.Record(currentTime, Position);
 		}
 
 		public void AdjustVehicleRadiusForSpeed()
@@ -297,14 +299,14 @@ namespace Bnoerj.AI.Steering.MapDrive
 			// are we heading roughly parallel to the current path segment?
 			Vector3 p = Position;
 			Vector3 pathHeading = path.TangentAt(p, pathFollowDirection);
-            if (Vector3.Dot(pathHeading, Forward) < 0.8f)
+			if (Vector3.Dot(pathHeading, Forward) < 0.8f)
 			{
 				// if not, the "hint" is to turn to align with path heading
 				Vector3 s = Side * halfWidth;
 				float f = halfLength * 2;
-				AnnotationLine(p + s, p + s + (Forward * f), Color.Black);
-				AnnotationLine(p - s, p - s + (Forward * f), Color.Black);
-				AnnotationLine(p, p + (pathHeading * 5), Color.Magenta);
+				annotation.Line(p + s, p + s + (Forward * f), Color.Black);
+				annotation.Line(p - s, p - s + (Forward * f), Color.Black);
+				annotation.Line(p, p + (pathHeading * 5), Color.Magenta);
 				return pathHeading;
 			}
 			else
@@ -337,16 +339,16 @@ namespace Bnoerj.AI.Steering.MapDrive
 							bool usableHint = obstacleDistance > farThreshold;
 							if (usableHint)
 							{
-                                Vector3 temp = offset;
-                                temp.Normalize();
+								Vector3 temp = offset;
+								temp.Normalize();
 								Vector3 q = p + (temp * 5);
-								AnnotationLine(p, q, Color.Magenta);
-								AnnotationCircleOrDisk(0.4f, Up, o, Color.White, 12, false, false);
+								annotation.Line(p, q, Color.Magenta);
+								annotation.CircleOrDisk(0.4f, Up, o, Color.White, 12, false, false);
 								return offset;
 							}
 						}
 					}
-					AnnotationCircleOrDisk(0.4f, Up, o, Color.Black, 12, false, false);
+					annotation.CircleOrDisk(0.4f, Up, o, Color.Black, 12, false, false);
 				}
 			}
 			// otherwise, no hint
@@ -388,7 +390,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 			if (hintGiven && !dtZero)
 				hintGivenCount++;
 			if (hintGiven)
-				AnnotationCircleOrDisk(halfWidth * 0.9f, Up, Position + (Up * 0.2f), Color.White, 12, false, false);
+				annotation.CircleOrDisk(halfWidth * 0.9f, Up, Position + (Up * 0.2f), Color.White, 12, false, false);
 
 			// QQQ temporary global QQQoaJustScraping
 			QQQoaJustScraping = true;
@@ -413,9 +415,9 @@ namespace Bnoerj.AI.Steering.MapDrive
 				{
 					float q = twoPi * fracLimit;
 					Vector3 fooz = Position - center;
-                    Vector3 booz = Vector3Helpers.RotateAboutGlobalY(fooz, sign * q);
-					AnnotationLine(center, center + fooz, Color.Red);
-					AnnotationLine(center, center + booz, Color.Red);
+					Vector3 booz = Vector3Helpers.RotateAboutGlobalY(fooz, sign * q);
+					annotation.Line(center, center + fooz, Color.Red);
+					annotation.Line(center, center + booz, Color.Red);
 				}
 			}
 
@@ -594,10 +596,10 @@ namespace Bnoerj.AI.Steering.MapDrive
 			{
 				AnnotationNoteOAClauseName("nearest obstacle is way out there");
 				AnnotationHintWasTaken();
-                if (Vector3.Dot(steerHint, Side) > 0)
-                    return Side;
-                else
-                    return -Side;
+				if (Vector3.Dot(steerHint, Side) > 0)
+					return Side;
+				else
+					return -Side;
 			}
 
 			// QQQ experiment 3-9-04
@@ -612,7 +614,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 			{
 				Color blue = new Color(0, 0, (byte)(255.0f * 0.8f));
 				AnnotationNoteOAClauseName("min turn radius");
-				AnnotationCircleOrDisk(MinimumTurningRadius() * 1.2f, Up,
+				annotation.CircleOrDisk(MinimumTurningRadius() * 1.2f, Up,
 										center, blue, 40, false, false);
 				return Side * sign;
 			}
@@ -634,18 +636,18 @@ namespace Bnoerj.AI.Steering.MapDrive
 				if (same && hintGiven)
 				{
 					AnnotationHintWasTaken();
-                    if (Vector3.Dot(steerHint, Side) > 0)
-                        return Side;
-                    else
-                        return -Side;
+					if (Vector3.Dot(steerHint, Side) > 0)
+						return Side;
+					else
+						return -Side;
 				}
 				else
 				{
 					// otherwise steer toward the less cluttered side
 					if (nearestL > nearestR)
-                        return Side;
-                    else
-                        return -Side;
+						return Side;
+					else
+						return -Side;
 				}
 			}
 
@@ -656,7 +658,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 			{
 				AnnotationNoteOAClauseName("equallyClear");
 				AnnotationHintWasTaken();
-                if (Vector3.Dot(steerHint, Side) > 0) return Side; else return -Side;
+				if (Vector3.Dot(steerHint, Side) > 0) return Side; else return -Side;
 			}
 
 			// turn towards the side whose "wing" region is less cluttered
@@ -673,7 +675,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 			if (scanIndex > 0)
 			{
 				Vector3 hit = scanOrigin + (scanStep * (float)scanIndex);
-				AnnotationLine(scanOrigin, hit, new Color((byte)(255.0f * 0.7f), (byte)(255.0f * 0.3f), (byte)(255.0f * 0.3f)));
+				annotation.Line(scanOrigin, hit, new Color((byte)(255.0f * 0.7f), (byte)(255.0f * 0.3f), (byte)(255.0f * 0.3f)));
 			}
 		}
 
@@ -706,10 +708,10 @@ namespace Bnoerj.AI.Steering.MapDrive
 			Vector3 ff = Forward * r;
 			Vector3 ss = Side * r;
 			Vector3 pp = Position + (Up * 0.2f);
-			AnnotationLine(pp + ff + ss, pp - ff + ss, Color.White);
-			AnnotationLine(pp - ff - ss, pp - ff + ss, Color.White);
-			AnnotationLine(pp - ff - ss, pp + ff - ss, Color.White);
-			AnnotationLine(pp + ff + ss, pp + ff - ss, Color.White);
+			annotation.Line(pp + ff + ss, pp - ff + ss, Color.White);
+			annotation.Line(pp - ff - ss, pp - ff + ss, Color.White);
+			annotation.Line(pp - ff - ss, pp + ff - ss, Color.White);
+			annotation.Line(pp + ff + ss, pp + ff - ss, Color.White);
 
 			//OpenSteerDemo.clock.setPausedState (true);
 		}
@@ -748,7 +750,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 			{
 				// rotate "spoke" to next step around circle
 				// (sin and cos values get filled in on first call)
-                spoke = Vector3Helpers.RotateAboutGlobalY(spoke, step, ref sin, ref cos);
+				spoke = Vector3Helpers.RotateAboutGlobalY(spoke, step, ref sin, ref cos);
 
 				// for spiral "ramps" of changing radius
 				float adjust = ((endRadiusChange == 0) ?
@@ -768,7 +770,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 				// to loop only for the sake of annotation (make that optional?)
 				if (obstacleFound)
 				{
-					AnnotationLine(oldPoint, newPoint, afterColor);
+					annotation.Line(oldPoint, newPoint, afterColor);
 				}
 				else
 				{
@@ -784,7 +786,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 						obstacleDistance = d2 * 0.5f * (i + 1);
 						returnObstaclePosition = newPoint;
 					}
-					AnnotationLine(oldPoint, newPoint, beforeColor);
+					annotation.Line(oldPoint, newPoint, beforeColor);
 				}
 				// save new point for next time around loop
 				oldPoint = newPoint;
@@ -861,8 +863,8 @@ namespace Bnoerj.AI.Steering.MapDrive
 				if (!curvedSteering)
 				{
 					Vector3 d = step * (float)samples;
-					AnnotationLine(lOffset, lOffset + d, Color.White);
-					AnnotationLine(rOffset, rOffset + d, Color.White);
+					annotation.Line(lOffset, lOffset + d, Color.White);
+					annotation.Line(rOffset, rOffset + d, Color.White);
 				}
 
 				// increment sideways displacement of scan line
@@ -897,7 +899,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 				float arcAngle = twoPi * arcLength / circumference;
 
 				Vector3 spoke = Position - center;
-                Vector3 newSpoke = Vector3Helpers.RotateAboutGlobalY(spoke, arcAngle);
+				Vector3 newSpoke = Vector3Helpers.RotateAboutGlobalY(spoke, arcAngle);
 				Vector3 prediction = newSpoke + center;
 
 				// QQQ unify with annotatePathFollowing
@@ -960,7 +962,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 
 			// are we facing in the correction direction?
 			Vector3 pathHeading = path.TangentAt(Position) * (float)direction;
-            bool correctDirection = Vector3.Dot(pathHeading, Forward) > 0;
+			bool correctDirection = Vector3.Dot(pathHeading, Forward) > 0;
 
 			// find the point on the path nearest the predicted future position
 			// XXX need to improve calling sequence, maybe change to return a
@@ -1013,13 +1015,13 @@ namespace Bnoerj.AI.Steering.MapDrive
 				if (nowOutside > 0) return SteerForSeek(nowOnPath);
 
 				// steering to seek target on path
-				Vector3 seek =Vector3Helpers.TruncateLength( SteerForSeek(target), MaxForce);
+				Vector3 seek = Vector3Helpers.TruncateLength(SteerForSeek(target), MaxForce);
 
 				// return that seek steering -- except when we are heading off
 				// the path (currently on path and future position is off path)
 				// in which case we put on the brakes.
 				if ((nowOutside < 0) && (futureOutside > 0))
-                    return (Vector3Helpers.PerpendicularComponent(seek, Forward) - (Forward * MaxForce));
+					return (Vector3Helpers.PerpendicularComponent(seek, Forward) - (Forward * MaxForce));
 				else
 					return seek;
 			}
@@ -1047,18 +1049,18 @@ namespace Bnoerj.AI.Steering.MapDrive
 			Vector3 p = Position;
 			Vector3 nowOnPath = path.MapPointToPath(p, out nowTangent, out nowOutside);
 			nowTangent *= (float)direction;
-            float alignedness = Vector3.Dot(nowTangent, Forward);
+			float alignedness = Vector3.Dot(nowTangent, Forward);
 
 			// facing the wrong way?
 			if (alignedness < 0)
 			{
-				AnnotationLine(p, p + (nowTangent * 10), Color.Cyan);
+				annotation.Line(p, p + (nowTangent * 10), Color.Cyan);
 
 				// if nearly anti-parallel
 				if (alignedness < -0.707f)
 				{
 					Vector3 towardCenter = nowOnPath - p;
-                    Vector3 turn = (Vector3.Dot(towardCenter, Side) > 0 ?
+					Vector3 turn = (Vector3.Dot(towardCenter, Side) > 0 ?
 									   Side * MaxForce :
 									   Side * MaxForce * -1);
 					return (turn + rawBraking);
@@ -1078,7 +1080,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 			else
 			{
 				// otherwise determine corrective steering (including braking)
-				AnnotationLine(futurePosition, futurePosition + pathHeading, Color.Red);
+				annotation.Line(futurePosition, futurePosition + pathHeading, Color.Red);
 				AnnotatePathFollowing(futurePosition, onPath,
 									   Position, futureOutside);
 
@@ -1086,8 +1088,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 				if (path.NearWaypoint(onPath) && (futureOutside > 0))
 				{
 					// steer to align with next path segment
-					AnnotationCircleOrDisk(0.5f, Up, futurePosition,
-											Color.Red, 8, false, false);
+					annotation.Circle3D(0.5f, futurePosition, Up, Color.Red, 8);
 					return SteerTowardHeading(pathHeading) + braking;
 				}
 				else
@@ -1096,7 +1097,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 					// are heading for
 					Vector3 pathSide = LocalRotateForwardToSide(pathHeading);
 					Vector3 towardFP = futurePosition - onPath;
-                    float whichSide = (Vector3.Dot(pathSide, towardFP) < 0) ? 1.0f : -1.0f;
+					float whichSide = (Vector3.Dot(pathSide, towardFP) < 0) ? 1.0f : -1.0f;
 					return (Side * MaxForce * whichSide) + braking;
 				}
 			}
@@ -1107,7 +1108,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 			Vector3 p = Position;
 
 			// draw the circular collision boundary
-			AnnotationCircleOrDisk(Radius, Up, p, Color.Black, 32, false, false);
+			annotation.CircleOrDisk(Radius, Up, p, Color.Black, 32, false, false);
 
 			// draw forward sensing corridor and wings ( for non-curved case)
 			if (!curvedSteering)
@@ -1123,27 +1124,27 @@ namespace Bnoerj.AI.Steering.MapDrive
 					Vector3 c3 = p - corSide + corFront;
 					Vector3 c4 = p - corSide + corBack;
 					Color color = ((annotateAvoid != Vector3.Zero) ? Color.Red : Color.Yellow);
-					AnnotationLine(c1, c2, color);
-					AnnotationLine(c2, c3, color);
-					AnnotationLine(c3, c4, color);
+					annotation.Line(c1, c2, color);
+					annotation.Line(c2, c3, color);
+					annotation.Line(c3, c4, color);
 
 					// draw sensing "wings"
 					Vector3 wingWidth = Side * WingSlope() * corLength;
 					Vector3 wingTipL = c2 + wingWidth;
 					Vector3 wingTipR = c3 - wingWidth;
 					Color wingColor = Color.Orange;
-					if (wingDrawFlagL) AnnotationLine(c2, wingTipL, wingColor);
-					if (wingDrawFlagL) AnnotationLine(c1, wingTipL, wingColor);
-					if (wingDrawFlagR) AnnotationLine(c3, wingTipR, wingColor);
-					if (wingDrawFlagR) AnnotationLine(c4, wingTipR, wingColor);
+					if (wingDrawFlagL) annotation.Line(c2, wingTipL, wingColor);
+					if (wingDrawFlagL) annotation.Line(c1, wingTipL, wingColor);
+					if (wingDrawFlagR) annotation.Line(c3, wingTipR, wingColor);
+					if (wingDrawFlagR) annotation.Line(c4, wingTipR, wingColor);
 				}
 			}
 
 			// annotate steering acceleration
 			Vector3 above = Position + new Vector3(0, 0.2f, 0);
-			Vector3 accel = SmoothedAcceleration * 5 / MaxForce;
+			Vector3 accel = Acceleration * 5 / MaxForce;
 			Color aColor = new Color((byte)(255.0f * 0.4f), (byte)(255.0f * 0.4f), (byte)(255.0f * 0.8f));
-			AnnotationLine(above, above + accel, aColor);
+			annotation.Line(above, above + accel, aColor);
 		}
 
 		// draw vehicle's body and annotation
@@ -1168,11 +1169,13 @@ namespace Bnoerj.AI.Steering.MapDrive
 
 			// annotate trail
 			Color darkGreen = new Color(0, (byte)(255.0f * 0.6f), 0);
-			DrawTrail(darkGreen, Color.Black);
+			trail.TrailColor = darkGreen;
+			trail.TickColor = Color.Black;
+			trail.Draw(Annotation.drawer);
 		}
 
 		// called when steerToFollowPath decides steering is required
-		public override void AnnotatePathFollowing(Vector3 future, Vector3 onPath, Vector3 target, float outside)
+		public void AnnotatePathFollowing(Vector3 future, Vector3 onPath, Vector3 target, float outside)
 		{
 			Color toTargetColor = new Color(0, (byte)(255.0f * 0.6f), 0);
 			Color insidePathColor = new Color((byte)(255.0f * 0.6f), (byte)(255.0f * 0.6f), 0);
@@ -1181,10 +1184,10 @@ namespace Bnoerj.AI.Steering.MapDrive
 
 			// draw line from our position to our predicted future position
 			if (!curvedSteering)
-				AnnotationLine(Position, future, futurePositionColor);
+				annotation.Line(Position, future, futurePositionColor);
 
 			// draw line from our position to our steering target on the path
-			AnnotationLine(Position, target, toTargetColor);
+			annotation.Line(Position, target, toTargetColor);
 
 			// draw a two-toned line between the future test point and its
 			// projection onto the path, the change from dark to light color
@@ -1192,12 +1195,12 @@ namespace Bnoerj.AI.Steering.MapDrive
 
 			float o = outside + Radius + (curvedSteering ? 1.0f : 0.0f);
 			Vector3 boundaryOffset = (onPath - future);
-            boundaryOffset.Normalize();
-            boundaryOffset *= o;
+			boundaryOffset.Normalize();
+			boundaryOffset *= o;
 
 			Vector3 onPathBoundary = future + boundaryOffset;
-			AnnotationLine(onPath, onPathBoundary, insidePathColor);
-			AnnotationLine(onPathBoundary, future, outsidePathColor);
+			annotation.Line(onPath, onPathBoundary, insidePathColor);
+			annotation.Line(onPathBoundary, future, outsidePathColor);
 		}
 
 		public void DrawMap()
@@ -1348,7 +1351,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 					Demo.Camera.DoNotSmoothNextMove();
 
 					// prevent long streaks due to teleportation 
-					ClearTrailHistory();
+					trail.Clear();
 
 					return true;
 				}
@@ -1435,9 +1438,9 @@ namespace Bnoerj.AI.Steering.MapDrive
 				// annotation
 				Vector3 u = new Vector3(0, 0.5f, 0);
 				Vector3 p = Position;
-				AnnotationLine(p + u, p + u + absolute, Color.Red);
-				AnnotationLine(p + u, p + u + curved, Color.Yellow);
-				AnnotationLine(p + u * 2, p + u * 2 + currentSteering, Color.Green);
+				annotation.Line(p + u, p + u + absolute, Color.Red);
+				annotation.Line(p + u, p + u + curved, Color.Yellow);
+				annotation.Line(p + u * 2, p + u * 2 + currentSteering, Color.Green);
 			}
 			return currentSteering;
 		}
@@ -1452,14 +1455,14 @@ namespace Bnoerj.AI.Steering.MapDrive
 		//
 		public Vector3 ConvertLinearToCurvedSpaceGlobal(Vector3 linear)
 		{
-            Vector3 trimmedLinear = Vector3Helpers.TruncateLength(linear, MaxForce);
+			Vector3 trimmedLinear = Vector3Helpers.TruncateLength(linear, MaxForce);
 
 			// ---------- this block imported from steerToAvoidObstaclesOnMap
 			float signedRadius = 1 / (NonZeroCurvatureQQQ() /*QQQ*/ * 1);
 			Vector3 localCenterOfCurvature = Side * signedRadius;
 			Vector3 center = Position + localCenterOfCurvature;
 			float sign = signedRadius < 0 ? 1.0f : -1.0f;
-            float arcLength = Vector3.Dot(trimmedLinear, Forward);
+			float arcLength = Vector3.Dot(trimmedLinear, Forward);
 			//
 			float arcRadius = signedRadius * -sign;
 			float twoPi = 2 * (float)Math.PI;
@@ -1471,12 +1474,12 @@ namespace Bnoerj.AI.Steering.MapDrive
 			// vector from center of curvature to position of vehicle
 			Vector3 initialSpoke = Position - center;
 			// rotate by signed arc angle
-            Vector3 spoke = Vector3Helpers.RotateAboutGlobalY(initialSpoke, arcAngle * sign);
+			Vector3 spoke = Vector3Helpers.RotateAboutGlobalY(initialSpoke, arcAngle * sign);
 			// ---------- this block imported from scanObstacleMap
 
 			Vector3 fromCenter = -localCenterOfCurvature;
-            fromCenter.Normalize();
-            float dRadius = Vector3.Dot(trimmedLinear, fromCenter);
+			fromCenter.Normalize();
+			float dRadius = Vector3.Dot(trimmedLinear, fromCenter);
 			float radiusChangeFactor = (dRadius + arcRadius) / arcRadius;
 			Vector3 resultLocation = center + (spoke * radiusChangeFactor);
 			{
@@ -1504,14 +1507,14 @@ namespace Bnoerj.AI.Steering.MapDrive
 				// minimum turing radius
 				float signedRadius = 1 / NonZeroCurvatureQQQ();
 				float sign = signedRadius < 0 ? 1.0f : -1.0f;
-                Vector3 thrust = Vector3Helpers.ParallelComponent(steering, Forward);
-                Vector3 trimmed = Vector3Helpers.TruncateLength(thrust, MaxForce);
+				Vector3 thrust = Vector3Helpers.ParallelComponent(steering, Forward);
+				Vector3 trimmed = Vector3Helpers.TruncateLength(thrust, MaxForce);
 				Vector3 widenOut = Side * MaxForce * sign;
 				{
 					// annotation
 					Vector3 localCenterOfCurvature = Side * signedRadius;
 					Vector3 center = Position + localCenterOfCurvature;
-					AnnotationCircleOrDisk(MinimumTurningRadius(), Up,
+					annotation.CircleOrDisk(MinimumTurningRadius(), Up,
 											center, Color.Blue, 40, false, false);
 				}
 				return trimmed + widenOut;
@@ -1565,7 +1568,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 					// heading (unit tangent) of the path segment of interest
 					Vector3 pathHeading = path.TangentAt(Position, pathFollowDirection);
 					// measure how parallel we are to the path
-                    float parallelness = Vector3.Dot(pathHeading, Forward);
+					float parallelness = Vector3.Dot(pathHeading, Forward);
 
 					// determine relative speed for this heading
 					float mw = 0.2f;
@@ -1585,10 +1588,10 @@ namespace Bnoerj.AI.Steering.MapDrive
 		public Vector3 SteerTowardHeading(Vector3 desiredGlobalHeading)
 		{
 			Vector3 headingError = desiredGlobalHeading - Forward;
-            headingError.Normalize();
-            headingError *= MaxForce;
+			headingError.Normalize();
+			headingError *= MaxForce;
 
-            return headingError;
+			return headingError;
 		}
 
 		// XXX this should eventually be in a library, make it a first
@@ -1613,9 +1616,9 @@ namespace Bnoerj.AI.Steering.MapDrive
 				Vector3 old = spoke + center;
 
 				// rotate point to next step around circle
-                spoke = Vector3Helpers.RotateAboutGlobalY(spoke, step, ref sin, ref cos);
+				spoke = Vector3Helpers.RotateAboutGlobalY(spoke, step, ref sin, ref cos);
 
-				AnnotationLine(spoke + center, old, color);
+				annotation.Line(spoke + center, old, color);
 			}
 		}
 

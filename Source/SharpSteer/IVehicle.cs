@@ -11,11 +11,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.Content;
 
 namespace Bnoerj.AI.Steering
 {
@@ -30,7 +25,12 @@ namespace Bnoerj.AI.Steering
         // velocity of vehicle
         Vector3 Velocity { get; }
 
-        // speed of vehicle (may be faster than taking magnitude of velocity)
+		/// <summary>
+		/// Gets the acceleration of the vehicle.
+		/// </summary>
+		Vector3 Acceleration { get; }
+		
+		// speed of vehicle (may be faster than taking magnitude of velocity)
 		float Speed { get; set; }
 
         // predict position of this vehicle at some time in the future

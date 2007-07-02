@@ -16,6 +16,8 @@ namespace Bnoerj.AI.Steering.MultiplePursuit
 {
 	public class MpBase : SimpleVehicle
 	{
+		protected Trail trail;
+
 		// constructor
 		public MpBase()
 		{
@@ -26,10 +28,12 @@ namespace Bnoerj.AI.Steering.MultiplePursuit
 		public override void Reset()
 		{
 			base.Reset();			// reset the vehicle 
+
 			Speed = 0;            // speed along Forward direction.
 			MaxForce = 5.0f;       // steering force is clipped to this magnitude
 			MaxSpeed = 3.0f;       // velocity is clipped to this magnitude
-			ClearTrailHistory();    // prevent long streaks due to teleportation 
+			trail = new Trail();
+			trail.Clear();    // prevent long streaks due to teleportation 
 			GaudyPursuitAnnotation = true; // select use of 9-color annotation
 		}
 
@@ -37,7 +41,7 @@ namespace Bnoerj.AI.Steering.MultiplePursuit
 		public void Draw()
 		{
 			Drawing.DrawBasic2dCircularVehicle(this, bodyColor);
-			DrawTrail();
+			trail.Draw(Annotation.drawer);
 		}
 
 		// for draw method

@@ -19,6 +19,7 @@ namespace Bnoerj.AI.Steering
 		public abstract float Mass { get; set; }
 		public abstract float Radius { get; set; }
         public abstract Vector3 Velocity { get; }
+		public abstract Vector3 Acceleration { get; }
 		public abstract float Speed { get; set; }
 
         public abstract Vector3 PredictFuturePosition(float predictionTime);

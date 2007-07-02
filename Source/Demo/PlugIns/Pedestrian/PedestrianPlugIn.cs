@@ -93,7 +93,7 @@ namespace Bnoerj.AI.Steering.Pedestrian
 			SerialNumberAnnotationUtility(selected, nearMouse);
 
 			// textual annotation for selected Pedestrian
-			if (Demo.SelectedVehicle != null && Annotation.IsAnnotationEnabled)
+			if (Demo.SelectedVehicle != null)//FIXME: && annotation.IsEnabled)
 			{
 				Color color = new Color((byte)(255.0f * 0.8f), (byte)(255.0f * 0.8f), (byte)(255.0f * 1.0f));
 				Vector3 textOffset = new Vector3(0, 0.25f, 0);

@@ -49,9 +49,9 @@ namespace Bnoerj.AI.Steering.LowSpeedTurn
 			Demo.Camera.FixedTarget = lstViewCenter;
 			Demo.Camera.FixedPosition = lstViewCenter;
 			Demo.Camera.FixedPosition.Y += lstLookDownDistance;
-			Demo.Camera.LookdownDistance = lstLookDownDistance;
-			Demo.Camera.FixedDistVOffset = Demo.Camera2dElevation;
-			Demo.Camera.FixedDistDistance = Demo.CameraTargetDistance;
+			Demo.Camera.LookDownDistance = lstLookDownDistance;
+			Demo.Camera.FixedDistanceVerticalOffset = Demo.Camera2dElevation;
+			Demo.Camera.FixedDistanceDistance = Demo.CameraTargetDistance;
 		}
 
 		public override void Update(float currentTime, float elapsedTime)

@@ -78,11 +78,11 @@ namespace Bnoerj.AI.Steering
         public Vector3 FixedUp;
 
 		// "constant distance from vehicle" camera mode parameters
-		public float FixedDistDistance;             // desired distance from it
-		public float FixedDistVOffset;              // fixed vertical offset from it
+		public float FixedDistanceDistance;        // desired distance from it
+		public float FixedDistanceVerticalOffset;  // fixed vertical offset from it
 
 		// "look straight down at vehicle" camera mode parameters
-		public float LookdownDistance;             // fixed vertical offset from it
+		public float LookDownDistance;             // fixed vertical offset from it
 
 		// "fixed local offset" camera mode parameters
         public Vector3 FixedLocalOffset;
@@ -123,11 +123,11 @@ namespace Bnoerj.AI.Steering
 			Mode = CameraMode.Fixed;
 
 			// "constant distance from vehicle" camera mode parameters
-			FixedDistDistance = 1;
-			FixedDistVOffset = 0;
+			FixedDistanceDistance = 1;
+			FixedDistanceVerticalOffset = 0;
 
 			// "look straight down at vehicle" camera mode parameters
-			LookdownDistance = 30;
+			LookDownDistance = 30;
 
 			// "static" camera mode parameters
 			FixedPosition = new Vector3(75, 75, 75);
@@ -153,7 +153,6 @@ namespace Bnoerj.AI.Steering
             Vector3 newTarget = Target;
             Vector3 newUp = Up;
 
-
 			// prediction time to compensate for lag caused by smoothing moves
 			float antiLagTime = simulationPaused ? 0 : 1 / smoothMoveSpeed;
 
@@ -173,7 +172,7 @@ namespace Bnoerj.AI.Steering
 				if (noVehicle) break;
 				newUp = Vector3.Up; // xxx maybe this should be v.up ?
 				newTarget = v.PredictFuturePosition(predictionTime);
-				newPosition = ConstDistHelper(elapsedTime);
+				newPosition = ConstantDistanceHelper(elapsedTime);
 				break;
 
 			case CameraMode.StraightDown:
@@ -181,7 +180,7 @@ namespace Bnoerj.AI.Steering
 				newUp = v.Forward;
 				newTarget = v.PredictFuturePosition(predictionTime);
 				newPosition = newTarget;
-				newPosition.Y += LookdownDistance;
+				newPosition.Y += LookDownDistance;
 				break;
 
 			case CameraMode.FixedLocalOffset:
@@ -220,12 +219,12 @@ namespace Bnoerj.AI.Steering
 		}
 
 		// helper function for "drag behind" mode
-        protected Vector3 ConstDistHelper(float elapsedTime)
+        protected Vector3 ConstantDistanceHelper(float elapsedTime)
 		{
 			// is the "global up"/"vertical" offset constraint enabled?  (it forces
 			// the camera's global-up (Y) cordinate to be a above/below the target
 			// vehicle by a given offset.)
-			bool constrainUp = (FixedDistVOffset != 0);
+			bool constrainUp = (FixedDistanceVerticalOffset != 0);
 
 			// vector offset from target to current camera position
             Vector3 adjustedPosition = new Vector3(Position.X, (constrainUp) ? Target.Y : Position.Y, Position.Z);
@@ -245,11 +244,11 @@ namespace Bnoerj.AI.Steering
                 Vector3 unitOffset = offset / distance;
 
 				// new offset of length XXX
-				float xxxDistance = (float)Math.Sqrt(Utilities.Square(FixedDistDistance) - Utilities.Square(FixedDistVOffset));
+				float xxxDistance = (float)Math.Sqrt(Utilities.Square(FixedDistanceDistance) - Utilities.Square(FixedDistanceVerticalOffset));
                 Vector3 newOffset = unitOffset * xxxDistance;
 
 				// return new camera position: adjust distance to target
-				return Target + newOffset + new Vector3(0, FixedDistVOffset, 0);
+				return Target + newOffset + new Vector3(0, FixedDistanceVerticalOffset, 0);
 			}
 		}
 
@@ -327,17 +326,17 @@ namespace Bnoerj.AI.Steering
 					// XXX --------------------------------------------------
 					//position = target + adjusted;
 					Position = (Target + adjusted);
-					FixedDistDistance = adjusted.Length();
+					FixedDistanceDistance = adjusted.Length();
 					//fixedDistVOffset = position.y - target.y;
-					FixedDistVOffset = Position.Y - Target.Y;
+					FixedDistanceVerticalOffset = Position.Y - Target.Y;
 					// XXX --------------------------------------------------
 					break;
 				}
 			case CameraMode.StraightDown:
 				{
-                    Vector3 offset = new Vector3(0, 0, LookdownDistance);
+                    Vector3 offset = new Vector3(0, 0, LookDownDistance);
                     Vector3 adjusted = MouseAdjustPolar(adjustment, offset);
-					LookdownDistance = adjusted.Z;
+					LookDownDistance = adjusted.Z;
 					break;
 				}
 			case CameraMode.FixedLocalOffset:

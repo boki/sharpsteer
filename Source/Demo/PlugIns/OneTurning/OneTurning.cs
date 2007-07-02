@@ -18,6 +18,8 @@ namespace Bnoerj.AI.Steering.OneTurning
 {
 	public class OneTurning : SimpleVehicle
 	{
+		Trail trail;
+
 		// constructor
 		public OneTurning()
 		{
@@ -31,22 +33,23 @@ namespace Bnoerj.AI.Steering.OneTurning
 			Speed = 1.5f;         // speed along Forward direction.
 			MaxForce = 0.3f;      // steering force is clipped to this magnitude
 			MaxSpeed = 5;         // velocity is clipped to this magnitude
-			ClearTrailHistory();    // prevent long streaks due to teleportation 
+			trail = new Trail();
+			trail.Clear();    // prevent long streaks due to teleportation 
 		}
 
 		// per frame simulation update
 		public void Update(float currentTime, float elapsedTime)
 		{
 			ApplySteeringForce(new Vector3(-2, 0, -3), elapsedTime);
-			AnnotationVelocityAcceleration();
-			RecordTrailVertex(currentTime, Position);
+			annotation.VelocityAcceleration(this);
+			trail.Record(currentTime, Position);
 		}
 
 		// draw this character/vehicle into the scene
 		public void Draw()
 		{
 			Drawing.DrawBasic2dCircularVehicle(this, Color.Gray);
-			DrawTrail();
+			trail.Draw(Annotation.drawer);
 		}
 	}
 }

@@ -19,9 +19,10 @@ namespace Bnoerj.AI.Steering.Ctf
 
 	public class CtfBase : SimpleVehicle
 	{
+		protected Trail trail;
+
 		// constructor
 		public CtfBase()
-			: base()
 		{
 			Reset();
 		}
@@ -39,21 +40,22 @@ namespace Bnoerj.AI.Steering.Ctf
 
 			RandomizeStartingPositionAndHeading();  // new starting position
 
-			ClearTrailHistory();     // prevent long streaks due to teleportation
+			trail = new Trail();
+			trail.Clear();     // prevent long streaks due to teleportation
 		}
 
 		// draw this character/vehicle into the scene
 		public virtual void Draw()
 		{
 			Drawing.DrawBasic2dCircularVehicle(this, BodyColor);
-			DrawTrail();
+			trail.Draw(Annotation.drawer);
 		}
 
 		// annotate when actively avoiding obstacles
 		// xxx perhaps this should be a call to a general purpose annotation
 		// xxx for "local xxx axis aligned box in XZ plane" -- same code in in
 		// xxx Pedestrian.cpp
-		public override void AnnotateAvoidObstacle(float minDistanceToCollision)
+		public void AnnotateAvoidObstacle(float minDistanceToCollision)
 		{
 			Vector3 boxSide = Side * Radius;
 			Vector3 boxFront = Forward * minDistanceToCollision;
@@ -61,10 +63,10 @@ namespace Bnoerj.AI.Steering.Ctf
 			Vector3 FL = Position + boxFront + boxSide;
 			Vector3 BR = Position - boxSide;
 			Vector3 BL = Position + boxSide;
-			AnnotationLine(FR, FL, Color.White);
-			AnnotationLine(FL, BL, Color.White);
-			AnnotationLine(BL, BR, Color.White);
-			AnnotationLine(BR, FR, Color.White);
+			annotation.Line(FR, FL, Color.White);
+			annotation.Line(FL, BL, Color.White);
+			annotation.Line(BL, BR, Color.White);
+			annotation.Line(BR, FR, Color.White);
 		}
 
 		public void DrawHomeBase()

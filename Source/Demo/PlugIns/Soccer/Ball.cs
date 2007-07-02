@@ -18,6 +18,8 @@ namespace Bnoerj.AI.Steering.Soccer
 {
 	public class Ball : SimpleVehicle
 	{
+		Trail trail;
+
 		public Ball(AABBox bbox)
 		{
 			m_bbox = bbox;
@@ -33,8 +35,8 @@ namespace Bnoerj.AI.Steering.Soccer
 			MaxSpeed = 9.0f;         // velocity is clipped to this magnitude
 
 			SetPosition(0, 0, 0);
-			ClearTrailHistory();    // prevent long streaks due to teleportation 
-			SetTrailParameters(100, 6000);
+			if (trail == null) trail = new Trail(100, 6000);
+			trail.Clear();    // prevent long streaks due to teleportation 
 		}
 
 		// per frame simulation update
@@ -55,7 +57,7 @@ namespace Bnoerj.AI.Steering.Soccer
 				RegenerateOrthonormalBasis(new Vector3(d.X, d.Y, -d.Z));
 				ApplySteeringForce(Velocity, elapsedTime);
 			}
-			RecordTrailVertex(currentTime, Position);
+			trail.Record(currentTime, Position);
 		}
 
 		public void Kick(Vector3 dir, float elapsedTime)
@@ -68,7 +70,7 @@ namespace Bnoerj.AI.Steering.Soccer
 		public void Draw()
 		{
 			Drawing.DrawBasic2dCircularVehicle(this, Color.Green);
-			DrawTrail();
+			trail.Draw(Annotation.drawer);
 		}
 
 		AABBox m_bbox;

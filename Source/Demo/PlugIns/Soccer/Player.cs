@@ -18,6 +18,8 @@ namespace Bnoerj.AI.Steering.Soccer
 {
 	public class Player : SimpleVehicle
 	{
+		Trail trail;
+
 		// constructor
 		public Player(List<Player> others, List<Player> allplayers, Ball ball, bool isTeamA, int id)
 		{
@@ -26,6 +28,7 @@ namespace Bnoerj.AI.Steering.Soccer
 			m_Ball = ball;
 			b_ImTeamA = isTeamA;
 			m_MyID = id;
+
 			Reset();
 		}
 
@@ -47,8 +50,9 @@ namespace Bnoerj.AI.Steering.Soccer
 					Position = (new Vector3(-Globals.PlayerPosition[m_MyID].X, Globals.PlayerPosition[m_MyID].Y, Globals.PlayerPosition[m_MyID].Z));
 			}
 			m_home = Position;
-			ClearTrailHistory();    // prevent long streaks due to teleportation 
-			SetTrailParameters(10, 60);
+
+			if (trail == null) trail = new Trail(10, 60);
+			trail.Clear();    // prevent long streaks due to teleportation 
 		}
 
 		// per frame simulation update
@@ -82,7 +86,7 @@ namespace Bnoerj.AI.Steering.Soccer
 							float Z = m_Ball.Position.Z - Position.Z > 0 ? -1.0f : 1.0f;
 							Vector3 behindBall = m_Ball.Position + (b_ImTeamA ? new Vector3(2, 0, Z) : new Vector3(-2, 0, Z));
 							Vector3 behindBallForce = xxxSteerForSeek(behindBall);
-							AnnotationLine(Position, behindBall, Color.Green);
+							annotation.Line(Position, behindBall, Color.Green);
 							Vector3 evadeTarget = xxxSteerForFlee(m_Ball.Position);
 							ApplySteeringForce(behindBallForce * 10 + evadeTarget, elapsedTime);
 						}
@@ -102,7 +106,7 @@ namespace Bnoerj.AI.Steering.Soccer
 		public void Draw()
 		{
 			Drawing.DrawBasic2dCircularVehicle(this, b_ImTeamA ? Color.Red : Color.Blue);
-			DrawTrail();
+			trail.Draw(Annotation.drawer);
 		}
 
 		// per-instance reference to its group

@@ -209,15 +209,15 @@ namespace Bnoerj.AI.Steering
 		// ------------------------------------------------------------------------
 		// rotate, in the canonical direction, a vector pointing in the
 		// "forward"(+Z) direction to the "side"(+/-X) direction
-        public Vector3 LocalRotateForwardToSide(Vector3 v)
+        public Vector3 LocalRotateForwardToSide(Vector3 value)
 		{
-			return new Vector3(IsRightHanded ? -v.Z : +v.Z, v.Y, v.X);
+			return new Vector3(IsRightHanded ? -value.Z : +value.Z, value.Y, value.X);
 		}
 
 		// not currently used, just added for completeness
-        public Vector3 GlobalRotateForwardToSide(Vector3 globalForward)
+        public Vector3 GlobalRotateForwardToSide(Vector3 value)
 		{
-            Vector3 localForward = LocalizeDirection(globalForward);
+            Vector3 localForward = LocalizeDirection(value);
             Vector3 localSide = LocalRotateForwardToSide(localForward);
 			return GlobalizeDirection(localSide);
 		}

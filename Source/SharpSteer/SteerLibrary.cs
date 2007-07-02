@@ -16,8 +16,11 @@ using Microsoft.Xna.Framework;
 namespace Bnoerj.AI.Steering
 {
 	//FIXME: this class should not be abstract
-	public abstract class SteerLibrary : Annotation
+	public abstract class SteerLibrary : AbstractVehicle
 	{
+		//HACK: This should not be... Find a way to access Game.Services
+		public static IAnnotationService annotation = new Annotation();
+
 		// Constructor: initializes state
 		public SteerLibrary()
 		{
@@ -125,7 +128,7 @@ namespace Bnoerj.AI.Steering
 				float targetPathDistance = nowPathDistance + pathDistanceOffset;
                 Vector3 target = path.MapPathDistanceToPoint(targetPathDistance);
 
-				AnnotatePathFollowing(futurePosition, onPath, target, outside);
+				annotation.PathFollowing(futurePosition, onPath, target, outside);
 
 				// return steering to seek target on path
 				return SteerForSeek(target);
@@ -153,7 +156,7 @@ namespace Bnoerj.AI.Steering
 				// our predicted future position was outside the path, need to
 				// steer towards it.  Use onPath projection of futurePosition
 				// as seek target
-				AnnotatePathFollowing(futurePosition, onPath, onPath, outside);
+				annotation.PathFollowing(futurePosition, onPath, onPath, outside);
 				return SteerForSeek(onPath);
 			}
 		}
@@ -174,8 +177,9 @@ namespace Bnoerj.AI.Steering
 
 			// XXX more annotation modularity problems (assumes spherical obstacle)
 			if (avoidance != Vector3.Zero)
-				AnnotateAvoidObstacle(minTimeToCollision * this.Speed);
-
+			{
+				annotation.AvoidObstacle(minTimeToCollision * this.Speed);
+			}
 			return avoidance;
 		}
 
@@ -206,7 +210,7 @@ namespace Bnoerj.AI.Steering
 			if ((nearest.intersect != false) && (nearest.distance < minDistanceToCollision))
 			{
 				// show the corridor that was checked for collisions
-				AnnotateAvoidObstacle(minDistanceToCollision);
+				annotation.AvoidObstacle(minDistanceToCollision);
 
 				// compute avoidance steering force: take offset from obstacle to me,
 				// take the component of that which is lateral (perpendicular to my
@@ -313,7 +317,7 @@ namespace Bnoerj.AI.Steering
 					}
 				}
 
-				annotateAvoidNeighbor(threat, steer, xxxOurPositionAtNearestApproach, xxxThreatPositionAtNearestApproach);
+				annotation.AvoidNeighbor(threat, steer, xxxOurPositionAtNearestApproach, xxxThreatPositionAtNearestApproach);
 			}
 
 			return this.Side * steer;
@@ -393,7 +397,7 @@ namespace Bnoerj.AI.Steering
 
 					if (currentDistance < minCenterToCenter)
 					{
-						AnnotateAvoidCloseNeighbor(other, minSeparationDistance);
+						annotation.AvoidCloseNeighbor(other, minSeparationDistance);
                         return Vector3Helpers.PerpendicularComponent(-offset, this.Forward);
 					}
 				}
@@ -638,7 +642,7 @@ namespace Bnoerj.AI.Steering
 			Vector3 target = quarry.PredictFuturePosition(etl);
 
 			// annotation
-			AnnotationLine(this.Position, target, GaudyPursuitAnnotation ? color : Color.DarkGray);
+			annotation.Line(this.Position, target, GaudyPursuitAnnotation ? color : Color.DarkGray);
 
 			return SteerForSeek(target);
 		}
@@ -724,10 +728,6 @@ namespace Bnoerj.AI.Steering
 		// xxx experiment cwr 9-6-02
 		protected void FindNextIntersectionWithSphere(SphericalObstacle obs, ref PathIntersection intersection)
 		{
-			// xxx"SphericalObstacle& obs" should be "const SphericalObstacle&
-			// obs" but then it won't let me store a pointer to in inside the
-			// PathIntersection
-
 			// This routine is based on the Paul Bourke's derivation in:
 			//   Intersection of a Line and a Sphere (or circle)
 			//   http://www.swin.edu.au/astronomy/pbourke/geometry/sphereline/
@@ -769,32 +769,6 @@ namespace Bnoerj.AI.Steering
 				((p < q) ? p : q) :
 				// otherwise only one intersections is in front, select it
 				((p > 0) ? p : q);
-		}
-
-		// ------------------------------------------------ graphical annotation
-
-		// called when steerToAvoidObstacles decides steering is required
-		// (default action is to do nothing, layered classes can overload it)
-		public virtual void AnnotateAvoidObstacle(float minDistanceToCollision)
-		{
-		}
-
-		// called when steerToFollowPath decides steering is required
-		// (default action is to do nothing, layered classes can overload it)
-        public virtual void AnnotatePathFollowing(Vector3 future, Vector3 onPath, Vector3 target, float outside)
-		{
-		}
-
-		// called when steerToAvoidCloseNeighbors decides steering is required
-		// (default action is to do nothing, layered classes can overload it)
-		public virtual void AnnotateAvoidCloseNeighbor(IVehicle other, float additionalDistance)
-		{
-		}
-
-		// called when steerToAvoidNeighbors decides steering is required
-		// (default action is to do nothing, layered classes can overload it)
-        public virtual void annotateAvoidNeighbor(IVehicle threat, float steer, Vector3 ourFuture, Vector3 threatFuture)
-		{
 		}
 	}
 }

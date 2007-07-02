@@ -48,9 +48,9 @@ namespace Bnoerj.AI.Steering.Boids
 			// initialize camera
 			Bnoerj.AI.Steering.Demo.Init3dCamera(Bnoerj.AI.Steering.Demo.SelectedVehicle);
 			Bnoerj.AI.Steering.Demo.Camera.Mode = Camera.CameraMode.Fixed;
-			Bnoerj.AI.Steering.Demo.Camera.FixedDistDistance = Bnoerj.AI.Steering.Demo.CameraTargetDistance;
-			Bnoerj.AI.Steering.Demo.Camera.FixedDistVOffset = 0;
-			Bnoerj.AI.Steering.Demo.Camera.LookdownDistance = 20;
+			Bnoerj.AI.Steering.Demo.Camera.FixedDistanceDistance = Bnoerj.AI.Steering.Demo.CameraTargetDistance;
+			Bnoerj.AI.Steering.Demo.Camera.FixedDistanceVerticalOffset = 0;
+			Bnoerj.AI.Steering.Demo.Camera.LookDownDistance = 20;
 			Bnoerj.AI.Steering.Demo.Camera.AimLeadTime = 0.5f;
 			Bnoerj.AI.Steering.Demo.Camera.PovOffset.X =0;
             Bnoerj.AI.Steering.Demo.Camera.PovOffset.Y = 0.5f;

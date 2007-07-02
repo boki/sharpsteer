@@ -45,7 +45,7 @@ namespace Bnoerj.AI.Steering.MultiplePursuit
 			ApplySteeringForce(SteerForPursuit(wanderer, maxTime), elapsedTime);
 
 			// for annotation
-			RecordTrailVertex(currentTime, Position);
+			trail.Record(currentTime, Position);
 		}
 
 		// reset position

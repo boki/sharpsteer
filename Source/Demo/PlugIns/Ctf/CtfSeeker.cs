@@ -54,8 +54,8 @@ namespace Bnoerj.AI.Steering.Ctf
 			ApplySteeringForce(steer, elapsedTime);
 
 			// annotation
-			AnnotationVelocityAcceleration();
-			RecordTrailVertex(currentTime, Position);
+			annotation.VelocityAcceleration(this);
+			trail.Record(currentTime, Position);
 		}
 
 		// is there a clear path to the goal?
@@ -87,7 +87,7 @@ namespace Bnoerj.AI.Steering.Ctf
                 float eForwardDistance = Vector3.Dot(Forward, eOffset);
 
 				// xxx temp move this up before the conditionals
-				AnnotationXZCircle(e.Radius, eFuture, Globals.ClearPathColor, 20); //xxx
+				annotation.CircleXZ(e.Radius, eFuture, Globals.ClearPathColor, 20); //xxx
 
 				// consider as potential blocker if within the corridor
 				if (inCorridor)
@@ -99,8 +99,8 @@ namespace Bnoerj.AI.Steering.Ctf
 						// not a blocker if behind us and we are perp to corridor
 						float eFront = eForwardDistance + e.Radius;
 
-						//annotationLine (position, forward*eFront, gGreen); // xxx
-						//annotationLine (e.position, forward*eFront, gGreen); // xxx
+						//annotation.annotationLine (position, forward*eFront, gGreen); // xxx
+						//annotation.annotationLine (e.position, forward*eFront, gGreen); // xxx
 
 						// xxx
 						// std::ostringstream message;
@@ -115,7 +115,7 @@ namespace Bnoerj.AI.Steering.Ctf
 						if (!safeToTurnTowardsGoal)
 						{
 							// this enemy blocks the path to the goal, so return false
-							AnnotationLine(Position, e.Position, Globals.ClearPathColor);
+							annotation.Line(Position, e.Position, Globals.ClearPathColor);
 							// return false;
 							xxxReturn = false;
 						}
@@ -157,7 +157,7 @@ namespace Bnoerj.AI.Steering.Ctf
 					// xxx experiment 9-16-02
 					Vector3 s = Vector3Helpers.LimitMaxDeviationAngle(seek, 0.707f, Forward);
 
-					AnnotationLine(Position, Position + (s * 0.2f), Globals.SeekColor);
+					annotation.Line(Position, Position + (s * 0.2f), Globals.SeekColor);
 					return s;
 				}
 				else
@@ -179,11 +179,11 @@ namespace Bnoerj.AI.Steering.Ctf
 						Vector3 evade = XXXSteerToEvadeAllDefenders();
 						Vector3 steer = Vector3Helpers.LimitMaxDeviationAngle(seek + evade, 0.707f, Forward);
 
-						AnnotationLine(Position, Position + seek, Color.Red);
-						AnnotationLine(Position, Position + evade, Color.Green);
+						annotation.Line(Position, Position + seek, Color.Red);
+						annotation.Line(Position, Position + evade, Color.Green);
 
 						// annotation: show evasion steering force
-						AnnotationLine(Position, Position + (steer * 0.2f), Globals.EvadeColor);
+						annotation.Line(Position, Position + (steer * 0.2f), Globals.EvadeColor);
 						return steer;
 					}
 				}
@@ -280,7 +280,7 @@ namespace Bnoerj.AI.Steering.Ctf
 						float timeEstimate = 0.15f * eDistance / e.Speed;//xxx
 						Vector3 future = e.PredictFuturePosition(timeEstimate);
 
-						AnnotationXZCircle(e.Radius, future, Globals.EvadeColor, 20); // xxx
+						annotation.CircleXZ(e.Radius, future, Globals.EvadeColor, 20); // xxx
 
 						Vector3 offset = future - Position;
                         Vector3 lateral = Vector3Helpers.PerpendicularComponent(offset, Forward);
@@ -308,7 +308,7 @@ namespace Bnoerj.AI.Steering.Ctf
 				Vector3 eFuture = e.PredictFuturePosition(timeEstimate);
 
 				// annotation
-				AnnotationXZCircle(e.Radius, eFuture, Globals.EvadeColor, 20);
+				annotation.CircleXZ(e.Radius, eFuture, Globals.EvadeColor, 20);
 
 				// steering to flee from eFuture (enemy's future position)
 				Vector3 flee = xxxSteerForFlee(eFuture);
@@ -352,11 +352,11 @@ namespace Bnoerj.AI.Steering.Ctf
 			Vector3 gun = LocalRotateForwardToSide(goalDirection);
 			Vector3 gn = gun * sideThreshold;
 			Vector3 hbc = Globals.HomeBaseCenter;
-			AnnotationLine(pbb + gn, hbc + gn, Globals.ClearPathColor);
-			AnnotationLine(pbb - gn, hbc - gn, Globals.ClearPathColor);
-			AnnotationLine(hbc - gn, hbc + gn, Globals.ClearPathColor);
-			AnnotationLine(pbb - gn, pbb + gn, Globals.ClearPathColor);
-			//AnnotationLine(pbb - behindSide, pbb + behindSide, Globals.clearPathColor);
+			annotation.Line(pbb + gn, hbc + gn, Globals.ClearPathColor);
+			annotation.Line(pbb - gn, hbc - gn, Globals.ClearPathColor);
+			annotation.Line(hbc - gn, hbc + gn, Globals.ClearPathColor);
+			annotation.Line(pbb - gn, pbb + gn, Globals.ClearPathColor);
+			//annotation.AnnotationLine(pbb - behindSide, pbb + behindSide, Globals.clearPathColor);
 		}
 
 		public SeekerState State;

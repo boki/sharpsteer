@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bnoerj.AI.SharpSteer</RootNamespace>
+    <RootNamespace>Bnoerj.AI.Steering</RootNamespace>
     <AssemblyName>Bnoerj.AI.SharpSteer.360</AssemblyName>
     <XnaFrameworkVersion>v1.0</XnaFrameworkVersion>
     <XnaPlatform>Xbox 360</XnaPlatform>
@@ -70,6 +70,10 @@
     <Compile Include="Clock.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>Clock</Name>
+    </Compile>
+    <Compile Include="IAnnotation.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>IAnnotation</Name>
     </Compile>
     <Compile Include="IDraw.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
@@ -135,6 +139,10 @@
     <Compile Include="SteerLibrary.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>SteerLibrary</Name>
+    </Compile>
+    <Compile Include="Trail.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Trail</Name>
     </Compile>
     <Compile Include="Utilities.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>

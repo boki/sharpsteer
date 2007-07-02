@@ -10,147 +10,62 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Bnoerj.AI.Steering
 {
-	//FIXME: this class should not be abstract
-	public abstract class Annotation : AbstractVehicle
+	public class Annotation : IAnnotationService
 	{
-		// trails
-		int trailVertexCount;       // number of vertices in array (ring buffer)
-		int trailIndex;             // array index of most recently recorded point
-		float trailDuration;        // duration (in seconds) of entire trail
-		float trailSampleInterval;  // desired interval between taking samples
-		float trailLastSampleTime;  // global time when lat sample was taken
-		int trailDottedPhase;       // dotted line: draw segment or not
-		Vector3 curPosition;           // last reported position of vehicle
-		Vector3[] trailVertices;        // array (ring) of recent points along trail
-		byte[] trailFlags;           // array (ring) of flag bits for trail points
+		bool isEnabled;
+		List<Trail> trails;
 
-		static bool isAnnotationEnabled;
-
+		//HACK: change the IDraw to a IDrawService
 		public static IDraw drawer;
 
 		// constructor
 		public Annotation()
 		{
-			trailVertices = null;
-			trailFlags = null;
-			isAnnotationEnabled = true;
-
-			// xxx I wonder if it makes more sense to NOT do this here, see if the
-			// xxx vehicle class calls it to set custom parameters, and if not, set
-			// xxx these default parameters on first call to a "trail" function.  The
-			// xxx issue is whether it is a problem to allocate default-sized arrays
-			// xxx then to free them and allocate new ones
-			SetTrailParameters(5, 100);  // 5 seconds with 100 points along the trail
+			isEnabled = true;
+			trails = new List<Trail>();
 		}
 
-		public static bool IsAnnotationEnabled
+		/// <summary>
+		/// Indicates whether annotation is enabled.
+		/// </summary>
+		public bool IsEnabled
 		{
-			get { return isAnnotationEnabled; }
-			set { isAnnotationEnabled = value; }
+			get { return isEnabled; }
+			set { isEnabled = value; }
 		}
 
-		// ------------------------------------------------------------------------
-		// trails / streamers
-		//
-		// these routines support visualization of a vehicle's recent path
-		//
-		// XXX conceivable trail/streamer should be a separate class,
-		// XXX Annotation would "has-a" one (or more))
-
-		// record a position for the current time, called once per update
-		public void RecordTrailVertex(float currentTime, Vector3 position)
+		/// <summary>
+		/// Adds a Trail.
+		/// </summary>
+		/// <param name="trail">The trail to add.</param>
+		public virtual void AddTrail(Trail trail)
 		{
-			float timeSinceLastTrailSample = currentTime - trailLastSampleTime;
-			if (timeSinceLastTrailSample > trailSampleInterval)
+			trails.Add(trail);
+		}
+
+		/// <summary>
+		/// Removes the specified Trail.
+		/// </summary>
+		/// <param name="trail">The trail to remove.</param>
+		public virtual void RemoveTrail(Trail trail)
+		{
+			trails.Remove(trail);
+		}
+
+		/// <summary>
+		/// Draws all registered Trails.
+		/// </summary>
+		public virtual void DrawTrails(IDraw drawer)
+		{
+			for (int i = 0; i < trails.Count; i++)
 			{
-				trailIndex = (trailIndex + 1) % trailVertexCount;
-				trailVertices[trailIndex] = position;
-				trailDottedPhase = (trailDottedPhase + 1) % 2;
-				bool tick = (Math.Floor(currentTime) > Math.Floor(trailLastSampleTime));
-				trailFlags[trailIndex] = (byte)(trailDottedPhase | (tick ? 2 : 0));
-				trailLastSampleTime = currentTime;
+				trails[i].Draw(drawer);
 			}
-			curPosition = position;
-		}
-
-		// draw the trail as a dotted line, fading away with age
-		public void DrawTrail()
-		{
-			DrawTrail(Color.LightGray, Color.White);
-		}
-
-		public void DrawTrail(Color trailColor, Color tickColor)
-		{
-			if (isAnnotationEnabled == true)
-			{
-				int index = trailIndex;
-				for (int j = 0; j < trailVertexCount; j++)
-				{
-					// index of the next vertex (mod around ring buffer)
-					int next = (index + 1) % trailVertexCount;
-
-					// "tick mark": every second, draw a segment in a different color
-					bool tick = ((trailFlags[index] & 2) != 0 || (trailFlags[next] & 2) != 0);
-					Color color = tick ? tickColor : trailColor;
-
-					// draw every other segment
-					if ((trailFlags[index] & 1) != 0)
-					{
-						if (j == 0)
-						{
-							// draw segment from current position to first trail point
-							if (drawer != null) drawer.LineAlpha(curPosition, trailVertices[index], color, 1);
-						}
-						else
-						{
-							// draw trail segments with opacity decreasing with age
-							const float minO = 0.05f; // minimum opacity
-							float fraction = (float)j / trailVertexCount;
-							float opacity = (fraction * (1 - minO)) + minO;
-							if (drawer != null) drawer.LineAlpha(trailVertices[index], trailVertices[next], color, opacity);
-						}
-					}
-					index = next;
-				}
-			}
-		}
-
-		// set trail parameters: the amount of time it represents and the
-		// number of samples along its length.  re-allocates internal buffers.
-		public void SetTrailParameters(float duration, int vertexCount)
-		{
-			// record new parameters
-			trailDuration = duration;
-			trailVertexCount = vertexCount;
-
-			// reset other internal trail state
-			trailIndex = 0;
-			trailLastSampleTime = 0;
-			trailSampleInterval = trailDuration / trailVertexCount;
-			trailDottedPhase = 1;
-
-			// prepare trailVertices array: free old one if needed, allocate new one
-			trailVertices = null;
-			trailVertices = new Vector3[trailVertexCount];
-
-			// prepare trailFlags array: free old one if needed, allocate new one
-			trailFlags = null;
-			trailFlags = new byte[trailVertexCount];
-
-			// initializing all flags to zero means "do not draw this segment"
-			for (int i = 0; i < trailVertexCount; i++) trailFlags[i] = 0;
-		}
-
-		// forget trail history: used to prevent long streaks due to teleportation
-		public void ClearTrailHistory()
-		{
-			// brute force implementation, reset everything
-			SetTrailParameters(trailDuration, trailVertexCount);
 		}
 
 		// ------------------------------------------------------------------------
@@ -166,68 +81,104 @@ namespace Bnoerj.AI.Steering
 		//       "segments" is the number of line segments used to draw the circle
 
 		// draw an opaque colored line segment between two locations in space
-		public void AnnotationLine(Vector3 startPoint, Vector3 endPoint, Color color)
+		public virtual void Line(Vector3 startPoint, Vector3 endPoint, Color color)
 		{
-			if (isAnnotationEnabled == true && drawer != null)
+			if (isEnabled == true && drawer != null)
 			{
 				drawer.Line(startPoint, endPoint, color);
 			}
 		}
 
 		// draw a circle on the XZ plane
-		public void AnnotationXZCircle(float radius, Vector3 center, Color color, int segments)
+		public virtual void CircleXZ(float radius, Vector3 center, Color color, int segments)
 		{
-			AnnotationXZCircleOrDisk(radius, center, color, segments, false);
+			CircleOrDiskXZ(radius, center, color, segments, false);
 		}
 
 		// draw a disk on the XZ plane
-		public void AnnotationXZDisk(float radius, Vector3 center, Color color, int segments)
+		public virtual void DiskXZ(float radius, Vector3 center, Color color, int segments)
 		{
-			AnnotationXZCircleOrDisk(radius, center, color, segments, true);
+			CircleOrDiskXZ(radius, center, color, segments, true);
 		}
 
 		// draw a circle perpendicular to the given axis
-		public void Annotation3dCircle(float radius, Vector3 center, Vector3 axis, Color color, int segments)
+		public virtual void Circle3D(float radius, Vector3 center, Vector3 axis, Color color, int segments)
 		{
-			Annotation3dCircleOrDisk(radius, center, axis, color, segments, false);
+			CircleOrDisk3D(radius, center, axis, color, segments, false);
 		}
 
 		// draw a disk perpendicular to the given axis
-		public void Annotation3dDisk(float radius, Vector3 center, Vector3 axis, Color color, int segments)
+		public virtual void Disk3D(float radius, Vector3 center, Vector3 axis, Color color, int segments)
 		{
-			Annotation3dCircleOrDisk(radius, center, axis, color, segments, true);
+			CircleOrDisk3D(radius, center, axis, color, segments, true);
 		}
 
 		// ------------------------------------------------------------------------
 		// support for annotation circles
-		public void AnnotationXZCircleOrDisk(float radius, Vector3 center, Color color, int segments, bool filled)
+		public virtual void CircleOrDiskXZ(float radius, Vector3 center, Color color, int segments, bool filled)
 		{
-			AnnotationCircleOrDisk(radius,
-									Vector3.Zero,
-									center,
-									color,
-									segments,
-									filled,
-									false); // "not in3d" -> on XZ plane
+			CircleOrDisk(radius, Vector3.Zero, center, color, segments, filled, false);
 		}
 
-		public void Annotation3dCircleOrDisk(float radius, Vector3 center, Vector3 axis, Color color, int segments, bool filled)
+		public virtual void CircleOrDisk3D(float radius, Vector3 center, Vector3 axis, Color color, int segments, bool filled)
 		{
-			AnnotationCircleOrDisk(radius,
-									axis,
-									center,
-									color,
-									segments,
-									filled,
-									true); // "in3d"
+			CircleOrDisk(radius, axis, center, color, segments, filled, true);
 		}
 
-		public void AnnotationCircleOrDisk(float radius, Vector3 axis, Vector3 center, Color color, int segments, bool filled, bool in3d)
+		public virtual void CircleOrDisk(float radius, Vector3 axis, Vector3 center, Color color, int segments, bool filled, bool in3d)
 		{
-			if (isAnnotationEnabled == true && drawer != null)
+			if (isEnabled == true && drawer != null)
 			{
 				drawer.CircleOrDisk(radius, axis, center, color, segments, filled, in3d);
 			}
+		}
+
+		// called when steerToAvoidObstacles decides steering is required
+		// (default action is to do nothing, layered classes can overload it)
+		public virtual void AvoidObstacle(float minDistanceToCollision)
+		{
+		}
+
+		// called when steerToFollowPath decides steering is required
+		// (default action is to do nothing, layered classes can overload it)
+		public virtual void PathFollowing(Vector3 future, Vector3 onPath, Vector3 target, float outside)
+		{
+		}
+
+		// called when steerToAvoidCloseNeighbors decides steering is required
+		// (default action is to do nothing, layered classes can overload it)
+		public virtual void AvoidCloseNeighbor(IVehicle other, float additionalDistance)
+		{
+		}
+
+		// called when steerToAvoidNeighbors decides steering is required
+		// (default action is to do nothing, layered classes can overload it)
+		public virtual void AvoidNeighbor(IVehicle threat, float steer, Vector3 ourFuture, Vector3 threatFuture)
+		{
+		}
+
+		public virtual void VelocityAcceleration(IVehicle vehicle)
+		{
+			VelocityAcceleration(vehicle, 3, 3);
+		}
+
+		public virtual void VelocityAcceleration(IVehicle vehicle, float maxLength)
+		{
+			VelocityAcceleration(vehicle, maxLength, maxLength);
+		}
+
+		public virtual void VelocityAcceleration(IVehicle vehicle, float maxLengthAcceleration, float maxLengthVelocity)
+		{
+			const byte desat = 102;
+			Color vColor = new Color(255, desat, 255); // pinkish
+			Color aColor = new Color(desat, desat, 255); // bluish
+
+			float aScale = maxLengthAcceleration / vehicle.MaxForce;
+			float vScale = maxLengthVelocity / vehicle.MaxSpeed;
+			Vector3 p = vehicle.Position;
+
+			Line(p, p + (vehicle.Velocity * vScale), vColor);
+			Line(p, p + (vehicle.Acceleration * aScale), aColor);
 		}
 	}
 }

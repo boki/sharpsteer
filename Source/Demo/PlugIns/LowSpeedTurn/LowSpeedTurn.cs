@@ -17,6 +17,8 @@ namespace Bnoerj.AI.Steering.LowSpeedTurn
 {
 	public class LowSpeedTurn : SimpleVehicle
 	{
+		Trail trail;
+
 		// constructor
 		public LowSpeedTurn()
 		{
@@ -48,14 +50,14 @@ namespace Bnoerj.AI.Steering.LowSpeedTurn
 			startSpeed += 0.15f;
 
 			// 15 seconds and 150 points along the trail
-			SetTrailParameters(15, 150);
+			trail = new Trail(15, 150);
 		}
 
 		// draw into the scene
 		public void Draw()
 		{
 			Drawing.DrawBasic2dCircularVehicle(this, Color.Gray);
-			DrawTrail();
+			trail.Draw(Annotation.drawer);
 		}
 
 		// per frame simulation update
@@ -64,8 +66,8 @@ namespace Bnoerj.AI.Steering.LowSpeedTurn
 			ApplySteeringForce(Steering, elapsedTime);
 
 			// annotation
-			AnnotationVelocityAcceleration();
-			RecordTrailVertex(currentTime, Position);
+			annotation.VelocityAcceleration(this);
+			trail.Record(currentTime, Position);
 		}
 
 		// reset starting positions

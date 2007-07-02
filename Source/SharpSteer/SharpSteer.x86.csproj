@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bnoerj.AI.SharpSteer</RootNamespace>
+    <RootNamespace>Bnoerj.AI.Steering</RootNamespace>
     <AssemblyName>Bnoerj.AI.SharpSteer.x86</AssemblyName>
     <XnaFrameworkVersion>v1.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
@@ -58,6 +58,10 @@
     <Compile Include="AbstractVehicle.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>AbstractVehicle</Name>
+    </Compile>
+    <Compile Include="IAnnotationService.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>IAnnotationService</Name>
     </Compile>
     <Compile Include="ILocalSpace.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
@@ -142,6 +146,10 @@
     <Compile Include="SteerLibrary.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>SteerLibrary</Name>
+    </Compile>
+    <Compile Include="Trail.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Trail</Name>
     </Compile>
     <Compile Include="Utilities.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>

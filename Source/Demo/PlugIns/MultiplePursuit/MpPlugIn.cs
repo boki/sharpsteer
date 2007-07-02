@@ -41,8 +41,8 @@ namespace Bnoerj.AI.Steering.MultiplePursuit
 			// initialize camera
 			Demo.SelectedVehicle = wanderer;
 			Demo.Camera.Mode = Camera.CameraMode.StraightDown;
-			Demo.Camera.FixedDistDistance = Demo.CameraTargetDistance;
-			Demo.Camera.FixedDistVOffset = Demo.Camera2dElevation;
+			Demo.Camera.FixedDistanceDistance = Demo.CameraTargetDistance;
+			Demo.Camera.FixedDistanceVerticalOffset = Demo.Camera2dElevation;
 		}
 
 		public override void Update(float currentTime, float elapsedTime)

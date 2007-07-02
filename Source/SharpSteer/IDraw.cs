@@ -7,9 +7,8 @@
 // are also available at http://www.codeplex.com/SharpSteer/Project/License.aspx.
 
 using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Bnoerj.AI.Steering
 {

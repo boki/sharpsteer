@@ -21,25 +21,31 @@ namespace Bnoerj.AI.Steering
 		public readonly int SerialNumber;
 		static int serialNumberCounter = 0;
 
-		float mass;       // Mass (defaults to unity so acceleration=force)
+		// Mass (defaults to unity so acceleration=force)
+		float mass;
 
-		float radius;     // size of bounding sphere, for obstacle avoidance, etc.
+		// size of bounding sphere, for obstacle avoidance, etc.
+		float radius;
 
-		float speed;      // speed along Forward direction.  Because local space
-		// is velocity-aligned, velocity = Forward * Speed
+		// speed along Forward direction. Because local space is
+		// velocity-aligned, velocity = Forward * Speed
+		float speed;
 
-		float maxForce;   // the maximum steering force this vehicle can apply
+		// the maximum steering force this vehicle can apply
 		// (steering force is clipped to this magnitude)
+		float maxForce;
 
-		float maxSpeed;   // the maximum speed this vehicle is allowed to move
+		// the maximum speed this vehicle is allowed to move
 		// (velocity is clipped to this magnitude)
+		float maxSpeed;
 
 		float curvature;
         Vector3 lastForward;
         Vector3 lastPosition;
         Vector3 smoothedPosition;
 		float smoothedCurvature;
-        Vector3 smoothedAcceleration;
+		// The acceleration is smoothed
+        Vector3 acceleration;
 
 		// constructor
 		public SimpleVehicle()
@@ -58,7 +64,7 @@ namespace Bnoerj.AI.Steering
 			ResetLocalSpace();
 
 			// reset SteerLibraryMixin state
-			// (XXX this seems really fragile, needs to be redesigned XXX)
+			//FIXME: this is really fragile, needs to be redesigned
 			base.Reset();
 
 			Mass = 1;          // Mass (defaults to 1 so acceleration=force)
@@ -72,7 +78,7 @@ namespace Bnoerj.AI.Steering
 			// reset bookkeeping to do running averages of these quanities
 			ResetSmoothedPosition();
 			ResetSmoothedCurvature();
-			ResetSmoothedAcceleration();
+			ResetAcceleration();
 		}
 
 		// get/set Mass
@@ -134,11 +140,11 @@ namespace Bnoerj.AI.Steering
 			if (elapsedTime > 0)
 			{
 				float smoothRate = Utilities.Clip(9 * elapsedTime, 0.15f, 0.4f);
-				Utilities.BlendIntoAccumulator(smoothRate, newAcceleration, ref smoothedAcceleration);
+				Utilities.BlendIntoAccumulator(smoothRate, newAcceleration, ref acceleration);
 			}
 
 			// Euler integrate (per frame) acceleration into velocity
-			newVelocity += smoothedAcceleration * elapsedTime;
+			newVelocity += acceleration * elapsedTime;
 
 			// enforce speed limit
             newVelocity = Vector3Helpers.TruncateLength(newVelocity, MaxSpeed);
@@ -184,7 +190,7 @@ namespace Bnoerj.AI.Steering
 
 			// acceleration points toward the center of local path curvature, the
 			// length determines how much the vehicle will roll while turning
-			Vector3 accelUp = smoothedAcceleration * 0.05f;
+			Vector3 accelUp = acceleration * 0.05f;
 
 			// combined banking, sum of UP due to turning and global UP
 			Vector3 bankUp = accelUp + globalUp;
@@ -196,10 +202,10 @@ namespace Bnoerj.AI.Steering
 			Up = tempUp;
             Up.Normalize();
 
-			AnnotationLine(Position, Position + (globalUp * 4), Color.White);  // XXX
-			AnnotationLine(Position, Position + (bankUp * 4), Color.Orange); // XXX
-			AnnotationLine(Position, Position + (accelUp * 4), Color.Red);    // XXX
-			AnnotationLine(Position, Position + (Up * 1), Color.Yellow); // XXX
+			annotation.Line(Position, Position + (globalUp * 4), Color.White);
+			annotation.Line(Position, Position + (bankUp * 4), Color.Orange);
+			annotation.Line(Position, Position + (accelUp * 4), Color.Red);
+			annotation.Line(Position, Position + (Up * 1), Color.Yellow);
 
 			// adjust orthonormal basis vectors to be aligned with new velocity
 			if (Speed > 0) RegenerateOrthonormalBasisUF(newVelocity / Speed);
@@ -224,7 +230,6 @@ namespace Bnoerj.AI.Steering
 				return Vector3Helpers.LimitMaxDeviationAngle(force, cosine, Forward);
 			}
 		}
-
 
 		// apply a given braking force (for a given dt) to our momentum.
 		// xxx experimental 9-6-02
@@ -264,17 +269,17 @@ namespace Bnoerj.AI.Steering
 			return smoothedCurvature = curvature = value;
 		}
 
-        public Vector3 SmoothedAcceleration
+		public override Vector3 Acceleration
 		{
-			get { return smoothedAcceleration; }
+			get { return acceleration; }
 		}
-        public Vector3 ResetSmoothedAcceleration()
+        public Vector3 ResetAcceleration()
 		{
-			return ResetSmoothedAcceleration(Vector3.Zero);
+			return ResetAcceleration(Vector3.Zero);
 		}
-        public Vector3 ResetSmoothedAcceleration(Vector3 value)
+        public Vector3 ResetAcceleration(Vector3 value)
 		{
-			return smoothedAcceleration = value;
+			return acceleration = value;
 		}
 
         public Vector3 SmoothedPosition
@@ -288,28 +293,6 @@ namespace Bnoerj.AI.Steering
         public Vector3 ResetSmoothedPosition(Vector3 value)
 		{
 			return smoothedPosition = value;
-		}
-
-		// draw lines from vehicle's position showing its velocity and acceleration
-		public void AnnotationVelocityAcceleration(float maxLengthA, float maxLengthV)
-		{
-			float desat = 0.4f;
-			float aScale = maxLengthA / MaxForce;
-			float vScale = maxLengthV / MaxSpeed;
-			Vector3 p = Position;
-			Color aColor = new Color(new Vector3(desat, desat, 1)); // bluish
-			Color vColor = new Color(new Vector3(1, desat, 1)); // pinkish
-
-			AnnotationLine(p, p + (Velocity * vScale), vColor);
-			AnnotationLine(p, p + (smoothedAcceleration * aScale), aColor);
-		}
-		public void AnnotationVelocityAcceleration(float maxLength)
-		{
-			AnnotationVelocityAcceleration(maxLength, maxLength);
-		}
-		public void AnnotationVelocityAcceleration()
-		{
-			AnnotationVelocityAcceleration(3, 3);
 		}
 
 		// set a random "2D" heading: set local Up to global Y, then effectively

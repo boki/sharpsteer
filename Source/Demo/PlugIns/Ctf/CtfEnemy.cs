@@ -60,8 +60,8 @@ namespace Bnoerj.AI.Steering.Ctf
 			ApplySteeringForce(steer, elapsedTime);
 
 			// annotation
-			AnnotationVelocityAcceleration();
-			RecordTrailVertex(currentTime, Position);
+			annotation.VelocityAcceleration(this);
+			trail.Record(currentTime, Position);
 
 			// detect and record interceptions ("tags") of seeker
 			float seekerToMeDist = Vector3.Distance(Position, Globals.Seeker.Position);
@@ -74,7 +74,7 @@ namespace Bnoerj.AI.Steering.Ctf
 				if (Globals.Seeker.State == SeekerState.Tagged)
 				{
 					Color color = new Color((byte)(255.0f * 0.8f), (byte)(255.0f * 0.5f), (byte)(255.0f * 0.5f));
-					AnnotationXZDisk(sumOfRadii, (Position + Globals.Seeker.Position) / 2, color, 20);
+					annotation.DiskXZ(sumOfRadii, (Position + Globals.Seeker.Position) / 2, color, 20);
 				}
 			}
 		}

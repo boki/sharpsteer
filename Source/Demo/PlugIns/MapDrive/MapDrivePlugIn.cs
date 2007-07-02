@@ -47,7 +47,7 @@ namespace Bnoerj.AI.Steering.MapDrive
 			initCamElev = 15;
 			Demo.Init2dCamera(vehicle, initCamDist, initCamElev);
 			// "look straight down at vehicle" camera mode parameters
-			Demo.Camera.LookdownDistance = 50;
+			Demo.Camera.LookDownDistance = 50;
 			// "static" camera mode parameters
 			Demo.Camera.FixedPosition = new Vector3(145);
 			Demo.Camera.FixedTarget.X = 40;

@@ -20,8 +20,10 @@ namespace Bnoerj.AI.Steering.Pedestrian
 
 	public class Pedestrian : SimpleVehicle
 	{
+		Trail trail;
+
 		// called when steerToFollowPath decides steering is required
-		public override void AnnotatePathFollowing(Vector3 future, Vector3 onPath, Vector3 target, float outside)
+		public void AnnotatePathFollowing(Vector3 future, Vector3 onPath, Vector3 target, float outside)
 		{
 			Color yellow = Color.Yellow;
 			Color lightOrange = new Color((byte)(255.0f * 1.0f), (byte)(255.0f * 0.5f), 0);
@@ -29,10 +31,10 @@ namespace Bnoerj.AI.Steering.Pedestrian
 			Color yellowOrange = new Color((byte)(255.0f * 1.0f), (byte)(255.0f * 0.75f), 0);
 
 			// draw line from our position to our predicted future position
-			AnnotationLine(Position, future, yellow);
+			annotation.Line(Position, future, yellow);
 
 			// draw line from our position to our steering target on the path
-			AnnotationLine(Position, target, Color.Orange);
+			annotation.Line(Position, target, Color.Orange);
 
 			// draw a two-toned line between the future test point and its
 			// projection onto the path, the change from dark to light color
@@ -41,13 +43,13 @@ namespace Bnoerj.AI.Steering.Pedestrian
             boundaryOffset.Normalize();
             boundaryOffset *= outside;
 			Vector3 onPathBoundary = future + boundaryOffset;
-			AnnotationLine(onPath, onPathBoundary, darkOrange);
-			AnnotationLine(onPathBoundary, future, lightOrange);
+			annotation.Line(onPath, onPathBoundary, darkOrange);
+			annotation.Line(onPathBoundary, future, lightOrange);
 		}
 
 		// called when steerToAvoidCloseNeighbors decides steering is required
 		// (parameter names commented out to prevent compiler warning from "-W")
-		public override void AnnotateAvoidCloseNeighbor(IVehicle other, float additionalDistance)
+		public void AnnotateAvoidCloseNeighbor(IVehicle other, float additionalDistance)
 		{
 			// draw the word "Ouch!" above colliding vehicles
             bool headOn = Vector3.Dot(Forward, other.Forward) < 0;
@@ -56,26 +58,26 @@ namespace Bnoerj.AI.Steering.Pedestrian
 			Color color = headOn ? red : green;
 			String text = headOn ? "OUCH!" : "pardon me";
 			Vector3 location = Position + new Vector3(0, 0.5f, 0);
-			if (Annotation.IsAnnotationEnabled)
+			if (annotation.IsEnabled)
 				Drawing.Draw2dTextAt3dLocation(text, location, color);
 		}
 
 		// (parameter names commented out to prevent compiler warning from "-W")
-		public override void annotateAvoidNeighbor(IVehicle threat, float steer, Vector3 ourFuture, Vector3 threatFuture)
+		public void AnnotateAvoidNeighbor(IVehicle threat, float steer, Vector3 ourFuture, Vector3 threatFuture)
 		{
 			Color green = new Color((byte)(255.0f * 0.15f), (byte)(255.0f * 0.6f), 0);
 
-			AnnotationLine(Position, ourFuture, green);
-			AnnotationLine(threat.Position, threatFuture, green);
-			AnnotationLine(ourFuture, threatFuture, Color.Red);
-			AnnotationXZCircle(Radius, ourFuture, green, 12);
-			AnnotationXZCircle(Radius, threatFuture, green, 12);
+			annotation.Line(Position, ourFuture, green);
+			annotation.Line(threat.Position, threatFuture, green);
+			annotation.Line(ourFuture, threatFuture, Color.Red);
+			annotation.CircleXZ(Radius, ourFuture, green, 12);
+			annotation.CircleXZ(Radius, threatFuture, green, 12);
 		}
 
 		// xxx perhaps this should be a call to a general purpose annotation for
 		// xxx "local xxx axis aligned box in XZ plane" -- same code in in
 		// xxx CaptureTheFlag.cpp
-		public override void AnnotateAvoidObstacle(float minDistanceToCollision)
+		public void AnnotateAvoidObstacle(float minDistanceToCollision)
 		{
 			Vector3 boxSide = Side * Radius;
 			Vector3 boxFront = Forward * minDistanceToCollision;
@@ -83,10 +85,10 @@ namespace Bnoerj.AI.Steering.Pedestrian
 			Vector3 FL = Position + boxFront + boxSide;
 			Vector3 BR = Position - boxSide;
 			Vector3 BL = Position + boxSide;
-			AnnotationLine(FR, FL, Color.White);
-			AnnotationLine(FL, BL, Color.White);
-			AnnotationLine(BL, BR, Color.White);
-			AnnotationLine(BR, FR, Color.White);
+			annotation.Line(FR, FL, Color.White);
+			annotation.Line(FL, BL, Color.White);
+			annotation.Line(BL, BR, Color.White);
+			annotation.Line(BR, FR, Color.White);
 		}
 
 		// constructor
@@ -133,7 +135,7 @@ namespace Bnoerj.AI.Steering.Pedestrian
 			pathDirection = (Utilities.Random() > 0.5) ? -1 : +1;
 
 			// trail parameters: 3 seconds with 60 points along the trail
-			SetTrailParameters(3, 60);
+			trail = new Trail(3, 60);
 
 			// notify proximity database that our position has changed
 			if (proximityToken != null) proximityToken.UpdateForNewPosition(Position);
@@ -151,18 +153,18 @@ namespace Bnoerj.AI.Steering.Pedestrian
 				if (Vector3.Distance(Position, Globals.Endpoint0) < path.radius)
 				{
 					pathDirection = +1;
-					AnnotationXZCircle(path.radius, Globals.Endpoint0, Color.DarkRed, 20);
+					annotation.CircleXZ(path.radius, Globals.Endpoint0, Color.DarkRed, 20);
 				}
 				if (Vector3.Distance(Position, Globals.Endpoint1) < path.radius)
 				{
 					pathDirection = -1;
-					AnnotationXZCircle(path.radius, Globals.Endpoint1, Color.DarkRed, 20);
+					annotation.CircleXZ(path.radius, Globals.Endpoint1, Color.DarkRed, 20);
 				}
 			}
 
 			// annotation
-			AnnotationVelocityAcceleration(5, 0);
-			RecordTrailVertex(currentTime, Position);
+			annotation.VelocityAcceleration(this, 5, 0);
+			trail.Record(currentTime, Position);
 
 			// notify proximity database that our position has changed
 			proximityToken.UpdateForNewPosition(Position);
@@ -242,7 +244,7 @@ namespace Bnoerj.AI.Steering.Pedestrian
 		public void Draw()
 		{
 			Drawing.DrawBasic2dCircularVehicle(this, Color.Gray);
-			DrawTrail();
+			trail.Draw(Annotation.drawer);
 		}
 
 		// switch to new proximity database -- just for demo purposes
