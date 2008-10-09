@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C# Express 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpSteer.360", "Source\SharpSteer\SharpSteer.360.csproj", "{9391357C-ECC1-486E-9E0A-DDD85135BCC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpSteer.360", "Source\SharpSteer\SharpSteer-v1.360.csproj", "{9391357C-ECC1-486E-9E0A-DDD85135BCC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpSteer.x86", "Source\SharpSteer\SharpSteer.x86.csproj", "{8E1E5411-3326-4077-B49B-2694E48AD255}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpSteer.x86", "Source\SharpSteer\SharpSteer-v1.x86.csproj", "{8E1E5411-3326-4077-B49B-2694E48AD255}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Source\Demo\Demo.csproj", "{7A37C881-0A5C-4B9C-B07E-3A2B7377434B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Source\Demo\Demo-v1.csproj", "{7A37C881-0A5C-4B9C-B07E-3A2B7377434B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

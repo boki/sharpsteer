@@ -1,41 +1,39 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{8E1E5411-3326-4077-B49B-2694E48AD255}</ProjectGuid>
+    <ProjectGuid>{9391357C-ECC1-486E-9E0A-DDD85135BCC0}</ProjectGuid>
     <ProjectTypeGuids>{9F340DF3-2AED-4330-AC16-78AC2D9B4738};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Bnoerj.AI.Steering</RootNamespace>
-    <AssemblyName>Bnoerj.AI.SharpSteer.x86</AssemblyName>
+    <AssemblyName>Bnoerj.AI.SharpSteer.360</AssemblyName>
     <XnaFrameworkVersion>v1.0</XnaFrameworkVersion>
-    <XnaPlatform>Windows</XnaPlatform>
+    <XnaPlatform>Xbox 360</XnaPlatform>
     <XNAGlobalContentPipelineAssemblies>Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</XNAGlobalContentPipelineAssemblies>
     <XNAProjectContentPipelineAssemblies>
     </XNAProjectContentPipelineAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Xbox 360\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;XBOX;XBOX360;XNAFXV1</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\Xbox 360\Release</OutputPath>
+    <DefineConstants>TRACE;XBOX;XBOX360;XNAFXV1</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <PlatformTarget>x86</PlatformTarget>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -51,8 +49,6 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractVehicle.cs">
@@ -63,9 +59,25 @@
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>AnnotationService</Name>
     </Compile>
+    <Compile Include="BruteForceProximityDatabase.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>BruteForceProximityDatabase</Name>
+    </Compile>
+    <Compile Include="Camera.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Camera</Name>
+    </Compile>
+    <Compile Include="Clock.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Clock</Name>
+    </Compile>
     <Compile Include="IAnnotationService.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>IAnnotationService</Name>
+    </Compile>
+    <Compile Include="IDraw.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>IDraw</Name>
     </Compile>
     <Compile Include="ILocalSpace.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
@@ -86,22 +98,6 @@
     <Compile Include="IVehicle.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>IVehicle</Name>
-    </Compile>
-    <Compile Include="BruteForceProximityDatabase.cs">
-      <XNAUseContentPipeline>false</XNAUseContentPipeline>
-      <Name>BruteForceProximityDatabase</Name>
-    </Compile>
-    <Compile Include="Camera.cs">
-      <XNAUseContentPipeline>false</XNAUseContentPipeline>
-      <Name>Camera</Name>
-    </Compile>
-    <Compile Include="Clock.cs">
-      <XNAUseContentPipeline>false</XNAUseContentPipeline>
-      <Name>Clock</Name>
-    </Compile>
-    <Compile Include="IDraw.cs">
-      <XNAUseContentPipeline>false</XNAUseContentPipeline>
-      <Name>IDraw</Name>
     </Compile>
     <Compile Include="LocalSpace.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
@@ -131,10 +127,7 @@
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>PolylinePathway</Name>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <XNAUseContentPipeline>false</XNAUseContentPipeline>
-      <Name>AssemblyInfo</Name>
-    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleVehicle.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>SimpleVehicle</Name>

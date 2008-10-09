@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpSteer-v3.x86", "Source\SharpSteer\SharpSteer-v3.x86.csproj", "{5D913C14-59D6-4A0F-9B87-0CCBDE5E3A98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo-v3.x86", "Source\Demo\Demo-v3.x86.csproj", "{5148671A-B271-4494-A285-8DC0E1BF6389}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D913C14-59D6-4A0F-9B87-0CCBDE5E3A98}.Debug|x86.ActiveCfg = Debug|x86
+		{5D913C14-59D6-4A0F-9B87-0CCBDE5E3A98}.Debug|x86.Build.0 = Debug|x86
+		{5D913C14-59D6-4A0F-9B87-0CCBDE5E3A98}.Release|x86.ActiveCfg = Release|x86
+		{5D913C14-59D6-4A0F-9B87-0CCBDE5E3A98}.Release|x86.Build.0 = Release|x86
+		{5148671A-B271-4494-A285-8DC0E1BF6389}.Debug|x86.ActiveCfg = Debug|x86
+		{5148671A-B271-4494-A285-8DC0E1BF6389}.Debug|x86.Build.0 = Debug|x86
+		{5148671A-B271-4494-A285-8DC0E1BF6389}.Release|x86.ActiveCfg = Release|x86
+		{5148671A-B271-4494-A285-8DC0E1BF6389}.Release|x86.Build.0 = Release|x86
+		{0CFDED5B-52BA-4937-88F7-9F4819D05043}.Debug|x86.ActiveCfg = Debug|x86
+		{0CFDED5B-52BA-4937-88F7-9F4819D05043}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

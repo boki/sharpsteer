@@ -79,8 +79,13 @@ namespace Bnoerj.AI.Steering
 			Bnoerj.AI.Steering.Drawing.game = this;
 
 			graphics = new GraphicsDeviceManager(this);
+#if XNAFXV1
 			content = new ContentManager(Services);
-
+#else
+			Content = new ContentManager(Services);
+			Content.RootDirectory = "Content";
+			content = Content;
+#endif
 			graphics.PreferredBackBufferWidth = preferredWindowWidth;
 			graphics.PreferredBackBufferHeight = preferredWindowHeight;
 
@@ -506,7 +511,32 @@ namespace Bnoerj.AI.Steering
 
 			base.Initialize();
 		}
+#if !XNAFXV1
+		/// <summary>
+		/// LoadContent will be called once per game and is the place to load
+		/// all of your content.
+		/// </summary>
+		protected override void LoadContent()
+		{
+			courierFont = new FixedFont(content.Load<Texture2D>("Fonts/Courier"));
 
+			spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
+
+			effect = content.Load<Effect>("Shaders/Simple");
+			effectParamWorldViewProjection = effect.Parameters["WorldViewProjection"];
+
+			vertexDeclaration = new VertexDeclaration(graphics.GraphicsDevice, VertexPositionColor.VertexElements);
+		}
+
+		/// <summary>
+		/// UnloadContent will be called once per game and is the place to unload
+		/// all content.
+		/// </summary>
+		protected override void UnloadContent()
+		{
+			// TODO: Unload any non ContentManager content here
+		}
+#else
 		/// <summary>
 		/// Load your graphics content.  If loadAllContent is true, you should
 		/// load content from both ResourceManagementMode pools.  Otherwise, just
@@ -544,7 +574,7 @@ namespace Bnoerj.AI.Steering
 				content.Unload();
 			}
 		}
-
+#endif
 		/// <summary>
 		/// Allows the game to run logic such as updating the world,
 		/// checking for collisions, gathering input and playing audio.
